@@ -1,0 +1,44 @@
+# --- 📂 IGNORAR ARCHIVOS GENERALES ---
+.DS_Store
+Thumbs.db
+*.log
+
+# --- 🐍 IGNORAR ARCHIVOS DE PYTHON ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.ipynb_checkpoints/
+.env
+.venv/
+
+# --- 📝 IGNORAR ARCHIVOS DE JUPYTER NOTEBOOKS TEMPORALES ---
+.ipynb_checkpoints/
+
+# --- 🛠 IGNORAR ARCHIVOS DE EXCEL Y CSV TEMPORALES ---
+*.xlsx
+*.xls
+~$*.xlsx  # Archivos temporales de Excel
+~$*.xls
+
+# --- 🌐 IGNORAR ARCHIVOS DE NODE.JS (FRONTEND / BACKEND) ---
+node_modules/
+npm-debug.log
+yarn.lock
+package-lock.json
+
+# --- ⚙️ IGNORAR CONFIGURACIONES DE SISTEMA ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- 🔒 IGNORAR ARCHIVOS PRIVADOS (SI USAN VARIABLES DE ENTORNO) ---
+.env
+config.json
+secrets.json
+
+# --- 🔄 IGNORAR ARCHIVOS DE COMPILACIÓN O BACKUPS ---
+*.bak
+*.tmp
+*.old
