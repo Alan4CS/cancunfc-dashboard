@@ -1,0 +1,794 @@
+Fecha,Año,Mes,Partido,Categoria,Subcategoria,Costos,Fuente,Tipo
+11-01-2022,2022,Enero,Celaya,Gastos,Meseros,"1,200.00",General,Liga
+11-01-2022,2022,Enero,Celaya,Gastos,Staff Partido,"6,000.00",General,Liga
+11-01-2022,2022,Enero,Celaya,Gastos,Ambulancia,"4,800.00",General,Liga
+11-01-2022,2022,Enero,Celaya,Gastos,Snack Vendedor,"3,000.00",General,Liga
+11-01-2022,2022,Enero,Celaya,Gastos,Servicio de Palcos,"1,000.00",General,Liga
+11-01-2022,2022,Enero,Celaya,Gastos,Pintura Campo,"1,078.00",General,Liga
+11-01-2022,2022,Enero,Celaya,Gastos,Hielo,"1,152.00",General,Liga
+11-01-2022,2022,Enero,Celaya,Gastos,Staff de Limpieza,"1,500.00",General,Liga
+11-01-2022,2022,Enero,Celaya,Gastos,Taquiilleras,"1,200.00",General,Liga
+11-01-2022,2022,Enero,Celaya,Gastos,Marcador,750.00,General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Meseros,"1,200.00",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Staff Apoyo Semana Taq,"1,200.00",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Staff Partido,"6,000.00",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Ambulancia,"4,800.00",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Snack Vestidor,"3,000.00",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Servicio de Palcos,"1,000.00",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Pintura Campo,"1,078.00",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Hielo,"1,152.00",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Staff de Limpieza,"1,500.00",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Taquiilleras,"1,200.00",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Marcador,750.00,General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Permiso COFEPRIS,"1,014.00",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Seguridad Privada,"7,830.00",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Seguridad Publica,"5,999.00",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Sonido,"17,400.00",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Hotel One Arbitros,"8,075.97",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Pago Cerverza,"3,640.00",General,Liga
+18-01-2022,2022,Enero,Dorados,Gastos,Refesco,"1,578.00",General,Liga
+30-01-2022,2022,Enero,Atlante,Gastos,Snack Vestidor,"3,000.00",General,Liga
+30-01-2022,2022,Enero,Atlante,Gastos,Staff,"6,000.00",General,Liga
+30-01-2022,2022,Enero,Atlante,Gastos,Taquiilleras,"1,500.00",General,Liga
+30-01-2022,2022,Enero,Atlante,Gastos,Pago Mission,"1,600.00",General,Liga
+30-01-2022,2022,Enero,Atlante,Gastos,Staff de Limpieza,"2,500.00",General,Liga
+30-01-2022,2022,Enero,Atlante,Gastos,Pago Cerveza,"13,780.00",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Meseros,"1,000.00",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Snack Vestidor,"3,000.00",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Staff Partido,"6,000.00",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Sanitizacion,"2,000.00",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Ambulancia,"4,800.00",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Ayudante Staff,900.00,General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Servicio Meseros,"1,002.00",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Taquiilleras,"1,500.00",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Hielo,988.00,General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Staff de Limpieza,"2,000.00",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Marcador,750.00,General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Refresco,"2,712.00",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Gasolina,500.00,General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Snack Arbitros,"1,000.00",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Seguridad Privada,"13,050.00",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Seguridad Publica,"5,999.00",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Sonido,"17,400.00",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Hotel One Arbitros,"8,973.30",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Pago Cerveza,"2,340.00",General,Liga
+08-02-2022,2022,Febrero,Tepatitlan,Gastos,Pago Mission,"1,300.00",General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Meseros,"1,500.00",General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Staff Partido,"4,750.00",General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Sanitizacion,"1,000.00",General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Ambulancia,"4,800.00",General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Servicio Meseros,972.50,General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Taquiilleras,"1,500.00",General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Hielo,"1,596.00",General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Staff de Limpieza,"2,500.00",General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Marcador,750.00,General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Apoyo Taxis,300.00,General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Inflar Baolnes,50.00,General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Comida,667.00,General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Seguridad Privada,"13,050.00",General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Seguridad Publica,"6,440.94",General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Sonido,"17,400.00",General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Hotel One Arbitros,"8,973.30",General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Pago Cerveza,"6,110.00",General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Refresco,"2,038.00",General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Snack Vestidor,"3,000.00",General,Liga
+23-02-2022,2022,Febrero,Raya2,Gastos,Pago Mission,"1,300.00",General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Meseros,"1,250.00",General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Staff Partido,,General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Sanitizacion,"1,000.00",General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Ambulancia,"4,800.00",General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Servicio de Palcos,"1,075.00",General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Taquiilleras,"1,500.00",General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Hielo,"1,260.00",General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Staff de Limpieza,"2,500.00",General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Marcador,750.00,General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Apoyo Taxis,300.00,General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Inflar Balones,50.00,General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Refresco,"1,575.00",General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Seguridad Privada,"44,660.00",General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Seguridad Publica,"9,661.41",General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Sonido,"17,400.00",General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Hotel One Arbitros,"8,095.59",General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Pago Cerverza,"7,150.00",General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Staff,"4,750.00",General,Liga
+15-03-2022,2022,Marzo,Tapatio,Gastos,Snack Vestidor,"4,408.79",General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Meseros,"1,500.00",General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Staff Partido,"4,500.00",General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Sanitizacion,"1,000.00",General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Ambulancia,"4,800.00",General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Servicio de Palcos,"1,061.00",General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Taquiilleras,"1,500.00",General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Hielo,"1,216.00",General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Staff de Limpieza,"2,500.00",General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Marcador,750.00,General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Apoyo Taxis,300.00,General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Inflar Balones,20.00,General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Comida,515.00,General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Refresco,"2,720.00",General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Seguridad Privada,"51,040.00",General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Seguridad Publica,"9,661.41",General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Sonido,"17,400.00",General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Hotel One Arbitros,"8,095.59",General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Pago Cerveza,"10,564.00",General,Liga
+25-03-2022,2022,Marzo,Pumas Tabasco,Gastos,Pago Mission,"1,300.00",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Meseros,"1,500.00",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Staff Partido,"6,000.00",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Sanitizacion,"2,000.00",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Ambulancia,"4,800.00",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Servicio de Palcos,"1,329.60",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Taquiilleras,"1,500.00",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Hielo,"1,216.00",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Staff de Limpieza,"2,500.00",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Marcador,750.00,General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Apoyo Taxis,300.00,General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Inflar Balones,20.00,General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Refresco,"2,720.00",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Seguridad Privada,"51,040.00",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Seguridad Publica,"9,661.41",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Sonido,"17,400.00",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Hotel One Arbitros,"8,095.59",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Pago Cerveza,"7,089.00",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Pago Mission,"1,300.00",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Pintura Campo,"1,428.00",General,Liga
+06-04-2022,2022,Abril,Tlaxcala,Gastos,Snack,"3,294.00",General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Pago Cerveza,"15,290.00",General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Pago Mission,975.00,General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Hielo,"1,216.00",General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Sanitizacion,"2,000.00",General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Refresco,"5,440.00",General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Pintura Campo,"1,170.00",General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Snack,"3,641.00",General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,DHL,533.58,General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Walmart,95.50,General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Bolsas,307.35,General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Taquiilleras,"1,500.00",General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Meseros,"1,500.00",General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Staff Partido,"6,000.00",General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Ambulancia,"4,800.00",General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Servicio de Palcos,"1,317.15",General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Staff de Limpieza,"2,500.00",General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Marcador,750.00,General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Gasolina,500.00,General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Apoyo Taxis,300.00,General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Comida,500.00,General,Liga
+21-04-2022,2022,Abril,Tepatitlan,Gastos,Medicamento area medica,"1,000.00",General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Pago Cerveza,"27,800.00",General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Pago Mission,"1,300.00",General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Hielo,"3,024.00",General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Sanitizacion,"2,000.00",General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Refresco,"6,122.00",General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Pintura Campo,"1,170.00",General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Snack,"3,641.00",General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,DHL,533.58,General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Walmart,95.50,General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Bolsas,307.35,General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Taquiilleras,"1,500.00",General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Meseros,"1,500.00",General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Staff Partido,"6,000.00",General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Ambulancia,"4,800.00",General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Servicio de Palcos,"1,317.15",General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Staff de Limpieza,"2,500.00",General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Marcador,750.00,General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Gasolina,500.00,General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Apoyo Taxis,300.00,General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Comida,500.00,General,Liga
+29-04-2022,2022,Abril,Celaya,Gastos,Medicamento area medica,"1,000.00",General,Liga
+13-06-2022,2022,Junio,America,Gastos,Efectivo Ramiro Taq,"754,926.00",General,Amistoso
+13-06-2022,2022,Junio,America,Gastos,Pago America Ramiro EFE,"100,000.00",General,Amistoso
+13-06-2022,2022,Junio,America,Gastos,Vallas,"44,700.00",General,Amistoso
+13-06-2022,2022,Junio,America,Gastos,Seguridad,"120,000.00",General,Amistoso
+13-06-2022,2022,Junio,America,Gastos,Operacion Efectivo,"38,894.60",General,Amistoso
+13-06-2022,2022,Junio,America,Gastos,Pago Mission,"1,300.00",General,Amistoso
+13-06-2022,2022,Junio,America,Gastos,Refresco,"8,000.00",General,Amistoso
+13-06-2022,2022,Junio,America,Gastos,Bonos,"10,800.00",General,Amistoso
+13-06-2022,2022,Junio,America,Gastos,Pago Cerveza,"85,255.00",General,Amistoso
+13-06-2022,2022,Junio,America,Gastos,Cortesias,"124,584.00",General,Amistoso
+13-06-2022,2022,Junio,America,Gastos,Cargo por Servicio,"1,132.00",General,Amistoso
+13-06-2022,2022,Junio,America,Gastos,America Invitacion,"500,000.00",General,Amistoso
+05-07-2022,2022,Julio,Raya2,Gastos,Pago Nomina,"14,550.00",General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Pago Mantenimiento Casa Club,"3,000.00",General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Servicio de Palcos,"5,624.97",General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Ambulancia,"8,120.00",General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Seguridad Privada,"29,232.00",General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Sonido,"17,864.00",General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Sanitizacion,"20,880.00",General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Pintura Campo,956.90,General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,"Papel de Baño, Jabon y Focos","2,150.50",General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Bolsas,386.16,General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Adaptadores Internet a LAP,"1,063.00",General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Seguridad Municipal,"12,881.80",General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Servicio Boletera,"4,020.00",General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Cortesias,"1,046.00",General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Impresion de Tarjetas,930.00,General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Impresion de Acreditaciones,"2,644.88",General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Cordones para gafetes,"1,751.60",General,Liga
+05-07-2022,2022,Julio,Raya2,Gastos,Refresco,"7,770.00",General,Liga
+19-07-2022,2022,Julio,Tlaxcala,Gastos,Pago Nomina,"16,000.00",General,Liga
+19-07-2022,2022,Julio,Tlaxcala,Gastos,Pago de Fotografo,"1,000.00",General,Liga
+19-07-2022,2022,Julio,Tlaxcala,Gastos,Servicio de Palcos,"3,075.50",General,Liga
+19-07-2022,2022,Julio,Tlaxcala,Gastos,Ambulancia,810.00,General,Liga
+19-07-2022,2022,Julio,Tlaxcala,Gastos,Seguridad Privada,"28,536.00",General,Liga
+19-07-2022,2022,Julio,Tlaxcala,Gastos,Sonido,"17,864.00",General,Liga
+19-07-2022,2022,Julio,Tlaxcala,Gastos,Pintura Campo,"1,110.00",General,Liga
+19-07-2022,2022,Julio,Tlaxcala,Gastos,Servicio Boletera,"4,055.00",General,Liga
+19-07-2022,2022,Julio,Tlaxcala,Gastos,Cortesias,"1,352.00",General,Liga
+19-07-2022,2022,Julio,Tlaxcala,Gastos,Impresion de Tarjetas,"1,610.00",General,Liga
+19-07-2022,2022,Julio,Tlaxcala,Gastos,Gasolina,100.00,General,Liga
+19-07-2022,2022,Julio,Tlaxcala,Gastos,Bolsas,386.16,General,Liga
+19-07-2022,2022,Julio,Tlaxcala,Gastos,Seguridad Municipal,"12,881.88",General,Liga
+19-07-2022,2022,Julio,Tlaxcala,Gastos,Enmicado de Gafetes,"1,356.36",General,Liga
+19-07-2022,2022,Julio,Tlaxcala,Gastos,Refresco,"4,335.00",General,Liga
+02-08-2022,2022,Agosto,La Paz,Gastos,Pago Nomina,"15,700.00",General,Liga
+02-08-2022,2022,Agosto,La Paz,Gastos,Servicio de Palcos,"2,927.51",General,Liga
+02-08-2022,2022,Agosto,La Paz,Gastos,Ambulancia,"8,120.00",General,Liga
+02-08-2022,2022,Agosto,La Paz,Gastos,Seguridad Privada,"28,536.00",General,Liga
+02-08-2022,2022,Agosto,La Paz,Gastos,Sonido,"17,864.00",General,Liga
+02-08-2022,2022,Agosto,La Paz,Gastos,Pintura Campo,"1,110.00",General,Liga
+02-08-2022,2022,Agosto,La Paz,Gastos,Servicio Boletera,"3,856.00",General,Liga
+02-08-2022,2022,Agosto,La Paz,Gastos,Cortesias,804.00,General,Liga
+02-08-2022,2022,Agosto,La Paz,Gastos,Impresion de Tarjetas,35.00,General,Liga
+02-08-2022,2022,Agosto,La Paz,Gastos,Gasolina,100.00,General,Liga
+02-08-2022,2022,Agosto,La Paz,Gastos,Bolsas,386.16,General,Liga
+02-08-2022,2022,Agosto,La Paz,Gastos,Seguridad Municipal,"12,881.88",General,Liga
+02-08-2022,2022,Agosto,La Paz,Gastos,Refresco,"4,335.00",General,Liga
+16-08-2022,2022,Agosto,Alebrijes,Gastos,Pago Nomina,"16,300.00",General,Liga
+16-08-2022,2022,Agosto,Alebrijes,Gastos,Servicio de Palcos,"3,100.50",General,Liga
+16-08-2022,2022,Agosto,Alebrijes,Gastos,Ambulancia,"8,120.00",General,Liga
+16-08-2022,2022,Agosto,Alebrijes,Gastos,Seguridad Privada,"28,536.00",General,Liga
+16-08-2022,2022,Agosto,Alebrijes,Gastos,Sonido,"17,864.00",General,Liga
+16-08-2022,2022,Agosto,Alebrijes,Gastos,Pintura Campo,"1,170.00",General,Liga
+16-08-2022,2022,Agosto,Alebrijes,Gastos,Servicio Boletera,"3,550.00",General,Liga
+16-08-2022,2022,Agosto,Alebrijes,Gastos,Cortesias,804.00,General,Liga
+16-08-2022,2022,Agosto,Alebrijes,Gastos,Bolsas,386.16,General,Liga
+16-08-2022,2022,Agosto,Alebrijes,Gastos,Seguridad Municipal,"12,881.88",General,Liga
+16-08-2022,2022,Agosto,Alebrijes,Gastos,Refresco,"3,992.20",General,Liga
+30-08-2022,2022,Agosto,Venados,Gastos,Pago Nomina,"19,300.00",General,Liga
+30-08-2022,2022,Agosto,Venados,Gastos,Servicio de Palcos,"1,574.00",General,Liga
+30-08-2022,2022,Agosto,Venados,Gastos,Mobiliario Zona Tourist Lounge,"3,190.00",General,Liga
+30-08-2022,2022,Agosto,Venados,Gastos,Ambulancia,"8,120.00",General,Liga
+30-08-2022,2022,Agosto,Venados,Gastos,Seguridad Privada,"52,896.00",General,Liga
+30-08-2022,2022,Agosto,Venados,Gastos,Sonido,"21,460.00",General,Liga
+30-08-2022,2022,Agosto,Venados,Gastos,Pintura Campo,"1,170.00",General,Liga
+30-08-2022,2022,Agosto,Venados,Gastos,Servicio Boletera,"3,606.00",General,Liga
+30-08-2022,2022,Agosto,Venados,Gastos,Cortesias,"1,006.00",General,Liga
+30-08-2022,2022,Agosto,Venados,Gastos,Impresion de Tarjetas,70.00,General,Liga
+30-08-2022,2022,Agosto,Venados,Gastos,Bolsas,772.33,General,Liga
+30-08-2022,2022,Agosto,Venados,Gastos,Insumos Iguana Bar,"2,810.96",General,Liga
+30-08-2022,2022,Agosto,Venados,Gastos,Seguridad Municipal,"12,881.88",General,Liga
+30-08-2022,2022,Agosto,Venados,Gastos,Refresco,"3,992.20",General,Liga
+13-09-2022,2022,Septiembre,Celaya,Gastos,Pago Nomina,"16,200.00",General,Liga
+13-09-2022,2022,Septiembre,Celaya,Gastos,Servicio de Palcos,"2,768.00",General,Liga
+13-09-2022,2022,Septiembre,Celaya,Gastos,Ambulancia,"8,120.00",General,Liga
+13-09-2022,2022,Septiembre,Celaya,Gastos,Seguridad Privada,"28,536.00",General,Liga
+13-09-2022,2022,Septiembre,Celaya,Gastos,Sonido,"17,864.00",General,Liga
+13-09-2022,2022,Septiembre,Celaya,Gastos,Pintura Campo,"1,170.00",General,Liga
+13-09-2022,2022,Septiembre,Celaya,Gastos,Servicio Boletera,"2,165.00",General,Liga
+13-09-2022,2022,Septiembre,Celaya,Gastos,Cortesias,"1,000.00",General,Liga
+13-09-2022,2022,Septiembre,Celaya,Gastos,Gasolina,100.00,General,Liga
+13-09-2022,2022,Septiembre,Celaya,Gastos,Bolsas,772.33,General,Liga
+13-09-2022,2022,Septiembre,Celaya,Gastos,Seguridad Municipal,"12,881.88",General,Liga
+13-09-2022,2022,Septiembre,Celaya,Gastos,Refresco,"3,992.20",General,Liga
+25-09-2022,2022,Septiembre,Dorados,Gastos,Pago Nomina,"17,950.00",General,Liga
+25-09-2022,2022,Septiembre,Dorados,Gastos,Servicio de Palcos,"3,736.50",General,Liga
+25-09-2022,2022,Septiembre,Dorados,Gastos,Inflable Activacion Explanada,400.00,General,Liga
+25-09-2022,2022,Septiembre,Dorados,Gastos,Renta Mesas y Sillas Tourist Lounge,"3,190.00",General,Liga
+25-09-2022,2022,Septiembre,Dorados,Gastos,Pago Banda Cancuncito,"3,000.00",General,Liga
+25-09-2022,2022,Septiembre,Dorados,Gastos,Ambulancia,"8,120.00",General,Liga
+25-09-2022,2022,Septiembre,Dorados,Gastos,Seguridad Privada,"28,536.00",General,Liga
+25-09-2022,2022,Septiembre,Dorados,Gastos,Sonido,"17,864.00",General,Liga
+25-09-2022,2022,Septiembre,Dorados,Gastos,Pintura Campo,"1,170.00",General,Liga
+25-09-2022,2022,Septiembre,Dorados,Gastos,Servicio Boletera,970.00,General,Liga
+25-09-2022,2022,Septiembre,Dorados,Gastos,Cortesias,"1,202.00",General,Liga
+25-09-2022,2022,Septiembre,Dorados,Gastos,Gasolina,100.08,General,Liga
+25-09-2022,2022,Septiembre,Dorados,Gastos,Bolsas,183.00,General,Liga
+25-09-2022,2022,Septiembre,Dorados,Gastos,Seguridad Municipal,"12,881.88",General,Liga
+28-09-2022,2022,Septiembre,Durango,Gastos,Pago Nomina,"16,200.00",General,Liga
+28-09-2022,2022,Septiembre,Durango,Gastos,Servicio de Palcos,"2,326.00",General,Liga
+28-09-2022,2022,Septiembre,Durango,Gastos,Ambulancia,"8,120.00",General,Liga
+28-09-2022,2022,Septiembre,Durango,Gastos,Seguridad Privada,"28,536.00",General,Liga
+28-09-2022,2022,Septiembre,Durango,Gastos,Pintura Campo,"1,170.00",General,Liga
+28-09-2022,2022,Septiembre,Durango,Gastos,Servicio Boletera,655.00,General,Liga
+28-09-2022,2022,Septiembre,Durango,Gastos,Cortesias,"1,002.00",General,Liga
+28-09-2022,2022,Septiembre,Durango,Gastos,Gasolina,100.06,General,Liga
+28-09-2022,2022,Septiembre,Durango,Gastos,Bolsas,772.33,General,Liga
+28-09-2022,2022,Septiembre,Durango,Gastos,Seguridad Municipal,"12,881.88",General,Liga
+28-09-2022,2022,Septiembre,Durango,Gastos,Refresco,"3,992.20",General,Liga
+11-10-2022,2022,Octubre,Tepatitlan,Gastos,Pago Nomina,"19,200.00",General,Liga
+11-10-2022,2022,Octubre,Tepatitlan,Gastos,Servicio de Palcos,"2,889.50",General,Liga
+11-10-2022,2022,Octubre,Tepatitlan,Gastos,Musicos Tourist Lounge,"6,000.00",General,Liga
+11-10-2022,2022,Octubre,Tepatitlan,Gastos,Ambulancia,"8,120.00",General,Liga
+11-10-2022,2022,Octubre,Tepatitlan,Gastos,Seguridad Privada,"28,536.00",General,Liga
+11-10-2022,2022,Octubre,Tepatitlan,Gastos,Sonido,"17,864.00",General,Liga
+11-10-2022,2022,Octubre,Tepatitlan,Gastos,Pintura Campo,"1,170.00",General,Liga
+11-10-2022,2022,Octubre,Tepatitlan,Gastos,Servicio Boletera,"1,150.00",General,Liga
+11-10-2022,2022,Octubre,Tepatitlan,Gastos,Cortesias,800.00,General,Liga
+11-10-2022,2022,Octubre,Tepatitlan,Gastos,Gasolina,99.99,General,Liga
+11-10-2022,2022,Octubre,Tepatitlan,Gastos,Bolsas,772.33,General,Liga
+11-10-2022,2022,Octubre,Tepatitlan,Gastos,Seguridad Municipal,"12,881.88",General,Liga
+11-10-2022,2022,Octubre,Tepatitlan,Gastos,Mobiliario Zona Tourist Lounge,"12,000.00",General,Liga
+11-10-2022,2022,Octubre,Tepatitlan,Gastos,Juegos Fiesta Mexicana Tourist Lounge,"8,120.00",General,Liga
+11-10-2022,2022,Octubre,Tepatitlan,Gastos,Mobiliario Musicos Tourist Lounge,"5,220.00",General,Liga
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Pago Nomina,"33,300.00",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Servicio de Palcos,"4,258.00",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Comision Cruz Azul,"166,909.54",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Ambulancia,"8,120.00",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Seguridad Privada,"121,800.00",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Sonido,"16,240.00",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Pintura Campo,"1,170.00",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Servicio Boletera,"35,290.00",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Cortesias,"2,704.00",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Anticipo Cruz Azul ,"100,000.00",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Gasolina,100.02,General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Bolsas,940.38,General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Seguridad Municipal,"16,102.35",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Vallas,"70,180.00",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Vasos para Bebidas,"30,160.00",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Show Maya,"17,400.00",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Pirotecnia,"19,720.00",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Espectacular Publicidad,"12,504.80",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Hospedaje Arbitros,"1,739.02",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Refresco,"8,299.20",General,Amistoso
+23-11-2022,2022,Noviembre,Cruz Azul,Gastos,Pago Cerveza,"83,007.15",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Pago Nomina,"39,100.00",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Servicio de Palcos,"3,569.50",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Insumos Iguana Bar,196.50,General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Comision America y Monterrey,"629,666.00",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Ambulancia,"8,120.00",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Seguridad Privada,"170,520.00",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Sonido,"16,240.00",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Pintura Campo,"1,170.00",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Servicio Boletera,"74,880.00",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Cortesias,"2,288.00",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Anticipo America,"50,000.00",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Gasolina,100.07,General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Bolsas,940.38,General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Seguridad Municipal,"6,440.94",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Vallas,"79,170.00",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Boletera Ramiro,"195,000.00",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Vuelo Arbitros,"15,540.00",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Espectacular Publicidad,"12,504.80",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Hospedaje Arbitros,"1,739.02",General,Amistoso
+11-12-2022,2022,Diciembre,America,Gastos,Refresco,"9,883.20",General,Amistoso
+11-01-2023,2023,Enero,UDG,Gastos,Pago Nomina,"16,200.00",General,Liga
+11-01-2023,2023,Enero,UDG,Gastos,Servicio de Palcos,"3,401.00",General,Liga
+11-01-2023,2023,Enero,UDG,Gastos,Ambulancia,"8,120.00",General,Liga
+11-01-2023,2023,Enero,UDG,Gastos,Seguridad Privada,"38,976.00",General,Liga
+11-01-2023,2023,Enero,UDG,Gastos,Sonido,"16,240.00",General,Liga
+11-01-2023,2023,Enero,UDG,Gastos,Pintura Campo,"1,198.00",General,Liga
+11-01-2023,2023,Enero,UDG,Gastos,Cargo por Servicio Taquilla,"4,100.00",General,Liga
+11-01-2023,2023,Enero,UDG,Gastos,Cargo por Servicio Bonocun,700.00,General,Liga
+11-01-2023,2023,Enero,UDG,Gastos,Cortesias,"2,420.00",General,Liga
+11-01-2023,2023,Enero,UDG,Gastos,Gasolina,100.02,General,Liga
+11-01-2023,2023,Enero,UDG,Gastos,Bolsas,772.33,General,Liga
+11-01-2023,2023,Enero,UDG,Gastos,Seguridad Municipal,"6,441.09",General,Liga
+11-01-2023,2023,Enero,UDG,Gastos,Sanitizacion,"30,624.00",General,Liga
+25-01-2023,2023,Enero,Correcaminos,Gastos,Pago Nomina,"16,400.00",General,Liga
+25-01-2023,2023,Enero,Correcaminos,Gastos,Servicio de Palcos,"3,519.00",General,Liga
+25-01-2023,2023,Enero,Correcaminos,Gastos,Ambulancia,"8,120.00",General,Liga
+25-01-2023,2023,Enero,Correcaminos,Gastos,Seguridad Privada,"42,688.00",General,Liga
+25-01-2023,2023,Enero,Correcaminos,Gastos,Sonido,"16,240.00",General,Liga
+25-01-2023,2023,Enero,Correcaminos,Gastos,Pintura Campo,"1,198.00",General,Liga
+25-01-2023,2023,Enero,Correcaminos,Gastos,Cargo por Servicio Taquilla,"3,000.00",General,Liga
+25-01-2023,2023,Enero,Correcaminos,Gastos,Cortesias,"2,782.00",General,Liga
+25-01-2023,2023,Enero,Correcaminos,Gastos,Gasolina,100.02,General,Liga
+25-01-2023,2023,Enero,Correcaminos,Gastos,Bolsas,772.21,General,Liga
+25-01-2023,2023,Enero,Correcaminos,Gastos,Seguridad Municipal,"6,441.09",General,Liga
+25-01-2023,2023,Enero,Correcaminos,Gastos,Refresco,"2,472.00",General,Liga
+07-02-2023,2023,Febrero,Atlante,Gastos,Pago Nomina,"29,950.00",General,Liga
+07-02-2023,2023,Febrero,Atlante,Gastos,Servicio de Palcos,"4,189.00",General,Liga
+07-02-2023,2023,Febrero,Atlante,Gastos,Pago Banda,"4,500.00",General,Liga
+07-02-2023,2023,Febrero,Atlante,Gastos,Ambulancia,"8,120.00",General,Liga
+07-02-2023,2023,Febrero,Atlante,Gastos,Seguridad Privada,"92,800.00",General,Liga
+07-02-2023,2023,Febrero,Atlante,Gastos,Sonido,"16,240.00",General,Liga
+07-02-2023,2023,Febrero,Atlante,Gastos,Pintura Campo,"1,198.00",General,Liga
+07-02-2023,2023,Febrero,Atlante,Gastos,Cargo por Servicio Taquilla,"5,050.00",General,Liga
+07-02-2023,2023,Febrero,Atlante,Gastos,Cortesias,"3,029.00",General,Liga
+07-02-2023,2023,Febrero,Atlante,Gastos,Gasolina,100.02,General,Liga
+07-02-2023,2023,Febrero,Atlante,Gastos,Bolsas,772.21,General,Liga
+07-02-2023,2023,Febrero,Atlante,Gastos,Seguridad Municipal,"24,305.44",General,Liga
+07-02-2023,2023,Febrero,Atlante,Gastos,Refresco,"5,484.00",General,Liga
+01-03-2023,2023,Marzo,Morelia,Gastos,Pago Nomina,"17,300.00",General,Liga
+01-03-2023,2023,Marzo,Morelia,Gastos,Servicio de Palcos,"3,742.00",General,Liga
+01-03-2023,2023,Marzo,Morelia,Gastos,Ambulancia,"8,120.00",General,Liga
+01-03-2023,2023,Marzo,Morelia,Gastos,Seguridad Privada,"41,760.00",General,Liga
+01-03-2023,2023,Marzo,Morelia,Gastos,Sonido,"16,240.00",General,Liga
+01-03-2023,2023,Marzo,Morelia,Gastos,Pintura Campo,"1,198.00",General,Liga
+01-03-2023,2023,Marzo,Morelia,Gastos,Cargo por Servicio Taquilla,"3,400.00",General,Liga
+01-03-2023,2023,Marzo,Morelia,Gastos,Cortesias,"2,332.00",General,Liga
+01-03-2023,2023,Marzo,Morelia,Gastos,Gasolina,100.02,General,Liga
+01-03-2023,2023,Marzo,Morelia,Gastos,Bolsas,772.21,General,Liga
+01-03-2023,2023,Marzo,Morelia,Gastos,Seguridad Municipal,"6,944.30",General,Liga
+01-03-2023,2023,Marzo,Morelia,Gastos,Refresco,"2,472.00",General,Liga
+16-03-2023,2023,Marzo,Mineros,Gastos,Pago Nomina,"17,300.00",General,Liga
+16-03-2023,2023,Marzo,Mineros,Gastos,Pago Banda,"4,000.00",General,Liga
+16-03-2023,2023,Marzo,Mineros,Gastos,Servicio de Palcos,"4,450.00",General,Liga
+16-03-2023,2023,Marzo,Mineros,Gastos,Ambulancia,"8,120.00",General,Liga
+16-03-2023,2023,Marzo,Mineros,Gastos,Seguridad Privada,"41,760.00",General,Liga
+16-03-2023,2023,Marzo,Mineros,Gastos,Sonido,"16,240.00",General,Liga
+16-03-2023,2023,Marzo,Mineros,Gastos,Pintura Campo,999.00,General,Liga
+16-03-2023,2023,Marzo,Mineros,Gastos,Cargo por Servicio Taquilla,"2,860.00",General,Liga
+16-03-2023,2023,Marzo,Mineros,Gastos,Cortesias,"2,654.00",General,Liga
+16-03-2023,2023,Marzo,Mineros,Gastos,Gasolina,100.04,General,Liga
+16-03-2023,2023,Marzo,Mineros,Gastos,Bolsas,772.21,General,Liga
+16-03-2023,2023,Marzo,Mineros,Gastos,Seguridad Municipal,"6,944.41",General,Liga
+16-03-2023,2023,Marzo,Mineros,Gastos,Refresco,"2,472.00",General,Liga
+24-03-2023,2023,Marzo,Cimarrones,Gastos,Pago Nomina,"18,850.00",General,Liga
+24-03-2023,2023,Marzo,Cimarrones,Gastos,Pago Banda,"4,000.00",General,Liga
+24-03-2023,2023,Marzo,Cimarrones,Gastos,Servicio de Palcos,"4,310.00",General,Liga
+24-03-2023,2023,Marzo,Cimarrones,Gastos,Ambulancia,"8,120.00",General,Liga
+24-03-2023,2023,Marzo,Cimarrones,Gastos,Seguridad Privada,"55,680.00",General,Liga
+24-03-2023,2023,Marzo,Cimarrones,Gastos,Sonido,"16,240.00",General,Liga
+24-03-2023,2023,Marzo,Cimarrones,Gastos,Pintura Campo,999.00,General,Liga
+24-03-2023,2023,Marzo,Cimarrones,Gastos,Cargo por Servicio Taquilla,"1,930.00",General,Liga
+24-03-2023,2023,Marzo,Cimarrones,Gastos,Cortesias,"1,916.00",General,Liga
+24-03-2023,2023,Marzo,Cimarrones,Gastos,Gasolina,100.04,General,Liga
+24-03-2023,2023,Marzo,Cimarrones,Gastos,Bolsas,772.21,General,Liga
+24-03-2023,2023,Marzo,Cimarrones,Gastos,Seguridad Municipal,"6,944.41",General,Liga
+24-03-2023,2023,Marzo,Cimarrones,Gastos,Refresco,"3,708.00",General,Liga
+29-03-2023,2023,Marzo,Tapatio,Gastos,Pago Nomina,"18,850.00",General,Liga
+29-03-2023,2023,Marzo,Tapatio,Gastos,Pago Banda,"4,000.00",General,Liga
+29-03-2023,2023,Marzo,Tapatio,Gastos,Servicio de Palcos,"4,394.50",General,Liga
+29-03-2023,2023,Marzo,Tapatio,Gastos,Ambulancia,"8,120.00",General,Liga
+29-03-2023,2023,Marzo,Tapatio,Gastos,Seguridad Privada,"46,400.00",General,Liga
+29-03-2023,2023,Marzo,Tapatio,Gastos,Sonido,"16,240.00",General,Liga
+29-03-2023,2023,Marzo,Tapatio,Gastos,Pintura Campo,999.00,General,Liga
+29-03-2023,2023,Marzo,Tapatio,Gastos,Cargo por Servicio Taquilla,"5,505.00",General,Liga
+29-03-2023,2023,Marzo,Tapatio,Gastos,Cortesias,"2,903.00",General,Liga
+29-03-2023,2023,Marzo,Tapatio,Gastos,Gasolina,99.97,General,Liga
+29-03-2023,2023,Marzo,Tapatio,Gastos,Bolsas,772.21,General,Liga
+29-03-2023,2023,Marzo,Tapatio,Gastos,Seguridad Municipal,"6,944.41",General,Liga
+29-03-2023,2023,Marzo,Tapatio,Gastos,Refresco,"3,012.00",General,Liga
+11-04-2023,2023,Abril,Pumas Tabasco,Gastos,Pago Nomina,"19,150.00",General,Liga
+11-04-2023,2023,Abril,Pumas Tabasco,Gastos,Pago Banda,"4,000.00",General,Liga
+11-04-2023,2023,Abril,Pumas Tabasco,Gastos,Servicio de Palcos,"4,690.50",General,Liga
+11-04-2023,2023,Abril,Pumas Tabasco,Gastos,Pago Comision Bebidas Clip,318.00,General,Liga
+11-04-2023,2023,Abril,Pumas Tabasco,Gastos,Ambulancia,"8,120.00",General,Liga
+11-04-2023,2023,Abril,Pumas Tabasco,Gastos,Seguridad Privada,"55,680.00",General,Liga
+11-04-2023,2023,Abril,Pumas Tabasco,Gastos,Sonido,"16,240.00",General,Liga
+11-04-2023,2023,Abril,Pumas Tabasco,Gastos,Pintura Campo,999.00,General,Liga
+11-04-2023,2023,Abril,Pumas Tabasco,Gastos,Cargo por Servicio Taquilla,"8,485.00",General,Liga
+11-04-2023,2023,Abril,Pumas Tabasco,Gastos,Cortesias,"2,467.00",General,Liga
+11-04-2023,2023,Abril,Pumas Tabasco,Gastos,Bolsas,772.21,General,Liga
+11-04-2023,2023,Abril,Pumas Tabasco,Gastos,Seguridad Municipal,"13,888.82",General,Liga
+11-04-2023,2023,Abril,Pumas Tabasco,Gastos,Refresco,"3,012.00",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Pago Nomina,"20,900.00",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Pago Banda,"3,500.00",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Servicio de Palcos,"4,675.50",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Gastos Tourist Lounge,"10,800.00",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Pago Pipa Jacuzzi y Cisternas,"2,000.00",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Ambulancia,"8,120.00",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Seguridad Privada,"111,360.00",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Sonido,"20,880.00",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Gastos Tourist,"10,096.00",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Pintura Campo,"1,270.00",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Cargo por Servicio Taquilla,"5,585.00",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Cortesias,"2,021.00",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Gasolina,100.00,General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Bolsas,772.21,General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Seguridad Municipal,"1,599.13",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Refresco,"8,625.00",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Hielo,"12,975.00",General,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Pago Nomina,"10,800.00",Tourist Lounge,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Hieleras,"2,962.00",Tourist Lounge,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Gastos Generales OFIX,"1,006.21",Tourist Lounge,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Insumos Soriana,546.80,Tourist Lounge,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Gasolina,200.00,Tourist Lounge,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Cortesias,391.00,Tourist Lounge,Liga
+29-07-2023,2023,Julio,Venados,Gastos,Pago DJ y Audio,"5,800.00",Tourist Lounge,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Pago Nomina,"22,000.00",General,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Pago Banda,"3,500.00",General,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Servicio de Palcos,"4,690.50",General,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Ambulancia,"8,120.00",General,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Seguridad Privada,"102,080.00",General,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Sonido,"20,880.00",General,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Pirotecnia,"18,560.00",General,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Pintura Campo,"1,270.00",General,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Cargo por Servicio Taquilla,"6,055.00",General,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Cortesias,"1,563.00",General,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Gasolina,100.08,General,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Bolsas,772.21,General,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Seguridad Municipal,"15,900.13",General,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Refresco,"3,858.00",General,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Hielo,"11,175.00",General,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Pago Nomina,"11,500.00",Torusit Lounge,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Pago DJ y Audio,"5,800.00",Torusit Lounge,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Gastos Generales OFIX,"1,028.71",Torusit Lounge,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Insumos Soriana,"1,619.25",Torusit Lounge,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Insumos Walmart,"1,550.00",Torusit Lounge,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Brazaletes,"4,674.80",Torusit Lounge,Liga
+05-08-2023,2023,Agosto,Correcaminos,Gastos,Gasolina,200.00,Torusit Lounge,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Pago Nomina,"23,700.00",General,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Pago Banda,"3,500.00",General,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Servicio de Palcos,"1,009.00",General,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Ambulancia,"8,120.00",General,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Seguridad Privada,"102,080.00",General,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Sonido,"20,880.00",General,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Pirotecnia,"18,560.00",General,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Pintura Campo,"1,270.00",General,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Cargo por Servicio Taquilla,"7,625.00",General,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Cortesias,"2,282.00",General,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Gasolina,99.93,General,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Bolsas,772.21,General,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Seguridad Municipal,"7,950.06",General,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Refresco,"6,568.50",General,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Hielo,"12,975.00",General,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Pago Nomina,"10,600.00",Torusit Lounge,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Pago DJ y Audio,"5,104.00",Torusit Lounge,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Gastos Generales OFIX,262.40,Torusit Lounge,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Insumos Costco,157.34,Torusit Lounge,Liga
+19-08-2023,2023,Agosto,Morelia,Gastos,Insumos Walmart,703.00,Torusit Lounge,Liga
+06-09-2023,2023,Septiembre,Tlaxcala,Gastos,Pago Nomina,"22,200.00",General,Liga
+06-09-2023,2023,Septiembre,Tlaxcala,Gastos,Pago Banda,"3,500.00",General,Liga
+06-09-2023,2023,Septiembre,Tlaxcala,Gastos,Servicio de Palcos,"1,023.00",General,Liga
+06-09-2023,2023,Septiembre,Tlaxcala,Gastos,Ambulancia,"8,120.00",General,Liga
+06-09-2023,2023,Septiembre,Tlaxcala,Gastos,Seguridad Privada,"64,960.00",General,Liga
+06-09-2023,2023,Septiembre,Tlaxcala,Gastos,Sonido,"20,880.00",General,Liga
+06-09-2023,2023,Septiembre,Tlaxcala,Gastos,Pintura Campo,"1,270.00",General,Liga
+06-09-2023,2023,Septiembre,Tlaxcala,Gastos,Cargo por Servicio Taquilla,"4,995.00",General,Liga
+06-09-2023,2023,Septiembre,Tlaxcala,Gastos,Cortesias,"2,271.00",General,Liga
+06-09-2023,2023,Septiembre,Tlaxcala,Gastos,Gasolina,100.16,General,Liga
+06-09-2023,2023,Septiembre,Tlaxcala,Gastos,Bolsas,772.21,General,Liga
+06-09-2023,2023,Septiembre,Tlaxcala,Gastos,Seguridad Municipal,"7,950.06",General,Liga
+06-09-2023,2023,Septiembre,Tlaxcala,Gastos,Refresco,"2,669.90",General,Liga
+06-09-2023,2023,Septiembre,Tlaxcala,Gastos,Hielo,"7,475.00",General,Liga
+19-09-2023,2023,Septiembre,Cimarrones,Gastos,Pago Nomina,"21,200.00",General,Liga
+19-09-2023,2023,Septiembre,Cimarrones,Gastos,Pago Banda,"3,500.00",General,Liga
+19-09-2023,2023,Septiembre,Cimarrones,Gastos,Servicio de Palcos,"1,000.00",General,Liga
+19-09-2023,2023,Septiembre,Cimarrones,Gastos,Ambulancia,"8,120.00",General,Liga
+19-09-2023,2023,Septiembre,Cimarrones,Gastos,Seguridad Privada,"64,960.00",General,Liga
+19-09-2023,2023,Septiembre,Cimarrones,Gastos,Sonido,"20,880.00",General,Liga
+19-09-2023,2023,Septiembre,Cimarrones,Gastos,Pintura Campo,"1,270.00",General,Liga
+19-09-2023,2023,Septiembre,Cimarrones,Gastos,Cargo por Servicio Taquilla,"1,960.00",General,Liga
+19-09-2023,2023,Septiembre,Cimarrones,Gastos,Cortesias,"1,990.00",General,Liga
+19-09-2023,2023,Septiembre,Cimarrones,Gastos,Gasolina,100.00,General,Liga
+19-09-2023,2023,Septiembre,Cimarrones,Gastos,Bolsas,772.21,General,Liga
+19-09-2023,2023,Septiembre,Cimarrones,Gastos,Seguridad Municipal,"7,950.06",General,Liga
+19-09-2023,2023,Septiembre,Cimarrones,Gastos,Refresco,"2,669.90",General,Liga
+19-09-2023,2023,Septiembre,Cimarrones,Gastos,Hielo,"8,425.00",General,Liga
+05-10-2023,2023,Octubre,UDG,Gastos,Pago Nomina,"20,850.00",General,Liga
+05-10-2023,2023,Octubre,UDG,Gastos,Pago Banda,"3,500.00",General,Liga
+05-10-2023,2023,Octubre,UDG,Gastos,Servicio de Palcos,"1,685.49",General,Liga
+05-10-2023,2023,Octubre,UDG,Gastos,Ambulancia,"8,120.00",General,Liga
+05-10-2023,2023,Octubre,UDG,Gastos,Seguridad Privada,"64,960.00",General,Liga
+05-10-2023,2023,Octubre,UDG,Gastos,Sonido,"20,880.00",General,Liga
+05-10-2023,2023,Octubre,UDG,Gastos,Pintura Campo,"1,270.00",General,Liga
+05-10-2023,2023,Octubre,UDG,Gastos,Cargo por Servicio Taquilla,"4,975.00",General,Liga
+05-10-2023,2023,Octubre,UDG,Gastos,Cortesias,"2,208.00",General,Liga
+05-10-2023,2023,Octubre,UDG,Gastos,Gasolina,99.98,General,Liga
+05-10-2023,2023,Octubre,UDG,Gastos,Bolsas,772.21,General,Liga
+05-10-2023,2023,Octubre,UDG,Gastos,Seguridad Municipal,"7,950.06",General,Liga
+05-10-2023,2023,Octubre,UDG,Gastos,Hielo,"7,975.00",General,Liga
+01-11-2023,2023,Noviembre,Mineros,Gastos,Pago Nomina,"20,250.00",General,Liga
+01-11-2023,2023,Noviembre,Mineros,Gastos,Pago Banda,"3,500.00",General,Liga
+01-11-2023,2023,Noviembre,Mineros,Gastos,Servicio de Palcos,"1,400.00",General,Liga
+01-11-2023,2023,Noviembre,Mineros,Gastos,Ambulancia,"8,120.00",General,Liga
+01-11-2023,2023,Noviembre,Mineros,Gastos,Seguridad Privada,"102,080.00",General,Liga
+01-11-2023,2023,Noviembre,Mineros,Gastos,Sonido,"27,840.00",General,Liga
+01-11-2023,2023,Noviembre,Mineros,Gastos,Pintura Campo,"1,270.00",General,Liga
+01-11-2023,2023,Noviembre,Mineros,Gastos,Cargo por Servicio Taquilla,"2,900.00",General,Liga
+01-11-2023,2023,Noviembre,Mineros,Gastos,Cortesias,"1,860.00",General,Liga
+01-11-2023,2023,Noviembre,Mineros,Gastos,Gasolina,100.00,General,Liga
+01-11-2023,2023,Noviembre,Mineros,Gastos,Bolsas,772.21,General,Liga
+01-11-2023,2023,Noviembre,Mineros,Gastos,Seguridad Municipal,"7,950.06",General,Liga
+19-11-2023,2023,Noviembre,Venados,Gastos,Pago Nomina,"23,350.00",General,Liga
+19-11-2023,2023,Noviembre,Venados,Gastos,Pago Banda,"3,500.00",General,Liga
+19-11-2023,2023,Noviembre,Venados,Gastos,Servicio de Palcos,"1,471.49",General,Liga
+19-11-2023,2023,Noviembre,Venados,Gastos,Pirotecnia,"18,560.00",General,Liga
+19-11-2023,2023,Noviembre,Venados,Gastos,Ambulancia,"8,120.00",General,Liga
+19-11-2023,2023,Noviembre,Venados,Gastos,Seguridad Privada,"139,200.00",General,Liga
+19-11-2023,2023,Noviembre,Venados,Gastos,Sonido,"20,880.00",General,Liga
+19-11-2023,2023,Noviembre,Venados,Gastos,Pintura Campo,949.01,General,Liga
+19-11-2023,2023,Noviembre,Venados,Gastos,Cargo por Servicio Taquilla,"27,363.00",General,Liga
+19-11-2023,2023,Noviembre,Venados,Gastos,Cortesias,"2,947.00",General,Liga
+19-11-2023,2023,Noviembre,Venados,Gastos,Gasolina,100.00,General,Liga
+19-11-2023,2023,Noviembre,Venados,Gastos,Bolsas,772.21,General,Liga
+19-11-2023,2023,Noviembre,Venados,Gastos,Seguridad Municipal,"11,925.10",General,Liga
+26-11-2023,2023,Noviembre,Mineros,Gastos,Pago Nomina,"27,000.00",General,Liga
+26-11-2023,2023,Noviembre,Mineros,Gastos,Servicio de Palcos,"1,194.49",General,Liga
+26-11-2023,2023,Noviembre,Mineros,Gastos,Pirotecnia y Cañones de Humo,"36,308.00",General,Liga
+26-11-2023,2023,Noviembre,Mineros,Gastos,Ambulancia,"8,120.00",General,Liga
+26-11-2023,2023,Noviembre,Mineros,Gastos,Seguridad Privada,"185,600.00",General,Liga
+26-11-2023,2023,Noviembre,Mineros,Gastos,Sonido,"35,960.00",General,Liga
+26-11-2023,2023,Noviembre,Mineros,Gastos,Pintura Campo,"1,094.83",General,Liga
+26-11-2023,2023,Noviembre,Mineros,Gastos,Cargo por Servicio Taquilla,"41,736.00",General,Liga
+26-11-2023,2023,Noviembre,Mineros,Gastos,Cortesias,"3,468.00",General,Liga
+26-11-2023,2023,Noviembre,Mineros,Gastos,Gasolina,100.00,General,Liga
+26-11-2023,2023,Noviembre,Mineros,Gastos,Bolsas,"1,544.42",General,Liga
+26-11-2023,2023,Noviembre,Mineros,Gastos,Seguridad Municipal,"11,925.10",General,Liga
+26-11-2023,2023,Noviembre,Mineros,Gastos,Compra Vasos,"19,720.00",General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Pago Nomina,"40,550.00",General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Servicio de Palcos,"3,000.00",General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Pirotecnia y Cañones de Humo,"93,734.96",General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Ambulancia,"16,240.00",General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Seguridad Privada,"464,000.00",General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Sonido,"49,880.00",General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Pintura Campo,"1,094.83",General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Cargo por Servicio Taquilla,"68,172.00",General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Cortesias,"6,433.00",General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Gasolina,100.00,General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Bolsas,"2,138.11",General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Seguridad Municipal,"15,900.13",General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Refresco,"14,295.00",General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Pago Cerveza,"76,349.47",General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Comisiones Bancarias ,"8,303.28",General,Liga
+03-12-2023,2023,Diciembre,Atlante,Gastos,Pago Minipalcos Depositados,"33,000.00",General,Liga
+16-01-2024,2024,Enero,Alebrijes,Gastos,Pago Nomina,"24,500.00",General,Liga
+16-01-2024,2024,Enero,Alebrijes,Gastos,Servicio de Palcos,"1,300.00",General,Liga
+16-01-2024,2024,Enero,Alebrijes,Gastos,Pago Traslado Tatuador,"3,500.00",General,Liga
+16-01-2024,2024,Enero,Alebrijes,Gastos,Pirotecnia,"17,770.00",General,Liga
+16-01-2024,2024,Enero,Alebrijes,Gastos,Ambulancia,"8,120.00",General,Liga
+16-01-2024,2024,Enero,Alebrijes,Gastos,Seguridad Privada,"74,240.00",General,Liga
+16-01-2024,2024,Enero,Alebrijes,Gastos,Sonido,"26,680.00",General,Liga
+16-01-2024,2024,Enero,Alebrijes,Gastos,Pintura Campo,"1,905.00",General,Liga
+16-01-2024,2024,Enero,Alebrijes,Gastos,Cargo por Servicio Taquilla,"18,624.75",General,Liga
+16-01-2024,2024,Enero,Alebrijes,Gastos,Cortesias,"4,052.00",General,Liga
+16-01-2024,2024,Enero,Alebrijes,Gastos,Bolsas,772.21,General,Liga
+16-01-2024,2024,Enero,Alebrijes,Gastos,Seguridad Municipal,"7,950.06",General,Liga
+16-01-2024,2024,Enero,Alebrijes,Gastos,Refresco,"12,918.00",General,Liga
+25-01-2024,2024,Enero,Atlante,Gastos,Pago Nomina,"28,150.00",General,Liga
+25-01-2024,2024,Enero,Atlante,Gastos,Servicio de Palcos,"2,000.00",General,Liga
+25-01-2024,2024,Enero,Atlante,Gastos,Pago Banda,"3,500.00",General,Liga
+25-01-2024,2024,Enero,Atlante,Gastos,Pirotecnia,"17,770.00",General,Liga
+25-01-2024,2024,Enero,Atlante,Gastos,Ambulancia,"8,032.50",General,Liga
+25-01-2024,2024,Enero,Atlante,Gastos,Seguridad Privada,"111,360.00",General,Liga
+25-01-2024,2024,Enero,Atlante,Gastos,Sonido,"28,420.00",General,Liga
+25-01-2024,2024,Enero,Atlante,Gastos,Pintura Campo,"1,905.00",General,Liga
+25-01-2024,2024,Enero,Atlante,Gastos,Cargo por Servicio Taquilla,"14,256.00",General,Liga
+25-01-2024,2024,Enero,Atlante,Gastos,Cortesias,"3,406.00",General,Liga
+25-01-2024,2024,Enero,Atlante,Gastos,Bolsas,772.21,General,Liga
+25-01-2024,2024,Enero,Atlante,Gastos,Seguridad Municipal,"15,900.13",General,Liga
+13-02-2024,2024,Febrero,Celaya,Gastos,Pago Nomina,"23,550.00",General,Liga
+13-02-2024,2024,Febrero,Celaya,Gastos,Servicio de Palcos,"1,000.00",General,Liga
+13-02-2024,2024,Febrero,Celaya,Gastos,Pago Banda,"3,500.00",General,Liga
+13-02-2024,2024,Febrero,Celaya,Gastos,Ambulancia,"8,032.50",General,Liga
+13-02-2024,2024,Febrero,Celaya,Gastos,Seguridad Privada,"74,240.00",General,Liga
+13-02-2024,2024,Febrero,Celaya,Gastos,Sonido,"28,420.00",General,Liga
+13-02-2024,2024,Febrero,Celaya,Gastos,Pintura Campo,"1,905.00",General,Liga
+13-02-2024,2024,Febrero,Celaya,Gastos,Cargo por Servicio Taquilla,"5,742.75",General,Liga
+13-02-2024,2024,Febrero,Celaya,Gastos,Cortesias,"3,160.00",General,Liga
+13-02-2024,2024,Febrero,Celaya,Gastos,Bolsas,"1,015.05",General,Liga
+13-02-2024,2024,Febrero,Celaya,Gastos,Seguridad Municipal,"8,320.20",General,Liga
+13-02-2024,2024,Febrero,Celaya,Gastos,Refresco,"3,360.00",General,Liga
+02-03-2024,2024,Marzo,La Paz,Gastos,Pago Nomina,"24,150.00",General,Liga
+02-03-2024,2024,Marzo,La Paz,Gastos,Servicio de Palcos,"1,300.00",General,Liga
+02-03-2024,2024,Marzo,La Paz,Gastos,Pago Banda,"5,000.00",General,Liga
+02-03-2024,2024,Marzo,La Paz,Gastos,Ambulancia,"8,032.50",General,Liga
+02-03-2024,2024,Marzo,La Paz,Gastos,Seguridad Privada,"60,320.00",General,Liga
+02-03-2024,2024,Marzo,La Paz,Gastos,Sonido,"28,420.00",General,Liga
+02-03-2024,2024,Marzo,La Paz,Gastos,Pintura Campo,"1,590.00",General,Liga
+02-03-2024,2024,Marzo,La Paz,Gastos,Pirotecnica,"6,550.00",General,Liga
+02-03-2024,2024,Marzo,La Paz,Gastos,Cargo por Servicio Taquilla,"5,852.25",General,Liga
+02-03-2024,2024,Marzo,La Paz,Gastos,Cortesias,"3,075.00",General,Liga
+02-03-2024,2024,Marzo,La Paz,Gastos,Bolsas,672.00,General,Liga
+02-03-2024,2024,Marzo,La Paz,Gastos,Seguridad Municipal,"8,320.20",General,Liga
+02-03-2024,2024,Marzo,La Paz,Gastos,Refresco,"3,336.00",General,Liga
+19-03-2024,2024,Marzo,Tepatitlan,Gastos,Pago Nomina,"22,450.00",General,Liga
+19-03-2024,2024,Marzo,Tepatitlan,Gastos,Servicio de Palcos,"1,840.00",General,Liga
+19-03-2024,2024,Marzo,Tepatitlan,Gastos,Ambulancia,"8,032.50",General,Liga
+19-03-2024,2024,Marzo,Tepatitlan,Gastos,Seguridad Privada,"46,400.00",General,Liga
+19-03-2024,2024,Marzo,Tepatitlan,Gastos,Sonido,"28,420.00",General,Liga
+19-03-2024,2024,Marzo,Tepatitlan,Gastos,Pintura Campo,"1,590.00",General,Liga
+19-03-2024,2024,Marzo,Tepatitlan,Gastos,Cargo por Servicio Taquilla,"3,561.00",General,Liga
+19-03-2024,2024,Marzo,Tepatitlan,Gastos,Cortesias,"3,284.00",General,Liga
+19-03-2024,2024,Marzo,Tepatitlan,Gastos,Bolsas,952.28,General,Liga
+19-03-2024,2024,Marzo,Tepatitlan,Gastos,Seguridad Municipal,"8,320.20",General,Liga
+19-03-2024,2024,Marzo,Tepatitlan,Gastos,Refresco,"4,228.80",General,Liga
+26-03-2024,2024,Marzo,Tapatio,Gastos,Pago Nomina,"22,650.00",General,Liga
+26-03-2024,2024,Marzo,Tapatio,Gastos,Servicio de Palcos,"1,840.00",General,Liga
+26-03-2024,2024,Marzo,Tapatio,Gastos,Pago Mariachis,"5,000.00",General,Liga
+26-03-2024,2024,Marzo,Tapatio,Gastos,Pago Alimentos Bailarines,950.00,General,Liga
+26-03-2024,2024,Marzo,Tapatio,Gastos,Ambulancia,"8,032.50",General,Liga
+26-03-2024,2024,Marzo,Tapatio,Gastos,Seguridad Privada,"46,400.00",General,Liga
+26-03-2024,2024,Marzo,Tapatio,Gastos,Sonido,"28,420.00",General,Liga
+26-03-2024,2024,Marzo,Tapatio,Gastos,Pintura Campo,"1,590.00",General,Liga
+26-03-2024,2024,Marzo,Tapatio,Gastos,Cargo por Servicio Taquilla,"12,790.50",General,Liga
+26-03-2024,2024,Marzo,Tapatio,Gastos,Cortesias,"3,079.00",General,Liga
+26-03-2024,2024,Marzo,Tapatio,Gastos,Bolsas,"1,524.20",General,Liga
+26-03-2024,2024,Marzo,Tapatio,Gastos,Seguridad Municipal,"8,320.20",General,Liga
+26-03-2024,2024,Marzo,Tapatio,Gastos,Refresco,"4,290.00",General,Liga
+09-04-2024,2024,Abril,Dorados,Gastos,Pago Nomina,"23,450.00",General,Liga
+09-04-2024,2024,Abril,Dorados,Gastos,Servicio de Palcos,"1,840.00",General,Liga
+09-04-2024,2024,Abril,Dorados,Gastos,Pago Banda,"3,500.00",General,Liga
+09-04-2024,2024,Abril,Dorados,Gastos,Ambulancia,"8,032.50",General,Liga
+09-04-2024,2024,Abril,Dorados,Gastos,Seguridad Privada,"46,400.00",General,Liga
+09-04-2024,2024,Abril,Dorados,Gastos,Sonido,"28,420.00",General,Liga
+09-04-2024,2024,Abril,Dorados,Gastos,Pintura Campo,"1,590.00",General,Liga
+09-04-2024,2024,Abril,Dorados,Gastos,Cargo por Servicio Taquilla,"6,122.35",General,Liga
+09-04-2024,2024,Abril,Dorados,Gastos,Cortesias,"3,288.00",General,Liga
+09-04-2024,2024,Abril,Dorados,Gastos,Bolsas,964.25,General,Liga
+09-04-2024,2024,Abril,Dorados,Gastos,Seguridad Municipal,"8,320.20",General,Liga
+25-04-2024,2024,Abril,Atlante,Gastos,Pago Nomina,"25,850.00",General,Liga
+25-04-2024,2024,Abril,Atlante,Gastos,Servicio de Palcos,"1,840.00",General,Liga
+25-04-2024,2024,Abril,Atlante,Gastos,Pago Activaciones Partido,"6,360.00",General,Liga
+25-04-2024,2024,Abril,Atlante,Gastos,Ambulancia,"8,032.50",General,Liga
+25-04-2024,2024,Abril,Atlante,Gastos,Seguridad Privada,"148,480.00",General,Liga
+25-04-2024,2024,Abril,Atlante,Gastos,Sonido,"28,420.00",General,Liga
+25-04-2024,2024,Abril,Atlante,Gastos,Pintura Campo,"1,905.00",General,Liga
+25-04-2024,2024,Abril,Atlante,Gastos,Pirotecnica,"40,600.00",General,Liga
+25-04-2024,2024,Abril,Atlante,Gastos,Show Luces,"40,600.00",General,Liga
+25-04-2024,2024,Abril,Atlante,Gastos,Cargo por Servicio Taquilla,"48,525.00",General,Liga
+25-04-2024,2024,Abril,Atlante,Gastos,Cortesias,"7,141.00",General,Liga
+25-04-2024,2024,Abril,Atlante,Gastos,Comision Venta Clip,"3,047.62",General,Liga
+25-04-2024,2024,Abril,Atlante,Gastos,Bolsas,964.25,General,Liga
+25-04-2024,2024,Abril,Atlante,Gastos,Seguridad Municipal,"16,640.00",General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Pago Nomina,"27,750.00",General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Servicio de Palcos,"3,100.00",General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Pago Traslado Aeropuerto Estadio,"1,700.00",General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Pago Banda,"3,500.00",General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Ambulancia,"16,240.00",General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Seguridad Privada,"278,400.00",General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Sonido,"49,880.00",General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Bolsas,964.25,General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Seguridad Publica,"26,708.43",General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Box Lunch Personas Protocolo,"30,566.00",General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Pintura Campo,"1,905.00",General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Planta de Luz,"8,282.00",General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Pirotecnica,"23,200.00",General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Cargo por Servicio Taquilla,"33,547.50",General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Cortesias,"7,608.00",General,Liga
+15-05-2024,2024,Mayo,Atlante,Gastos,Comision Venta Clip,"3,470.00",General,Liga
+03-08-2024,2024,Agosto,Tepatitlan,Gastos,Pago Nomina,"21,900.00",General,Liga
+03-08-2024,2024,Agosto,Tepatitlan,Gastos,Servicio de Palcos,"1,200.00",General,Liga
+03-08-2024,2024,Agosto,Tepatitlan,Gastos,Pago Banda,"3,500.00",General,Liga
+03-08-2024,2024,Agosto,Tepatitlan,Gastos,Ambulancia,"8,032.50",General,Liga
+03-08-2024,2024,Agosto,Tepatitlan,Gastos,Seguridad Privada,"109,620.00",General,Liga
+03-08-2024,2024,Agosto,Tepatitlan,Gastos,Sonido,"29,000.00",General,Liga
+03-08-2024,2024,Agosto,Tepatitlan,Gastos,Bolsas,964.25,General,Liga
+03-08-2024,2024,Agosto,Tepatitlan,Gastos,Seguridad Municipal,"4,451.40",General,Liga
+03-08-2024,2024,Agosto,Tepatitlan,Gastos,Pintura Campo,"2,025.00",General,Liga
+03-08-2024,2024,Agosto,Tepatitlan,Gastos,Cargo por Servicio Taquilla,"4,906.50",General,Liga
+03-08-2024,2024,Agosto,Tepatitlan,Gastos,Cortesias,"3,356.00",General,Liga
+03-08-2024,2024,Agosto,Tepatitlan,Gastos,Comision Venta Clip,392.96,General,Liga
+17-08-2024,2024,Agosto,Mineros,Gastos,Pago Nomina,"22,000.00",General,Liga
+17-08-2024,2024,Agosto,Mineros,Gastos,Servicio de Palcos,"1,200.00",General,Liga
+17-08-2024,2024,Agosto,Mineros,Gastos,Pago Edecan,400.00,General,Liga
+17-08-2024,2024,Agosto,Mineros,Gastos,Pago Banda,"3,500.00",General,Liga
+17-08-2024,2024,Agosto,Mineros,Gastos,Ambulancia,"10,327.50",General,Liga
+17-08-2024,2024,Agosto,Mineros,Gastos,Seguridad Privada,"52,780.00",General,Liga
+17-08-2024,2024,Agosto,Mineros,Gastos,Sonido,"29,000.00",General,Liga
+17-08-2024,2024,Agosto,Mineros,Gastos,Pago Servicio Maquinas CO2,"25,000.00",General,Liga
+17-08-2024,2024,Agosto,Mineros,Gastos,Pago Renta Truss CO2,"2,320.00",General,Liga
+17-08-2024,2024,Agosto,Mineros,Gastos,Bolsas,964.25,General,Liga
+17-08-2024,2024,Agosto,Mineros,Gastos,Seguridad Municipal,"4,451.40",General,Liga
+17-08-2024,2024,Agosto,Mineros,Gastos,Pintura Campo,"2,025.00",General,Liga
+17-08-2024,2024,Agosto,Mineros,Gastos,Cargo por Servicio Taquilla,"7,381.50",General,Liga
+17-08-2024,2024,Agosto,Mineros,Gastos,Cortesias,"5,297.00",General,Liga
+17-08-2024,2024,Agosto,Mineros,Gastos,Comision Venta Clip,467.71,General,Liga
+24-08-2024,2024,Agosto,Tampico,Gastos,Pago Nomina,"22,900.00",General,Liga
+24-08-2024,2024,Agosto,Tampico,Gastos,Servicio de Palcos,"1,200.00",General,Liga
+24-08-2024,2024,Agosto,Tampico,Gastos,Pago Activaciones Marketing,"1,800.00",General,Liga
+24-08-2024,2024,Agosto,Tampico,Gastos,Pago Banda,"3,500.00",General,Liga
+24-08-2024,2024,Agosto,Tampico,Gastos,Ambulancia,"10,327.50",General,Liga
+24-08-2024,2024,Agosto,Tampico,Gastos,Seguridad Privada,"109,620.00",General,Liga
+24-08-2024,2024,Agosto,Tampico,Gastos,Sonido,"29,000.00",General,Liga
+24-08-2024,2024,Agosto,Tampico,Gastos,Bolsas,964.25,General,Liga
+24-08-2024,2024,Agosto,Tampico,Gastos,Seguridad Municipal,"8,902.81",General,Liga
+24-08-2024,2024,Agosto,Tampico,Gastos,Pintura Campo,"2,025.00",General,Liga
+24-08-2024,2024,Agosto,Tampico,Gastos,Cargo por Servicio Taquilla,"5,965.50",General,Liga
+24-08-2024,2024,Agosto,Tampico,Gastos,Cortesias,"4,771.00",General,Liga
+24-08-2024,2024,Agosto,Tampico,Gastos,Comision Venta Clip,347.44,General,Liga
+07-09-2024,2024,Septiembre,UDG,Gastos,Pago Nomina,"23,400.00",General,Liga
+07-09-2024,2024,Septiembre,UDG,Gastos,Servicio de Palcos,"1,200.00",General,Liga
+07-09-2024,2024,Septiembre,UDG,Gastos,Pago Activaciones Marketing,"1,500.00",General,Liga
+07-09-2024,2024,Septiembre,UDG,Gastos,Pago Mariachis,"2,600.00",General,Liga
+07-09-2024,2024,Septiembre,UDG,Gastos,Ambulancia,"10,327.50",General,Liga
+07-09-2024,2024,Septiembre,UDG,Gastos,Seguridad Privada,"52,780.00",General,Liga
+07-09-2024,2024,Septiembre,UDG,Gastos,Sonido,"29,000.00",General,Liga
+07-09-2024,2024,Septiembre,UDG,Gastos,Bolsas,964.25,General,Liga
+07-09-2024,2024,Septiembre,UDG,Gastos,Seguridad Municipal,"4,451.40",General,Liga
+07-09-2024,2024,Septiembre,UDG,Gastos,Pintura Campo,"2,025.00",General,Liga
+07-09-2024,2024,Septiembre,UDG,Gastos,Cargo por Servicio Taquilla,"5,691.00",General,Liga
+07-09-2024,2024,Septiembre,UDG,Gastos,Cortesias,"4,145.00",General,Liga
+07-09-2024,2024,Septiembre,UDG,Gastos,Comision Venta Clip,390.00,General,Liga
+28-09-2024,2024,Septiembre,Tlaxcala,Gastos,Pago Nomina,"23,400.00",General,Liga
+28-09-2024,2024,Septiembre,Tlaxcala,Gastos,Servicio de Palcos,"1,200.00",General,Liga
+28-09-2024,2024,Septiembre,Tlaxcala,Gastos,Pago Activaciones Marketing,"1,100.00",General,Liga
+28-09-2024,2024,Septiembre,Tlaxcala,Gastos,Ambulancia,"10,327.50",General,Liga
+28-09-2024,2024,Septiembre,Tlaxcala,Gastos,Seguridad Privada,"52,780.00",General,Liga
+28-09-2024,2024,Septiembre,Tlaxcala,Gastos,Sonido,"29,000.00",General,Liga
+28-09-2024,2024,Septiembre,Tlaxcala,Gastos,Bolsas,964.25,General,Liga
+28-09-2024,2024,Septiembre,Tlaxcala,Gastos,Seguridad Municipal,"4,451.40",General,Liga
+28-09-2024,2024,Septiembre,Tlaxcala,Gastos,Pintura Campo,"2,025.00",General,Liga
+28-09-2024,2024,Septiembre,Tlaxcala,Gastos,Cargo por Servicio Taquilla,"2,112.00",General,Liga
+28-09-2024,2024,Septiembre,Tlaxcala,Gastos,Cortesias,"3,594.00",General,Liga
+28-09-2024,2024,Septiembre,Tlaxcala,Gastos,Comision Venta Clip,123.61,General,Liga
