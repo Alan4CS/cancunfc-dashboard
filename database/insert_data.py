@@ -1,152 +1,125 @@
 import pandas as pd
 import mysql.connector
-from mysql.connector import Error
 
-# Configuración de conexión a MySQL
+# 📌 Configurar conexión con MySQL
 DB_HOST = "localhost"
-DB_USER = "root"  # Cambia esto si tienes otro usuario
-DB_PASSWORD = ""  # Pon tu contraseña de MySQL si tienes una
-DB_NAME = "cancunfc_dw"
+DB_USER = "root"  # Cambia según tu configuración
+DB_PASSWORD = ""  # Agrega tu contraseña si la tienes
+DB_NAME = "CancunFC"
 
-# Conectar a la base de datos
-def connect_db():
-    try:
-        connection = mysql.connector.connect(
-            host=DB_HOST,
-            user=DB_USER,
-            password=DB_PASSWORD,
-            database=DB_NAME
-        )
-        return connection
-    except Error as e:
-        print(f"Error de conexión: {e}")
-        return None
+# 📌 Conectar a MySQL
+conn = mysql.connector.connect(
+    host=DB_HOST,
+    user=DB_USER,
+    password=DB_PASSWORD,
+    database=DB_NAME
+)
+cursor = conn.cursor()
 
-# Función para insertar datos en Dim_Tiempo
-def insert_tiempo(fecha, anio, mes, cursor):
+# 📌 Función para insertar datos en Dim_Tiempo
+def insert_tiempo(fecha, año, mes):
     cursor.execute("SELECT Tiempo_ID FROM Dim_Tiempo WHERE Fecha = %s", (fecha,))
     result = cursor.fetchone()
     if result:
-        return result[0]  # Ya existe, devolver ID
-    cursor.execute("INSERT INTO Dim_Tiempo (Fecha, Año, Mes) VALUES (%s, %s, %s)", (fecha, anio, mes))
-    return cursor.lastrowid  # Retornar el nuevo ID
+        return result[0]
 
-# Función para insertar datos en Dim_Partido
-def insert_partido(nombre_partido, cursor):
+    cursor.execute("INSERT INTO Dim_Tiempo (Fecha, Año, Mes) VALUES (%s, %s, %s)", (fecha, año, mes))
+    conn.commit()
+    return cursor.lastrowid
+
+# 📌 Función para insertar datos en Dim_Partido
+def insert_partido(nombre_partido):
     cursor.execute("SELECT Partido_ID FROM Dim_Partido WHERE Nombre_Partido = %s", (nombre_partido,))
     result = cursor.fetchone()
     if result:
         return result[0]
+
     cursor.execute("INSERT INTO Dim_Partido (Nombre_Partido) VALUES (%s)", (nombre_partido,))
+    conn.commit()
     return cursor.lastrowid
 
-# Función para insertar datos en Dim_Subcategoria
-def insert_subcategoria(nombre_subcategoria, categoria, cursor):
-    cursor.execute("SELECT Subcategoria_ID FROM Dim_Subcategoria WHERE Nombre_Subcategoria = %s", (nombre_subcategoria,))
+# 📌 Función para insertar datos en Dim_Subcategoria
+def insert_subcategoria(nombre_subcategoria, categoria):
+    cursor.execute("SELECT Subcategoria_ID FROM Dim_Subcategoria WHERE Nombre_Subcategoria = %s AND Categoria = %s", 
+                   (nombre_subcategoria, categoria))
     result = cursor.fetchone()
     if result:
         return result[0]
-    cursor.execute("INSERT INTO Dim_Subcategoria (Nombre_Subcategoria, Categoria) VALUES (%s, %s)", (nombre_subcategoria, categoria))
+
+    cursor.execute("INSERT INTO Dim_Subcategoria (Nombre_Subcategoria, Categoria) VALUES (%s, %s)", 
+                   (nombre_subcategoria, categoria))
+    conn.commit()
     return cursor.lastrowid
 
-# Función para insertar datos en Dim_Fuente
-def insert_fuente(tipo_fuente, cursor):
+# 📌 Función para insertar datos en Dim_Fuente
+def insert_fuente(tipo_fuente):
     cursor.execute("SELECT Fuente_ID FROM Dim_Fuente WHERE Tipo_Fuente = %s", (tipo_fuente,))
     result = cursor.fetchone()
     if result:
         return result[0]
+
     cursor.execute("INSERT INTO Dim_Fuente (Tipo_Fuente) VALUES (%s)", (tipo_fuente,))
+    conn.commit()
     return cursor.lastrowid
 
-def insert_competencia(nombre_competencia, cursor):
+# 📌 Función para insertar datos en Dim_Competencia
+def insert_competencia(nombre_competencia):
     cursor.execute("SELECT Competencia_ID FROM Dim_Competencia WHERE Nombre_Competencia = %s", (nombre_competencia,))
     result = cursor.fetchone()
     if result:
         return result[0]
-    cursor.execute("INSERT INTO Dim_Competencia (Nombre_Competencia) values (%s)", (nombre_competencia,))
+
+    cursor.execute("INSERT INTO Dim_Competencia (Nombre_Competencia) VALUES (%s)", (nombre_competencia,))
+    conn.commit()
     return cursor.lastrowid
 
-# Función para insertar datos en Hechos_Ventas
-def insert_ventas(data, cursor):
+# 📌 Función para insertar datos en Hechos_Transacciones
+def insert_transacciones(data):
     for index, row in data.iterrows():
-        tiempo_id = insert_tiempo(row['Fecha'], row['Año'], row['Mes'], cursor)
-        partido_id = insert_partido(row['Partido'], cursor)
-        subcategoria_id = insert_subcategoria(row['Subcategoria'], 'Ventas', cursor)
-        fuente_id = insert_fuente(row['Fuente'], cursor)
-        competencia_id = insert_competencia(row['Tipo'], cursor)
+        tiempo_id = insert_tiempo(row['Fecha'], row['Año'], row['Mes'])
+        partido_id = insert_partido(row['Partido'])
+        subcategoria_id = insert_subcategoria(row['Subcategoria'], row['Categoria'])
+        fuente_id = insert_fuente(row['Fuente'])
+        competencia_id = insert_competencia(row['Competencia'])
+
+        #monto = None if pd.isna(row['Monto']) else float(row['Monto'])
+        #cantidad = None if pd.isna(row['Cantidad']) else int(row['Cantidad'])
+        monto = row['Monto']
+        cantidad = None if pd.isna(row['Cantidad']) else int(row['Cantidad']) if not pd.isna(row['Cantidad']) else None
         
-        # Manejar valores vacíos o no válidos en 'Cantidad'
-        cantidad = row['Cantidad']
-        if pd.isna(cantidad) or str(cantidad).strip() == '':
-            cantidad = None  # Asignar NULL si el valor está vacío o es NaN
-        else:
-            try:
-                cantidad = int(float(cantidad))  # Convertir a float primero y luego a int
-            except (ValueError, TypeError):
-                cantidad = None  # Si no se puede convertir, asignar NULL
-
-
+        
+        #print("---------------->",monto,cantidad)
+        
         cursor.execute("""
-            INSERT INTO Hechos_Ventas (Tiempo_ID, Partido_ID, Subcategoria_ID, Ingreso, Cantidad, Fuente_ID, Competencia_ID)
+            INSERT INTO Hechos_Transacciones 
+            (Tiempo_ID, Partido_ID, Subcategoria_ID, Monto, Cantidad, Fuente_ID, Competencia_ID)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
-        """, (tiempo_id, partido_id, subcategoria_id, row['Ingreso'], cantidad, fuente_id, competencia_id))
+        """, (tiempo_id, partido_id, subcategoria_id, monto, cantidad, fuente_id, competencia_id))
 
-# Función para insertar datos en Hechos_Taquilla
-def insert_taquilla(data, cursor):
-    for index, row in data.iterrows():
-        tiempo_id = insert_tiempo(row['Fecha'], row['Año'], row['Mes'], cursor)
-        partido_id = insert_partido(row['Partido'], cursor)
-        tipo_boleto_id = insert_fuente(row['Tipo Venta'], cursor)
-        
-        boletos_vendidos = None if pd.isna(row['Boletos Vendidos']) else int(row['Boletos Vendidos'])
+    conn.commit()
 
-        cursor.execute("""
-            INSERT INTO Hechos_Taquilla (Tiempo_ID, Partido_ID, TipoBoleto_ID, Boletos_vendidos, Ingreso)
-            VALUES (%s, %s, %s, %s, %s)
-        """, (tiempo_id, partido_id, tipo_boleto_id, boletos_vendidos, row['Ingreso']))
-
-# Función para insertar datos en Hechos_Gastos
-def insert_gastos(data, cursor):
-    for index, row in data.iterrows():
-        tiempo_id = insert_tiempo(row['Fecha'], row['Año'], row['Mes'], cursor)
-        partido_id = insert_partido(row['Partido'], cursor)
-        subcategoria_id = insert_subcategoria(row['Subcategoria'], 'Gastos', cursor)
-        fuente_id = insert_fuente(row['Fuente'], cursor)
-        competencia_id = insert_competencia(row['Tipo'], cursor)
-
-        cursor.execute("""
-            INSERT INTO Hechos_Gastos (Tiempo_ID, Partido_ID, Subcategoria_ID, Costos, Fuente_ID, Competencia_ID)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, (tiempo_id, partido_id, subcategoria_id, row['Costos'], fuente_id, competencia_id))
-
-# Función principal para leer CSVs y subirlos a MySQL
+# 📌 Cargar y procesar el archivo CSV
 def load_data():
-    connection = connect_db()
-    if not connection:
-        return
+    file_path = "../data/GastosCancunFC_Data_Limpio.csv"
+    print(f"Cargando datos desde {file_path}...")
 
-    cursor = connection.cursor()
+    df = pd.read_csv(file_path)
 
-    # Cargar datos de Ventas
-    df_ventas = pd.read_csv("../data/GastosCancunFC_Ventas_Limpio.csv", encoding="utf-8")
-    insert_ventas(df_ventas, cursor)
-    print("Datos de Ventas insertados correctamente.")
+    # ✅ Reemplazar valores vacíos con NaN para evitar errores
+    df.replace({"": None}, inplace=True)
 
-    # Cargar datos de Taquilla
-    df_taquilla = pd.read_csv("../data/GastosCancunFC_Taquilla_Limpio.csv", encoding="utf-8")
-    insert_taquilla(df_taquilla, cursor)
-    print("Datos de Taquilla insertados correctamente.")
+    # ✅ Convertir tipos de datos correctamente
+    #df["Monto"] = pd.to_numeric(df["Monto"], errors='coerce')
+    #df["Cantidad"] = pd.to_numeric(df["Cantidad"], errors='coerce')  # Mantiene los NaN correctamente
 
-    # Cargar datos de Gastos
-    df_gastos = pd.read_csv("../data/GastosCancunFC_Gastos_Limpio.csv", encoding="utf-8")
-    insert_gastos(df_gastos, cursor)
-    print("Datos de Gastos insertados correctamente.")
+    # ✅ Insertar en la base de datos
+    insert_transacciones(df)
+    print("Datos insertados correctamente en la base de datos. 🚀")
 
-    # Confirmar cambios y cerrar conexión
-    connection.commit()
-    cursor.close()
-    connection.close()
-    print("Proceso de carga completado.")
+# 📌 Ejecutar la carga de datos
+load_data()
 
-if __name__ == "__main__":
-    load_data()
+# 📌 Cerrar conexión
+cursor.close()
+conn.close()
+print("Proceso completado con éxito. 🚀")
