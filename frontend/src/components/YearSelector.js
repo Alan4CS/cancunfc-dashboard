@@ -40,7 +40,7 @@ export default function YearSelector({ year, setYear }) {
     },
     {
       id: "2024-B",
-      label: "Clausura 2024",
+      label: "Apertura 2024",
       image: "/image/2024B.jpg",
       months: ["Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
     },

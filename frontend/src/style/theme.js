@@ -53,16 +53,16 @@ const theme = createTheme({
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          backgroundColor: "#000000",
-          borderRight: "1px solid rgba(26, 138, 152, 0.1)",
+          backgroundColor: "#1A8A98",
+          borderRight: "none",
         },
       },
     },
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: "#000000",
-          borderBottom: "1px solid rgba(26, 138, 152, 0.1)",
+          backgroundColor: "#1A8A98",
+          borderBottom: "none",
         },
       },
     },
