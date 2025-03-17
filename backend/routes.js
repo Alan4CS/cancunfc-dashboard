@@ -56,4 +56,31 @@ router.get("/taquilla_total", (req, res) => {
     });
 });
 
+// Endpoint para extraer los gastos-ingresos-taquilla por cada mes 
+router.get("/ingresos_gatos_mes", (req, res) => {
+    const query = `
+        SELECT 
+            dt.Año, 
+            dt.Mes, 
+            ds.Categoria, 
+            SUM(ht.Monto) AS total
+        FROM hechos_transacciones ht
+        JOIN dim_tiempo dt ON ht.Tiempo_ID = dt.Tiempo_ID
+        JOIN dim_subcategoria ds ON ht.Subcategoria_ID = ds.Subcategoria_ID
+        WHERE dt.Año BETWEEN 2022 AND 2024
+        GROUP BY dt.Año, dt.Mes, ds.Categoria
+        ORDER BY dt.Año, 
+                FIELD(dt.Mes, 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
+    `;
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error("❌ Error al obtener los ingresos y gastos por mes:", err);
+            return res.status(500).json({ error: "Error al obtener los ingresos y gastos por mes" });
+        }
+        res.json(results); // Devuelve el total de ingresos
+    });
+});
+
+
 module.exports = router;
