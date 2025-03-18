@@ -38,7 +38,7 @@ router.get("/gastos_totales", (req, res) => {
     });
 });
 
-// Endpoint para obtener los gastos totales
+// Endpoint para obtener la taquilla total
 router.get("/taquilla_total", (req, res) => {
     const query = `
         SELECT SUM(ht.Monto) AS taquilla_total
