@@ -46,7 +46,7 @@ export default function SummaryCards() {
     }
   
     fetchData()
-  }, [summaryData]) // Agrega `summaryData` como dependencia  
+  }, []) // Usa un array vacío para que solo se ejecute una vez
   
   return (
     <Stack direction={{ xs: "column", sm: "row" }} spacing={3} sx={{ width: "100%" }}>

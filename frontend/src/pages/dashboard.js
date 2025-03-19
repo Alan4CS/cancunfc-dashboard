@@ -1,30 +1,30 @@
-import { useState } from "react"
-import { Box, Container, CssBaseline, ThemeProvider } from "@mui/material"
+import { useState } from "react";
+import { Box, Container, CssBaseline, ThemeProvider } from "@mui/material";
 // Importar componentes
-import Sidebar from "../components/sidebar"
-import Header from "../components/header"
-import SummaryCards from "../components/SummaryCards"
-import MainCharts from "../components/MainCharts"
-import TopPartidos from "../components/TopPartidos"
-import SubcategoriasChart from "../components/SubcategoriasChart"
-import YearSelector from "../components/YearSelector"
-import theme from "../style/theme"
+import Sidebar from "../components/sidebar";
+import Header from "../components/header";
+import SummaryCards from "../components/SummaryCards";
+import MainCharts from "../components/MainCharts";
+import TopPartidos from "../components/TopPartidos";
+import SubcategoriasChart from "../components/SubcategoriasChart";
+import YearSelector from "../components/YearSelector";
+import theme from "../style/theme";
 
 // Ancho del sidebar expandido y contraído
-const drawerWidth = 240
-const drawerCollapsedWidth = 64
+const drawerWidth = 240;
+const drawerCollapsedWidth = 64;
 
 export default function Dashboard() {
   // Cambiado el valor inicial a cadena vacía para que no haya temporada seleccionada al inicio
-  const [year, setYear] = useState("")
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(true)
+  const [year, setYear] = useState("");
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen)
-  }
+    setMobileOpen(!mobileOpen);
+  };
 
-  const currentWidth = isExpanded ? drawerWidth : drawerCollapsedWidth
+  const currentWidth = isExpanded ? drawerWidth : drawerCollapsedWidth;
 
   return (
     <ThemeProvider theme={theme}>
@@ -95,7 +95,7 @@ export default function Dashboard() {
                 {/* MainCharts a la izquierda */}
                 <Box
                   sx={{
-                    width: { xs: "100%", md: "70%" },
+                    width: { xs: "100%", md: "80%" }, // Aumentamos el ancho de MainCharts
                   }}
                 >
                   <MainCharts />
@@ -104,7 +104,7 @@ export default function Dashboard() {
                 {/* TopPartidos a la derecha */}
                 <Box
                   sx={{
-                    width: { xs: "100%", md: "30%" },
+                    width: { xs: "100%", md: "20%" }, // Reducimos el ancho de TopPartidos
                   }}
                 >
                   <TopPartidos />
@@ -120,5 +120,5 @@ export default function Dashboard() {
         </Box>
       </Box>
     </ThemeProvider>
-  )
+  );
 }
