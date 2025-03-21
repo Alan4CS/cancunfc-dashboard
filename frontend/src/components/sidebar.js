@@ -25,6 +25,12 @@ import {
 const drawerWidth = 240
 const drawerCollapsedWidth = 64
 
+const handleLogout = () => {
+  localStorage.removeItem("token"); // Eliminar el token del usuario
+  window.location.reload(); // Recargar la página para regresar al Login
+};
+
+
 export default function Sidebar({ mobileOpen, handleDrawerToggle, isExpanded, setIsExpanded }) {
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded)
@@ -44,7 +50,7 @@ export default function Sidebar({ mobileOpen, handleDrawerToggle, isExpanded, se
       >
         {isExpanded ? (
           <>
-            <Avatar src="/image/FC.png" alt="Logo" sx={{ width: 60, height: 80,}}/>
+            <Avatar src="/image/FC.png" alt="Logo" sx={{ width: 60, height: 80, }} />
             <Typography variant="body2" component="div" sx={{ color: "white", fontWeight: "bold", flexGrow: 1 }}>
               DASHBOARD
             </Typography>
@@ -177,6 +183,7 @@ export default function Sidebar({ mobileOpen, handleDrawerToggle, isExpanded, se
         <ListItem disablePadding>
           <Tooltip title={isExpanded ? "" : "Cerrar Sesión"} placement="right">
             <ListItemButton
+              onClick={handleLogout} // 🔥 Ahora el botón funciona
               sx={{
                 minHeight: 48,
                 justifyContent: isExpanded ? "initial" : "center",
