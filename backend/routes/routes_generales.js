@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const db = require("./db"); // Importamos la conexión correcta
+const db = require("../db"); // Importamos la conexión correcta
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
@@ -363,35 +363,54 @@ router.get("/taquilla_por_subcategoria_temporada", (req, res) => {
     });
 });
 
-const SECRET_KEY = "mi_secreto_super_seguro"; // Clave para firmar el JWT
 
-// Ruta de Login
-router.post("/login", (req, res) => {
-    const { username, password } = req.body;
+// Endpoint para obtener resumen por partido (gastos, ventas y taquilla)
+router.get("/resumen_por_partido", (req, res) => {
+    const query = `
+        SELECT 
+            dp.Nombre_Partido,
+            dt.Fecha,
+            SUM(CASE WHEN ds.Categoria = 'Gastos' THEN ht.Monto ELSE 0 END) AS Total_Gastos,
+            SUM(CASE WHEN ds.Categoria = 'Ventas' THEN ht.Monto ELSE 0 END) AS Total_Ventas,
+            SUM(CASE WHEN ds.Categoria = 'Taquilla' THEN ht.Monto ELSE 0 END) AS Total_Taquilla
+        FROM hechos_transacciones ht
+        JOIN dim_subcategoria ds ON ht.Subcategoria_ID = ds.Subcategoria_ID
+        JOIN dim_partido dp ON ht.Partido_ID = dp.Partido_ID
+        JOIN dim_tiempo dt ON ht.Tiempo_ID = dt.Tiempo_ID
+        GROUP BY dp.Nombre_Partido, dt.Fecha
+        ORDER BY dt.Fecha ASC;
+    `;
 
-    // Buscar usuario en la base de datos
-    const query = "SELECT * FROM users WHERE username = ?";
-    db.query(query, [username], (err, results) => {
+    db.query(query, (err, results) => {
         if (err) {
-            console.error("❌ Error al buscar usuario:", err);
-            return res.status(500).json({ message: "Error en el servidor" });
+            console.error("❌ Error al obtener resumen por partido:", err);
+            return res.status(500).json({ error: "Error al obtener resumen por partido" });
         }
+        res.json(results);
+    });
+});
 
-        if (results.length === 0) {
-            return res.status(400).json({ message: "Usuario no encontrado" });
+// Endpoint para obtener resumen por partido (gastos, ventas y taquilla)
+router.get("/ventas_gastos_taquilla_competencia", (req, res) => {
+    const query = `
+        SELECT 
+            dc.Nombre_Competencia,
+            SUM(CASE WHEN ds.Categoria = 'Gastos' THEN ht.Monto ELSE 0 END) AS Total_Gastos,
+            SUM(CASE WHEN ds.Categoria = 'Ventas' THEN ht.Monto ELSE 0 END) AS Total_Ventas,
+            SUM(CASE WHEN ds.Categoria = 'Taquilla' THEN ht.Monto ELSE 0 END) AS Total_Taquilla
+        FROM hechos_transacciones ht
+        JOIN dim_subcategoria ds ON ht.Subcategoria_ID = ds.Subcategoria_ID
+        JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
+        GROUP BY dc.Nombre_Competencia
+        ORDER BY dc.Nombre_Competencia;
+    `;
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error("❌ Error al obtener resumen por partido:", err);
+            return res.status(500).json({ error: "Error al obtener resumen por partido" });
         }
-
-        const user = results[0];
-
-        // Comparar contraseñas en texto plano (por ahora)
-        if (password !== user.password) {
-            return res.status(400).json({ message: "Contraseña incorrecta" });
-        }
-
-        // Crear token JWT
-        const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, { expiresIn: "1h" });
-
-        res.json({ token }); // Devolvemos el token
+        res.json(results);
     });
 });
 
