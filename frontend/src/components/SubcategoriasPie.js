@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react"
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, Sector } from "recharts"
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer} from "recharts"
 import { Box, Typography, CircularProgress, Alert, FormControl, Select, MenuItem, InputLabel, Paper, Tabs,
   Tab, useTheme, alpha, Chip, Stack, ToggleButtonGroup, ToggleButton, IconButton, Slider, TextField, InputAdornment,
 } from "@mui/material"
@@ -89,34 +89,6 @@ const CustomTooltip = ({ active, payload }) => {
   )
 }
 
-// Componente para el sector activo (cuando se hace hover)
-const renderActiveShape = (props) => {
-  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props
-
-  return (
-    <g>
-      <Sector
-        cx={cx}
-        cy={cy}
-        innerRadius={innerRadius}
-        outerRadius={outerRadius + 10}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        fill={fill}
-        opacity={0.9}
-      />
-      <Sector
-        cx={cx}
-        cy={cy}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        innerRadius={outerRadius + 12}
-        outerRadius={outerRadius + 16}
-        fill={fill}
-      />
-    </g>
-  )
-}
 
 export default function SubcategoriaPieCharts() {
   // Estado para los datos
@@ -134,7 +106,6 @@ export default function SubcategoriaPieCharts() {
   const [selectedYear, setSelectedYear] = useState("all")
   const [selectedTemporada, setSelectedTemporada] = useState("all")
   const [tabValue, setTabValue] = useState(0)
-  const [activeIndex, setActiveIndex] = useState(null)
   const [refreshKey, setRefreshKey] = useState(0)
   const [viewMode, setViewMode] = useState("mes") // "mes" o "temporada"
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
@@ -143,32 +114,22 @@ export default function SubcategoriaPieCharts() {
   const [searchTerm, setSearchTerm] = useState("")
   const theme = useTheme()
 
-  // Manejar cambio de pestaña
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue)
-    setActiveIndex(null) // Resetear el sector activo al cambiar de pestaña
-  }
-
+ // Manejar cambio de pestaña
+const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
+  
   // Manejar cambio de modo de vista
   const handleViewModeChange = (event, newMode) => {
     if (newMode !== null) {
-      setViewMode(newMode)
+      setViewMode(newMode);
       // Resetear filtros específicos al cambiar de modo
       if (newMode === "mes") {
-        setSelectedTemporada("all")
+        setSelectedTemporada("all");
       } else {
-        setSelectedMonth("all")
+        setSelectedMonth("all");
       }
     }
-  }
-
-  // Manejar hover en el gráfico
-  const onPieEnter = (_, index) => {
-    setActiveIndex(index)
-  }
-
-  const onPieLeave = () => {
-    setActiveIndex(null)
   }
 
   // Función para refrescar los datos
@@ -596,7 +557,8 @@ export default function SubcategoriaPieCharts() {
       <ResponsiveContainer width="100%" height={400}>
         <PieChart>
           <Pie
-            activeShape={false}  // Desactiva la forma activa (resaltado al hacer clic)
+            activeIndex={false}
+            activeShape={false}// Desactiva la forma activa (resaltado al hacer clic)
             onClick={() => {}}  // Desactiva el evento de clic
             data={currentData}
             dataKey="value"
@@ -606,8 +568,6 @@ export default function SubcategoriaPieCharts() {
             innerRadius={80}
             outerRadius={140}
             paddingAngle={2}
-            onMouseEnter={onPieEnter}
-            onMouseLeave={onPieLeave}
             labelLine={false}  // Deshabilita la línea de conexión
             label={false}  // Deshabilita las etiquetas dentro de los segmentos
             //label={({ name, percentage }) => `${name}: ${percentage.toFixed(1)}%`}
