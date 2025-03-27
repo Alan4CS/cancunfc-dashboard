@@ -1,17 +1,5 @@
-"use client"
-import {
-  Box,
-  Divider,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-  Avatar,
-  IconButton,
-  Tooltip,
+import { Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText,
+  Typography, Avatar, IconButton, Tooltip,
 } from "@mui/material"
 import {
   Dashboard as DashboardIcon,

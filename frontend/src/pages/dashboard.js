@@ -9,6 +9,9 @@ import TopPartidos from "../components/TopPartidos";
 import SubcategoriasChart from "../components/SubcategoriasChart";
 import YearSelector from "../components/YearSelector";
 import theme from "../style/theme";
+import CompetenciaChart from "../components/CompetenciaChart";
+import SubcategoriaPie from "../components/SubcategoriasPie";
+
 
 // Ancho del sidebar expandido y contraído
 const drawerWidth = 240;
@@ -104,7 +107,7 @@ export default function Dashboard() {
                 {/* TopPartidos a la derecha */}
                 <Box
                   sx={{
-                    width: { xs: "100%", md: "20%" }, // Reducimos el ancho de TopPartidos
+                    width: { xs: "100%", md: "25%" }, // Reducimos el ancho de TopPartidos
                   }}
                 >
                   <TopPartidos />
@@ -114,6 +117,16 @@ export default function Dashboard() {
               {/* Subcategorías */}
               <Box sx={{ mb: 4 }}>
                 <SubcategoriasChart />
+              </Box>
+
+              {/* Competencia Chart */}
+              <Box sx={{ mb: 4 }}>
+                <CompetenciaChart />
+              </Box>
+
+              {/* Subcategoria pie*/}
+              <Box sx={{ mb: 4 }}>
+                <SubcategoriaPie />
               </Box>
             </Container>
           </Box>

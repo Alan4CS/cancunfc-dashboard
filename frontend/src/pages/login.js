@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { Box, Button, TextField, Typography, Paper, InputAdornment, IconButton, Avatar } from "@mui/material"
 import { User, Lock, Eye, EyeOff } from "lucide-react"
