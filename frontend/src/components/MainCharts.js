@@ -12,7 +12,15 @@ import { BarChartIcon, LineChartIcon, TrendingUpIcon, RefreshCwIcon as RefreshIc
 // Componente personalizado para el tooltip
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload || !payload.length) return null
-  
+
+  // Obtener valores seguros para los cálculos (0 en caso de undefined o null)
+  const ventasValue = payload.find((p) => p.dataKey === "ventas")?.value || 0
+  const gastosValue = payload.find((p) => p.dataKey === "gastos")?.value || 0
+  const taquillaValue = payload.find((p) => p.dataKey === "taquilla")?.value || 0
+
+  // Calcular ganancia como ventas + taquilla - gastos
+  const ganancia = ventasValue + taquillaValue - gastosValue
+
   return (
     <Box
       sx={{
@@ -43,6 +51,19 @@ const CustomTooltip = ({ active, payload, label }) => {
           </Typography>
         </Box>
       ))}
+      {payload.length >= 2 && (
+        <Box sx={{ mt: 1, pt: 1, borderTop: "1px solid rgba(255,255,255,0.2)" }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: ganancia >= 0 ? "#2ecc71" : "#e74c3c",
+              fontWeight: "bold",
+            }}
+          >
+            Ganancia: ${ganancia.toLocaleString()}
+          </Typography>
+        </Box>
+      )}
     </Box>
   )
 }
@@ -59,7 +80,6 @@ export default function MainCharts() {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
-
   // Función para formatear números grandes
   const formatNumber = (num) => {
     if (num >= 1000000) return `$${(num / 1000000).toFixed(1).toLocaleString()}M`
@@ -67,85 +87,85 @@ export default function MainCharts() {
     return `$${num.toLocaleString()}`
   }
 
-    // Función auxiliar para obtener el número del mes
-    const getMonthNumber = (monthName) => {
-      const months = {
-        Enero: "01",
-        Febrero: "02",
-        Marzo: "03",
-        Abril: "04",
-        Mayo: "05",
-        Junio: "06",
-        Julio: "07",
-        Agosto: "08",
-        Septiembre: "09",
-        Octubre: "10",
-        Noviembre: "11",
-        Diciembre: "12",
-      }
-      return months[monthName] || "01"
+  // Función auxiliar para obtener el número del mes
+  const getMonthNumber = (monthName) => {
+    const months = {
+      Enero: "01",
+      Febrero: "02",
+      Marzo: "03",
+      Abril: "04",
+      Mayo: "05",
+      Junio: "06",
+      Julio: "07",
+      Agosto: "08",
+      Septiembre: "09",
+      Octubre: "10",
+      Noviembre: "11",
+      Diciembre: "12",
     }
-  
-    // Función para transformar los datos, memorizada con useCallback
-    const transformData = useCallback((data) => {
-      const seasonMapping = {
-        Clausura: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio"],
-        Apertura: ["Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-      }
-      const groupedData = {}
-  
-      data.forEach((item) => {
-        const key = `${item.Mes} ${item.Año}`
-        if (!groupedData[key]) {
-          const season = seasonMapping.Clausura.includes(item.Mes) ? "Clausura" : "Apertura"
-  
-          groupedData[key] = {
-            name: key,
-            ventas: 0,
-            gastos: 0,
-            taquilla: 0,
-            año: item.Año,
-            mes: item.Mes,
-            temporada: season,
-            fecha: new Date(`${item.Año}-${getMonthNumber(item.Mes)}-01`),
-            mesNumero: getMonthNumber(item.Mes),
-          }
+    return months[monthName] || "01"
+  }
+
+  // Función para transformar los datos, memorizada con useCallback
+  const transformData = useCallback((data) => {
+    const seasonMapping = {
+      Clausura: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio"],
+      Apertura: ["Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+    }
+    const groupedData = {}
+
+    data.forEach((item) => {
+      const key = `${item.Mes} ${item.Año}`
+      if (!groupedData[key]) {
+        const season = seasonMapping.Clausura.includes(item.Mes) ? "Clausura" : "Apertura"
+
+        groupedData[key] = {
+          name: key,
+          ventas: 0,
+          gastos: 0,
+          taquilla: 0,
+          año: item.Año,
+          mes: item.Mes,
+          temporada: season,
+          fecha: new Date(`${item.Año}-${getMonthNumber(item.Mes)}-01`),
+          mesNumero: getMonthNumber(item.Mes),
         }
-        if (item.Categoria === "Ventas") {
-          groupedData[key].ventas = item.total
-        } else if (item.Categoria === "Gastos") {
-          groupedData[key].gastos = item.total
-        } else if (item.Categoria === "Taquilla") {
-          groupedData[key].taquilla = item.total
-        }
-  
-        // Calcular ganancia (ventas + taquilla - gastos)
-        groupedData[key].ganancia = groupedData[key].ventas + groupedData[key].taquilla - groupedData[key].gastos
-      })
-  
-      return Object.values(groupedData).sort((a, b) => a.fecha - b.fecha)
-    }, [])
-  
-    // Función para obtener datos - Wrap with useCallback
-    const fetchData = useCallback(async () => {
-      setLoading(true)
-      setError(null)
-      try {
-        const response = await axios.get("http://localhost:5000/api/ventas_gastos_taquilla_mes")
-        const transformedData = transformData(response.data)
-        setVentasGastosData(transformedData)
-      } catch (error) {
-        console.error("Error al obtener los datos", error)
-        setError("No se pudieron cargar los datos. Por favor, intente nuevamente más tarde.")
-      } finally {
-        setLoading(false)
       }
-    }, [transformData])
-  
-    // Efecto para cargar datos al montar el componente o al refrescar
-    useEffect(() => {
-      fetchData()
-    }, [refreshKey, fetchData])  // Added fetchData as dependency
+      if (item.Categoria === "Ventas") {
+        groupedData[key].ventas = item.total
+      } else if (item.Categoria === "Gastos") {
+        groupedData[key].gastos = item.total
+      } else if (item.Categoria === "Taquilla") {
+        groupedData[key].taquilla = item.total
+      }
+
+      // Calcular ganancia (ventas + taquilla - gastos)
+      groupedData[key].ganancia = groupedData[key].ventas + groupedData[key].taquilla - groupedData[key].gastos
+    })
+
+    return Object.values(groupedData).sort((a, b) => a.fecha - b.fecha)
+  }, [])
+
+  // Función para obtener datos - Wrap with useCallback
+  const fetchData = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await axios.get("http://localhost:5000/api/ventas_gastos_taquilla_mes")
+      const transformedData = transformData(response.data)
+      setVentasGastosData(transformedData)
+    } catch (error) {
+      console.error("Error al obtener los datos", error)
+      setError("No se pudieron cargar los datos. Por favor, intente nuevamente más tarde.")
+    } finally {
+      setLoading(false)
+    }
+  }, [transformData])
+
+  // Efecto para cargar datos al montar el componente o al refrescar
+  useEffect(() => {
+    fetchData()
+  }, [refreshKey, fetchData]) // Added fetchData as dependency
 
   // Obtener años únicos para el selector
   const availableYears = useMemo(() => {
@@ -192,13 +212,11 @@ export default function MainCharts() {
   // Calcular el valor máximo para el dominio del eje Y
   const getYAxisDomain = useMemo(() => {
     if (!filteredData.length) return [0, 100]
-    
+
     // Encontrar el valor máximo entre ventas, gastos y taquilla
-    const maxValues = filteredData.map(item => 
-      Math.max(item.ventas, item.gastos, item.taquilla)
-    )
+    const maxValues = filteredData.map((item) => Math.max(item.ventas, item.gastos, item.taquilla))
     const absoluteMax = Math.max(...maxValues)
-    
+
     // Añadir un 20% adicional para dar más espacio
     return [0, Math.ceil(absoluteMax * 1.2)]
   }, [filteredData])
@@ -272,9 +290,9 @@ export default function MainCharts() {
             {commonAxisProps.tooltip}
             {commonAxisProps.legend}
             {commonAxisProps.referenceLine}
-            <Bar dataKey="ventas" name="Ventas" fill="#1A8A98" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="gastos" name="Gastos" fill="#2ecc71" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="taquilla" name="Taquilla" fill="#e74c3c" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="ventas" name="Ventas" fill="#2ecc71" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="gastos" name="Gastos" fill="#e74c3c" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="taquilla" name="Taquilla" fill="#1A8A98" radius={[4, 4, 0, 0]} />
           </BarChart>
         )
       case "line":
@@ -290,24 +308,24 @@ export default function MainCharts() {
               type="monotone"
               dataKey="ventas"
               name="Ventas"
-              stroke="#1A8A98"
-              dot={{ r: 4, fill: "#1A8A98", strokeWidth: 2 }}
-              activeDot={{ r: 6 }}
-            />
-            <Line
-              type="monotone"
-              dataKey="gastos"
-              name="Gastos"
               stroke="#2ecc71"
               dot={{ r: 4, fill: "#2ecc71", strokeWidth: 2 }}
               activeDot={{ r: 6 }}
             />
             <Line
               type="monotone"
-              dataKey="taquilla"
-              name="Taquilla"
+              dataKey="gastos"
+              name="Gastos"
               stroke="#e74c3c"
               dot={{ r: 4, fill: "#e74c3c", strokeWidth: 2 }}
+              activeDot={{ r: 6 }}
+            />
+            <Line
+              type="monotone"
+              dataKey="taquilla"
+              name="Taquilla"
+              stroke="#1A8A98"
+              dot={{ r: 4, fill: "#1A8A98", strokeWidth: 2 }}
               activeDot={{ r: 6 }}
             />
           </LineChart>
@@ -318,16 +336,16 @@ export default function MainCharts() {
           <AreaChart {...commonProps}>
             <defs>
               <linearGradient id="colorVentas" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#1A8A98" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#1A8A98" stopOpacity={0.1} />
-              </linearGradient>
-              <linearGradient id="colorGastos" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#2ecc71" stopOpacity={0.8} />
                 <stop offset="95%" stopColor="#2ecc71" stopOpacity={0.1} />
               </linearGradient>
-              <linearGradient id="colorTaquilla" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="colorGastos" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#e74c3c" stopOpacity={0.8} />
                 <stop offset="95%" stopColor="#e74c3c" stopOpacity={0.1} />
+              </linearGradient>
+              <linearGradient id="colorTaquilla" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#1A8A98" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#1A8A98" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             {commonAxisProps.cartesianGrid}
@@ -340,30 +358,30 @@ export default function MainCharts() {
               type="monotone"
               dataKey="ventas"
               name="Ventas"
-              stroke="#1A8A98"
+              stroke="#2ecc71"
               fillOpacity={1}
               fill="url(#colorVentas)"
-              dot={{ r: 4, fill: "#1A8A98", strokeWidth: 2 }}
+              dot={{ r: 4, fill: "#2ecc71", strokeWidth: 2 }}
               activeDot={{ r: 6 }}
             />
             <Area
               type="monotone"
               dataKey="gastos"
               name="Gastos"
-              stroke="#2ecc71"
+              stroke="#e74c3c"
               fillOpacity={1}
               fill="url(#colorGastos)"
-              dot={{ r: 4, fill: "#2ecc71", strokeWidth: 2 }}
+              dot={{ r: 4, fill: "#e74c3c", strokeWidth: 2 }}
               activeDot={{ r: 6 }}
             />
             <Area
               type="monotone"
               dataKey="taquilla"
               name="Taquilla"
-              stroke="#e74c3c"
+              stroke="#1A8A98"
               fillOpacity={1}
               fill="url(#colorTaquilla)"
-              dot={{ r: 4, fill: "#e74c3c", strokeWidth: 2 }}
+              dot={{ r: 4, fill: "#1A8A98", strokeWidth: 2 }}
               activeDot={{ r: 6 }}
             />
           </AreaChart>
@@ -585,6 +603,12 @@ export default function MainCharts() {
         )}
       </Box>
 
+      {/* Leyenda de ganancia */}
+      <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
+        <Typography variant="caption" sx={{ color: "rgba(255, 255, 255, 0.6)", fontStyle: "italic" }}>
+          * Ganancia = Ventas + Taquilla - Gastos
+        </Typography>
+      </Box>
     </Paper>
   )
 }

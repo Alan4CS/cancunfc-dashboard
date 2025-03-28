@@ -559,7 +559,7 @@ const handleTabChange = (event, newValue) => {
           <Pie
             activeIndex={false}
             activeShape={false}// Desactiva la forma activa (resaltado al hacer clic)
-            onClick={() => {}}  // Desactiva el evento de clic
+            onClick={null}  // Desactiva el evento de clic
             data={currentData}
             dataKey="value"
             nameKey="name"

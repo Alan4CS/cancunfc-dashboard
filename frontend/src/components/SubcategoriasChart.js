@@ -67,7 +67,8 @@ export default function SubcategoriasChart() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [refreshKey, setRefreshKey] = useState(0)
-  const [filterType, setFilterType] = useState("all") // "top5", "top10", "all"
+  const [filterType, setFilterType] = useState("top5") // "top5", "top10", "all"
+  const [taquillaData, setTaquillaData] = useState([])
 
   // Función para cambiar de tab
   const handleTabChange = (event, newValue) => {
@@ -118,6 +119,20 @@ export default function SubcategoriasChart() {
     setRefreshKey((prev) => prev + 1)
   }
 
+  const fetchTaquillaData = useCallback(async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/taquilla_por_subcategoria_total")
+
+      // Ordenar los datos de mayor a menor para mejor visualización
+      const sortedData = response.data.sort((a, b) => b.total_taquilla - a.total_taquilla)
+      setTaquillaData(sortedData)
+      return true
+    } catch (err) {
+      console.error("Error al obtener taquilla por subcategoría:", err)
+      return false
+    }
+  }, [])
+
   // useEffect para hacer las peticiones a los endpoints
   useEffect(() => {
     const fetchData = async () => {
@@ -125,9 +140,14 @@ export default function SubcategoriasChart() {
       setError(null)
 
       try {
-        const [ventasSuccess, costosSuccess] = await Promise.all([fetchVentasData(), fetchCostosData()])
+        // Añadir la petición para obtener los datos de taquilla
+        const [ventasSuccess, costosSuccess, taquillaSuccess] = await Promise.all([
+          fetchVentasData(),
+          fetchCostosData(),
+          fetchTaquillaData(),
+        ])
 
-        if (!ventasSuccess || !costosSuccess) {
+        if (!ventasSuccess || !costosSuccess || !taquillaSuccess) {
           setError("Error al cargar algunos datos. Intente nuevamente.")
         }
       } catch (err) {
@@ -139,11 +159,25 @@ export default function SubcategoriasChart() {
     }
 
     fetchData()
-  }, [fetchVentasData, fetchCostosData, refreshKey])
+  }, [fetchVentasData, fetchCostosData, fetchTaquillaData, refreshKey])
 
   // Determinar el título según la pestaña seleccionada
   const getTitle = () => {
-    let title = tabValue === 0 ? "Ventas por Subcategoría" : "Gastos por Subcategoría"
+    let title = ""
+
+    switch (tabValue) {
+      case 0:
+        title = "Ventas por Subcategoría"
+        break
+      case 1:
+        title = "Gastos por Subcategoría"
+        break
+      case 2:
+        title = "Taquilla por Subcategoría"
+        break
+      default:
+        title = "Subcategorías"
+    }
 
     if (filterType === "top5") {
       title += " - Top 5"
@@ -156,7 +190,21 @@ export default function SubcategoriasChart() {
 
   // Filtrar los datos según el tipo de filtro seleccionado
   const filteredData = useMemo(() => {
-    const currentData = tabValue === 0 ? ventasData : costosData
+    let currentData = []
+
+    switch (tabValue) {
+      case 0:
+        currentData = ventasData
+        break
+      case 1:
+        currentData = costosData
+        break
+      case 2:
+        currentData = taquillaData
+        break
+      default:
+        currentData = ventasData
+    }
 
     if (filterType === "top5") {
       return currentData.slice(0, 5)
@@ -165,7 +213,7 @@ export default function SubcategoriasChart() {
     }
 
     return currentData
-  }, [tabValue, ventasData, costosData, filterType])
+  }, [tabValue, ventasData, costosData, taquillaData, filterType])
 
   // Determinar si hay datos disponibles
   const hasData = filteredData && filteredData.length > 0
@@ -224,10 +272,10 @@ export default function SubcategoriasChart() {
       )
     }
 
-    const dataKey = tabValue === 0 ? "total_ventas" : "total_gasto"
-    const gradientId = tabValue === 0 ? "ventasGradient" : "gastosGradient"
-    const gradientColor1 = tabValue === 0 ? "#1A8A98" : "#2ecc71"
-    const gradientColor2 = tabValue === 0 ? "#106570" : "#1e8449"
+    const dataKey = tabValue === 0 ? "total_ventas" : tabValue === 1 ? "total_gasto" : "total_taquilla"
+    const gradientId = tabValue === 0 ? "ventasGradient" : tabValue === 1 ? "gastosGradient" : "taquillaGradient"
+    const gradientColor1 = tabValue === 0 ? "#2ecc71" : tabValue === 1 ? "#f39c12" : "#1A8A98"
+    const gradientColor2 = tabValue === 0 ? "#1e8449" : tabValue === 1 ? "#d35400" : "#106570"
 
     return (
       <ResponsiveContainer width="100%" height={chartHeight}>
@@ -368,28 +416,30 @@ export default function SubcategoriasChart() {
         </Box>
       </Box>
 
-      <Box sx={{ borderBottom: 1, borderColor: "rgba(26, 138, 152, 0.2)", mb: 2 }}>
-        <Tabs
-          value={tabValue}
-          onChange={handleTabChange}
-          sx={{
-            "& .MuiTab-root": {
-              color: "rgba(255, 255, 255, 0.7)",
-              "&.Mui-selected": {
-                color: "#1A8A98",
-              },
+      <Tabs
+        value={tabValue}
+        onChange={handleTabChange}
+        sx={{
+          borderBottom: 1,
+          borderColor: "rgba(26, 138, 152, 0.2)",
+          mb: 2,
+          "& .MuiTab-root": {
+            color: "rgba(255, 255, 255, 0.7)",
+            "&.Mui-selected": {
+              color: "#1A8A98",
             },
-            "& .MuiTabs-indicator": {
-              backgroundColor: "#1A8A98",
-              height: "3px",
-            },
-          }}
-          aria-label="Pestañas de subcategorías"
-        >
-          <Tab label="Subcategoría Ventas" id="tab-0" aria-controls="tabpanel-0" />
-          <Tab label="Subcategoría Costos" id="tab-1" aria-controls="tabpanel-1" />
-        </Tabs>
-      </Box>
+          },
+          "& .MuiTabs-indicator": {
+            backgroundColor: "#1A8A98",
+            height: "3px",
+          },
+        }}
+        aria-label="Pestañas de subcategorías"
+      >
+        <Tab label="Subcategoría Ventas" id="tab-0" aria-controls="tabpanel-0" />
+        <Tab label="Subcategoría Costos" id="tab-1" aria-controls="tabpanel-1" />
+        <Tab label="Subcategoría Taquilla" id="tab-2" aria-controls="tabpanel-2" />
+      </Tabs>
 
       {/* Mostrar chip con la cantidad de elementos */}
       <Box sx={{ mb: 2 }}>

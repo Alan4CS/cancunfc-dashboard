@@ -1,26 +1,38 @@
 import { useState, useEffect, useMemo } from "react"
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, Sector } from "recharts"
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LabelList, PieChart, Pie } from "recharts"
 import axios from "axios"
-import { Box, Typography, CircularProgress, Alert, Paper, useTheme, alpha } from "@mui/material"
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  Alert,
+  Paper,
+  useTheme,
+  alpha,
+  ToggleButtonGroup,
+  ToggleButton,
+} from "@mui/material"
+import { BarChart2, PieChartIcon } from "lucide-react"
 
 // Colores para los segmentos del gráfico
 const COLORS = [
   "#1A8A98", // Turquesa (principal)
   "#2ecc71", // Verde
-  "#e74c3c", // Rojo
-  "#f39c12", // Naranja
-  "#9b59b6", // Púrpura
-  "#3498db", // Azul
-  "#1abc9c", // Verde azulado
-  "#d35400", // Naranja oscuro
 ]
 
 export default function CompetenciaChart() {
   const [competenciaData, setCompetenciaData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [activeIndex, setActiveIndex] = useState(null)
+  const [chartType, setChartType] = useState("bar") // "bar" o "pie"
   const theme = useTheme()
+
+  // Manejar cambio de tipo de gráfico
+  const handleChartTypeChange = (event, newType) => {
+    if (newType !== null) {
+      setChartType(newType)
+    }
+  }
 
   // Fetch the data from the backend API
   useEffect(() => {
@@ -71,45 +83,7 @@ export default function CompetenciaChart() {
     )
   }, [competenciaData, totalIngresos])
 
-  // Componente para el sector activo (cuando se hace hover)
-  const renderActiveShape = (props) => {
-    const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props
-
-    return (
-      <g>
-        <Sector
-          cx={cx}
-          cy={cy}
-          innerRadius={innerRadius}
-          outerRadius={outerRadius + 10}
-          startAngle={startAngle}
-          endAngle={endAngle}
-          fill={fill}
-          opacity={0.9}
-        />
-        <Sector
-          cx={cx}
-          cy={cy}
-          startAngle={startAngle}
-          endAngle={endAngle}
-          innerRadius={outerRadius + 12}
-          outerRadius={outerRadius + 16}
-          fill={fill}
-        />
-      </g>
-    )
-  }
-
-  // Manejar hover en el gráfico
-  const onPieEnter = (_, index) => {
-    setActiveIndex(index)
-  }
-
-  const onPieLeave = () => {
-    setActiveIndex(null)
-  }
-
-  // Actualizar el componente CustomTooltip para mostrar información financiera detallada
+  // Componente personalizado para el tooltip
   const CustomTooltip = ({ active, payload }) => {
     if (!active || !payload || !payload.length) return null
 
@@ -140,7 +114,7 @@ export default function CompetenciaChart() {
           maxWidth: "300px",
         }}
       >
-        <Typography variant="subtitle2" sx={{ color: "#fff", marginBottom: 1, fontWeight: "bold" }}>
+        <Typography variant="body2" sx={{ color: "#fff", marginBottom: 1, fontWeight: "bold" }}>
           {item.name}
         </Typography>
 
@@ -199,6 +173,71 @@ export default function CompetenciaChart() {
     )
   }
 
+  // Renderizar el gráfico de barras verticales
+  const renderBarChart = () => {
+    return (
+      <ResponsiveContainer width="100%" height={400}>
+        <BarChart data={data} margin={{ top: 20, right: 20, left: 20, bottom: 60 }} barSize={40}>
+          <XAxis
+            dataKey="name"
+            angle={-45}
+            textAnchor="end"
+            height={70}
+            tick={{ fill: "#fff", fontSize: 12 }}
+            stroke="#ccc"
+          />
+          <YAxis type="number" domain={[0, 100]} tickFormatter={(value) => `${value}%`} stroke="#ccc" />
+          <Tooltip content={<CustomTooltip />} />
+          <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+            <LabelList
+              dataKey="value"
+              position="top"
+              formatter={(value) => `${value.toFixed(1)}%`}
+              style={{ fill: "#fff", fontSize: 12, fontWeight: "bold" }}
+            />
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    )
+  }
+
+  // Renderizar el gráfico circular (original)
+  const renderPieChart = () => {
+    return (
+      <ResponsiveContainer width="100%" height={400}>
+        <PieChart>
+          <Pie
+            data={data}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            innerRadius={60}
+            outerRadius={100}
+            paddingAngle={2}
+            isAnimationActive={false}
+            label={({ name, value }) => `${name}: ${value.toFixed(1)}%`}
+            labelLine={{ stroke: "rgba(255, 255, 255, 0.3)", strokeWidth: 1, strokeDasharray: "3 3" }}
+          >
+            {data.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+                stroke="rgba(0, 0, 0, 0.3)"
+                strokeWidth={1}
+                cursor="default"
+              />
+            ))}
+          </Pie>
+          <Tooltip content={<CustomTooltip />} />
+        </PieChart>
+      </ResponsiveContainer>
+    )
+  }
+
   // Render the chart when data is ready
   const renderChart = () => {
     if (loading) {
@@ -239,53 +278,7 @@ export default function CompetenciaChart() {
       )
     }
 
-    return (
-      <ResponsiveContainer width="100%" height={400}>
-        <PieChart>
-          <Pie
-            activeIndex={activeIndex}
-            activeShape={renderActiveShape}
-            data={data}
-            dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            innerRadius={80}
-            outerRadius={140}
-            paddingAngle={2}
-            onMouseEnter={onPieEnter}
-            onMouseLeave={onPieLeave}
-            label={({ name, value }) => `${name}: ${value.toFixed(1)}%`}
-            labelLine={{ stroke: "rgba(255, 255, 255, 0.3)", strokeWidth: 1 }}
-          >
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-                stroke="rgba(0, 0, 0, 0.3)"
-                strokeWidth={1}
-              />
-            ))}
-          </Pie>
-          <Tooltip content={<CustomTooltip />} />
-          <Legend
-            layout="vertical"
-            verticalAlign="middle"
-            align="right"
-            wrapperStyle={{
-              paddingLeft: 20,
-              fontSize: 12,
-              color: "white",
-            }}
-            formatter={(value, entry) => (
-              <span style={{ color: "white" }}>
-                {value} ({entry.payload.value.toFixed(1)}%)
-              </span>
-            )}
-          />
-        </PieChart>
-      </ResponsiveContainer>
-    )
+    return chartType === "bar" ? renderBarChart() : renderPieChart()
   }
 
   return (
@@ -301,9 +294,41 @@ export default function CompetenciaChart() {
         flexDirection: "column",
       }}
     >
-      <Typography variant="h6" color="#1A8A98" fontWeight="bold" mb={2}>
-        Porcentaje de Ganancia por Competencia
-      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+        <Typography variant="h6" color="#1A8A98" fontWeight="bold">
+          Porcentaje de Ganancia por Competencia
+        </Typography>
+        <ToggleButtonGroup
+          value={chartType}
+          exclusive
+          onChange={handleChartTypeChange}
+          size="small"
+          aria-label="tipo de gráfico"
+          sx={{
+            ".MuiToggleButton-root": {
+              color: "rgba(255, 255, 255, 0.7)",
+              borderColor: "rgba(26, 138, 152, 0.3)",
+              "&.Mui-selected": {
+                backgroundColor: "rgba(26, 138, 152, 0.2)",
+                color: "#1A8A98",
+                "&:hover": {
+                  backgroundColor: "rgba(26, 138, 152, 0.3)",
+                },
+              },
+              "&:hover": {
+                backgroundColor: "rgba(26, 138, 152, 0.1)",
+              },
+            },
+          }}
+        >
+          <ToggleButton value="bar" aria-label="gráfico de barras">
+            <BarChart2 size={18} />
+          </ToggleButton>
+          <ToggleButton value="pie" aria-label="gráfico circular">
+            <PieChartIcon size={18} />
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
       <Box
         sx={{
           flexGrow: 1,
@@ -314,6 +339,12 @@ export default function CompetenciaChart() {
         }}
       >
         {renderChart()}
+      </Box>
+      <Box sx={{ mt: 2, p: 2, bgcolor: "rgba(26, 138, 152, 0.05)", borderRadius: 1 }}>
+        <Typography variant="caption" sx={{ color: "rgba(255, 255, 255, 0.7)", fontStyle: "italic" }}>
+          * Pase el cursor sobre cada {chartType === "bar" ? "barra" : "segmento"} para ver detalles financieros
+          completos de la competencia.
+        </Typography>
       </Box>
     </Paper>
   )

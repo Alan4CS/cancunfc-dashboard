@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Box, Paper, Typography, Stack, Chip, IconButton } from "@mui/material"
+import { Box, Paper, Typography, Stack, Chip, IconButton, Fade } from "@mui/material"
 import { Close as CloseIcon, FilterAlt as FilterAltIcon } from "@mui/icons-material"
 
 export default function YearSelector({ year, setYear }) {
@@ -40,7 +40,7 @@ export default function YearSelector({ year, setYear }) {
     },
     {
       id: "2024-B",
-      label: "Apertura 2024",
+      label: "Clausura 2024",
       image: "/image/2024B.jpg",
       months: ["Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
     },
@@ -80,6 +80,11 @@ export default function YearSelector({ year, setYear }) {
         alignItems: "center",
         py: 2,
         gap: 2,
+        bgcolor: "#121212",
+        borderRadius: 2,
+        border: "1px solid rgba(26, 138, 152, 0.1)",
+        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+        p: 3,
       }}
     >
       {/* Título con botón de reinicio si hay un filtro activo */}
@@ -204,45 +209,47 @@ export default function YearSelector({ year, setYear }) {
 
       {/* Filtro de meses */}
       {showMonths && selectedSeason && (
-        <Box
-          sx={{
-            width: "100%",
-            mt: 2,
-            p: 2,
-            borderRadius: 2,
-            bgcolor: "#121212",
-            border: "1px solid rgba(26, 138, 152, 0.1)",
-            boxShadow: 1,
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-            <FilterAltIcon sx={{ color: "#1A8A98", mr: 1 }} />
-            <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
-              Filtrar por mes: {selectedSeason.label}
-            </Typography>
-          </Box>
+        <Fade in={showMonths} timeout={500}>
+          <Box
+            sx={{
+              width: "100%",
+              mt: 2,
+              p: 2,
+              borderRadius: 2,
+              bgcolor: "#121212",
+              border: "1px solid rgba(26, 138, 152, 0.1)",
+              boxShadow: 1,
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+              <FilterAltIcon sx={{ color: "#1A8A98", mr: 1 }} />
+              <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
+                Filtrar por mes: {selectedSeason.label}
+              </Typography>
+            </Box>
 
-          <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ gap: 1 }}>
-            {selectedSeason.months.map((month) => (
-              <Chip
-                key={month}
-                label={month}
-                onClick={() => handleMonthToggle(month)}
-                color={selectedMonths.includes(month) ? "primary" : "default"}
-                variant={selectedMonths.includes(month) ? "filled" : "outlined"}
-                sx={{
-                  borderRadius: "16px",
-                  "&.MuiChip-colorPrimary": {
-                    bgcolor: "#1A8A98",
-                  },
-                  "&.MuiChip-outlined": {
-                    borderColor: "rgba(26, 138, 152, 0.3)",
-                  },
-                }}
-              />
-            ))}
-          </Stack>
-        </Box>
+            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ gap: 1 }}>
+              {selectedSeason.months.map((month) => (
+                <Chip
+                  key={month}
+                  label={month}
+                  onClick={() => handleMonthToggle(month)}
+                  color={selectedMonths.includes(month) ? "primary" : "default"}
+                  variant={selectedMonths.includes(month) ? "filled" : "outlined"}
+                  sx={{
+                    borderRadius: "16px",
+                    "&.MuiChip-colorPrimary": {
+                      bgcolor: "#1A8A98",
+                    },
+                    "&.MuiChip-outlined": {
+                      borderColor: "rgba(26, 138, 152, 0.3)",
+                    },
+                  }}
+                />
+              ))}
+            </Stack>
+          </Box>
+        </Fade>
       )}
     </Box>
   )
