@@ -13,9 +13,11 @@ function App() {
     }
   }, []);
 
+  // { token ? <Dashboard /> : <Login setToken={setToken} />}
+
   return (
     <div>
-      {token ? <Dashboard /> : <Login setToken={setToken} />}
+      <Dashboard />
     </div>
   );
 }
