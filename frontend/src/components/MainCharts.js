@@ -152,6 +152,7 @@ export default function MainCharts() {
     setError(null)
     try {
       const response = await axios.get("https://cancunfc-dashboard.vercel.app/api/ventas_gastos_taquilla_mes")
+      console.log(response.data);  // Verifica qué datos recibes
       const transformedData = transformData(response.data)
       setVentasGastosData(transformedData)
     } catch (error) {

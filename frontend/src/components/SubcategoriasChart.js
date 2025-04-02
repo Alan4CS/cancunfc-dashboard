@@ -122,6 +122,7 @@ export default function SubcategoriasChart() {
   const fetchTaquillaData = useCallback(async () => {
     try {
       const response = await axios.get("https://cancunfc-dashboard.vercel.app/api/taquilla_por_subcategoria_total")
+      console.log(response.data);  // Verifica qué datos recibes
 
       // Ordenar los datos de mayor a menor para mejor visualización
       const sortedData = response.data.sort((a, b) => b.total_taquilla - a.total_taquilla)
