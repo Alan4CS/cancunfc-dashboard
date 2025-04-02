@@ -17,7 +17,7 @@ function App() {
 
   return (
     <div>
-      <Dashboard />
+      { token ? <Dashboard /> : <Login setToken={setToken} />}
     </div>
   );
 }
