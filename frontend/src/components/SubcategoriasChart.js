@@ -100,7 +100,7 @@ export default function SubcategoriasChart() {
   // Función para obtener los costos por subcategoría - Optimizada con useCallback
   const fetchCostosData = useCallback(async () => {
     try {
-      const response = await axios.get("https://cancunfc-dashboard.vercel.app/api/gastos_por_subcategoria_total")
+      const response = await axios.get("http://localhost:5000/api/gastos_por_subcategoria_total")
 
       // Ordenar los datos de mayor a menor para mejor visualización
       const sortedData = response.data.sort((a, b) => b.total_gasto - a.total_gasto)
