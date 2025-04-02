@@ -221,7 +221,7 @@ router.get("/ingresos_gastos_taquilla_por_partido_temporada", (req, res) => {
 });
 
 // Endpoint para extraer los gastos por subcategoria por temporada
-router.get("/gastos_por_subcategoria_temporada", (req, res) => {
+router.get("/gastos_por_subcategoria_temporada_filtro", (req, res) => {
     const { año, temporada } = req.query;  // Recibe los parámetros 'año' y 'temporada' (1 o 2)
 
     // Verificar que se reciban los parámetros
@@ -291,7 +291,7 @@ router.get("/gastos_por_subcategoria_temporada", (req, res) => {
 });
 
 // Endpoint para extraer las ventas por subcategoria por temporada
-router.get("/ventas_por_subcategoria_temporada", (req, res) => {
+router.get("/ventas_por_subcategoria_temporada_filtro", (req, res) => {
     const { año, temporada } = req.query;  // Recibe los parámetros 'año' y 'temporada' (1 o 2)
 
     // Verificar que se reciban los parámetros
@@ -361,7 +361,7 @@ router.get("/ventas_por_subcategoria_temporada", (req, res) => {
 });
 
 // Endpoint para extraer la taquilla por subcategoria por temporada
-router.get("/taquilla_por_subcategoria_temporada", (req, res) => {
+router.get("/taquilla_por_subcategoria_temporada_filtro", (req, res) => {
     const { año, temporada } = req.query;  // Recibe los parámetros 'año' y 'temporada' (1 o 2)
 
     // Verificar que se reciban los parámetros
