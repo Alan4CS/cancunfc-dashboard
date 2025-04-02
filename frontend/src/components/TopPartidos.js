@@ -38,7 +38,7 @@ export default function TopPartidos() {
   // Función para obtener los datos de los partidos desde el backend
   const fetchTopPartidos = useCallback(async () => {
     try {
-      const response = await axios.get("https://cancunfc-dashboard.vercel.app/api/resumen_por_partido")
+      const response = await axios.get("http://localhost:5000/api/resumen_por_partido")
 
       // Asegurarse de que los valores sean números y no cadenas
       const sortedData = response.data

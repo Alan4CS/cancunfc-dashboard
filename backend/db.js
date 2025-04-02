@@ -6,36 +6,18 @@ const db = mysql.createPool({
     connectionLimit: 10,
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.MYSQLPORT, // Añadir el puerto específico
-    waitForConnections: true,
-    queueLimit: 0
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME
 });
 
-// Probar conexión mejorado
+// Probar conexión
 db.getConnection((err, connection) => {
     if (err) {
-        console.error("❌ Error conectando a la base de datos:", {
-            message: err.message,
-            code: err.code,
-            errno: err.errno,
-            sqlState: err.sqlState
-        });
+        console.error("❌ Error conectando a la base de datos:", err);
         return;
     }
-    console.log("✅ Conectado a la base de datos en Railway");
-    connection.release();
+    console.log("✅ Conectado a la base de datos");
+    connection.release(); // Liberar conexión
 });
 
-// Manejar errores de conexión
-db.on('error', (err) => {
-    console.error('Error en el pool de conexiones:', err);
-    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-        console.log('Reconectando...');
-    } else {
-        throw err;
-    }
-});
-
-module.exports = db;
+module.exports = db; // Exportamos la conexión

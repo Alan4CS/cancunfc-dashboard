@@ -85,7 +85,7 @@ export default function SubcategoriasChart() {
   // Función para obtener las ventas por subcategoría - Optimizada con useCallback
   const fetchVentasData = useCallback(async () => {
     try {
-      const response = await axios.get("https://cancunfc-dashboard.vercel.app/api/ventas_por_subcategoria_total")
+      const response = await axios.get("http://localhost:5000/api/ventas_por_subcategoria_total")
 
       // Ordenar los datos de mayor a menor para mejor visualización
       const sortedData = response.data.sort((a, b) => b.total_ventas - a.total_ventas)
@@ -121,8 +121,7 @@ export default function SubcategoriasChart() {
 
   const fetchTaquillaData = useCallback(async () => {
     try {
-      const response = await axios.get("https://cancunfc-dashboard.vercel.app/api/taquilla_por_subcategoria_total")
-      console.log(response.data);  // Verifica qué datos recibes
+      const response = await axios.get("http://localhost:5000/api/taquilla_por_subcategoria_total")
 
       // Ordenar los datos de mayor a menor para mejor visualización
       const sortedData = response.data.sort((a, b) => b.total_taquilla - a.total_taquilla)

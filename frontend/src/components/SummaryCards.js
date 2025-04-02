@@ -7,19 +7,19 @@ import { RefreshCwIcon as RefreshIcon } from "lucide-react"
 const cardConfig = [
   {
     title: "Esquilmos Totales",
-    endpoint: "https://cancunfc-dashboard.vercel.app/api/ingresos_totales",
+    endpoint: "http://localhost:5000/api/ingresos_totales",
     key: "total_ingresos",
     color: "#1A8A98",
   },
   {
     title: "Gastos Totales",
-    endpoint: "https://cancunfc-dashboard.vercel.app/api/gastos_totales",
+    endpoint: "http://localhost:5000/api/gastos_totales",
     key: "total_gastos",
     color: "#1A8A98",
   },
   {
     title: "Taquilla Total",
-    endpoint: "https://cancunfc-dashboard.vercel.app/api/taquilla_total",
+    endpoint: "http://localhost:5000/api/taquilla_total",
     key: "taquilla_total",
     color: "#1A8A98",
   },
