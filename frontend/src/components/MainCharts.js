@@ -9,17 +9,17 @@ import {
 import axios from "axios"
 import { BarChartIcon, LineChartIcon, TrendingUpIcon, RefreshCwIcon as RefreshIcon } from "lucide-react"
 
-// Componente personalizado para el tooltip
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload || !payload.length) return null
 
-  // Obtener valores seguros para los cálculos (0 en caso de undefined o null)
-  const ventasValue = payload.find((p) => p.dataKey === "ventas")?.value || 0
-  const gastosValue = payload.find((p) => p.dataKey === "gastos")?.value || 0
-  const taquillaValue = payload.find((p) => p.dataKey === "taquilla")?.value || 0
-
-  // Calcular ganancia como ventas + taquilla - gastos
-  const ganancia = ventasValue + taquillaValue - gastosValue
+  // Función para formatear números
+  const formatnum = (num) => {
+    // Asegurar que num sea un número
+    const value = Number(num);
+    
+    // Formatear con comas para los miles
+    return `$${value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+  }
 
   return (
     <Box
@@ -47,29 +47,20 @@ const CustomTooltip = ({ active, payload, label }) => {
             }}
           />
           <Typography variant="body2" sx={{ color: "#fff" }}>
-            {entry.name}: ${entry.value.toLocaleString()}
+            {entry.name}: {formatnum(entry.value)}
           </Typography>
         </Box>
       ))}
-      {payload.length >= 2 && (
-        <Box sx={{ mt: 1, pt: 1, borderTop: "1px solid rgba(255,255,255,0.2)" }}>
-          <Typography
-            variant="body2"
-            sx={{
-              color: ganancia >= 0 ? "#2ecc71" : "#e74c3c",
-              fontWeight: "bold",
-            }}
-          >
-            Ganancia: ${ganancia.toLocaleString()}
-          </Typography>
-        </Box>
-      )}
     </Box>
   )
 }
 
 // Componente principal
-export default function MainCharts() {
+export default function MainCharts({
+  selectedYear: yearProp = "all",
+  selectedSeason: seasonProp = "all",
+  selectedMonths = [],
+}) {
   const [ventasGastosData, setVentasGastosData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -79,6 +70,9 @@ export default function MainCharts() {
   const [refreshKey, setRefreshKey] = useState(0)
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
+  const [partidosData, setPartidosData] = useState([])
+  const [showPartidos, setShowPartidos] = useState(false)
+  const [selectedMonth, setSelectedMonth] = useState("all")
 
   // Función para formatear números grandes
   const formatNumber = (num) => {
@@ -112,38 +106,70 @@ export default function MainCharts() {
       Clausura: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio"],
       Apertura: ["Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
     }
-    const groupedData = {}
 
-    data.forEach((item) => {
-      const key = `${item.Mes} ${item.Año}`
-      if (!groupedData[key]) {
-        const season = seasonMapping.Clausura.includes(item.Mes) ? "Clausura" : "Apertura"
+    // Crear un objeto para almacenar todos los meses posibles
+    const allMonths = {}
 
-        groupedData[key] = {
+    // Obtener años únicos de los datos
+    const years = [...new Set(data.map((item) => item.Año))]
+
+    // Generar todos los meses posibles para cada año
+    years.forEach((year) => {
+      const allMonthNames = [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre",
+      ]
+
+      allMonthNames.forEach((month) => {
+        const key = `${month} ${year}`
+        const season = seasonMapping.Clausura.includes(month) ? "Clausura" : "Apertura"
+
+        allMonths[key] = {
           name: key,
           ventas: 0,
           gastos: 0,
           taquilla: 0,
-          año: item.Año,
-          mes: item.Mes,
+          año: year,
+          mes: month,
           temporada: season,
-          fecha: new Date(`${item.Año}-${getMonthNumber(item.Mes)}-01`),
-          mesNumero: getMonthNumber(item.Mes),
+          fecha: new Date(`${year}-${getMonthNumber(month)}-01`),
+          mesNumero: getMonthNumber(month),
+          hasData: false, // Para identificar si tiene datos reales
         }
-      }
-      if (item.Categoria === "Ventas") {
-        groupedData[key].ventas = item.total
-      } else if (item.Categoria === "Gastos") {
-        groupedData[key].gastos = item.total
-      } else if (item.Categoria === "Taquilla") {
-        groupedData[key].taquilla = item.total
-      }
-
-      // Calcular ganancia (ventas + taquilla - gastos)
-      groupedData[key].ganancia = groupedData[key].ventas + groupedData[key].taquilla - groupedData[key].gastos
+      })
     })
 
-    return Object.values(groupedData).sort((a, b) => a.fecha - b.fecha)
+    // Llenar con datos reales
+    data.forEach((item) => {
+      const key = `${item.Mes} ${item.Año}`
+      if (allMonths[key]) {
+        if (item.Categoria === "Ventas") {
+          allMonths[key].ventas = item.total
+        } else if (item.Categoria === "Gastos") {
+          allMonths[key].gastos = item.total
+        } else if (item.Categoria === "Taquilla") {
+          allMonths[key].taquilla = item.total
+        }
+
+        // Marcar que tiene datos
+        allMonths[key].hasData = true
+
+        // Calcular ganancia (ventas + taquilla - gastos)
+        allMonths[key].ganancia = allMonths[key].ventas + allMonths[key].taquilla - allMonths[key].gastos
+      }
+    })
+
+    return Object.values(allMonths).sort((a, b) => a.fecha - b.fecha)
   }, [])
 
   // Función para obtener datos - Wrap with useCallback
@@ -151,9 +177,10 @@ export default function MainCharts() {
     setLoading(true)
     setError(null)
     try {
-      const response = await axios.get("http://localhost:5000/api/ventas_gastos_taquilla_mes")
-      const transformedData = transformData(response.data)
-      setVentasGastosData(transformedData)
+      // Obtener datos por mes
+      const responseMes = await axios.get("http://localhost:5000/api/ventas_gastos_taquilla_mes")
+      const transformedMesData = transformData(responseMes.data)
+      setVentasGastosData(transformedMesData)
     } catch (error) {
       console.error("Error al obtener los datos", error)
       setError("No se pudieron cargar los datos. Por favor, intente nuevamente más tarde.")
@@ -162,10 +189,79 @@ export default function MainCharts() {
     }
   }, [transformData])
 
+  // Función para obtener datos de partidos por temporada
+  const fetchPartidosByTemporada = useCallback(async (year, temporadaNum) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/ingresos_gastos_taquilla_por_partido_temporada?año=${year}&temporada=${temporadaNum}`,
+      )
+
+      // Transformar los datos para el formato que espera el gráfico
+      const transformedData = response.data.partidos.map((partido) => ({
+        name: partido.Partido,
+        fecha: new Date(partido.Fecha),
+        ventas: Number(partido.total_ventas),
+        gastos: Number(partido.total_gastos),
+        taquilla: Number(partido.total_taquilla),
+        // Añadir información adicional que pueda ser útil
+        fechaOriginal: partido.Fecha,
+        ganancia: Number(partido.total_ventas) + Number(partido.total_taquilla) - Number(partido.total_gastos),
+      }))
+
+      // Ordenar por fecha
+      const sortedData = transformedData.sort((a, b) => a.fecha - b.fecha)
+
+      setPartidosData(sortedData)
+      setShowPartidos(true)
+      return sortedData
+    } catch (error) {
+      console.error("Error al obtener los partidos por temporada:", error)
+      setError("No se pudieron cargar los partidos. Por favor, intente nuevamente más tarde.")
+      setShowPartidos(false)
+      return []
+    }
+  }, [])
+
+  // Efecto para actualizar el estado interno cuando cambien los props
+  useEffect(() => {
+    // Si yearProp es "all", significa que no hay filtros seleccionados
+    if (yearProp === "all" || !yearProp) {
+      // Resetear los estados internos para mostrar la información general
+      setSelectedYear("all")
+      setSelectedSeason("all")
+      setSelectedMonth("all")
+      setShowPartidos(false)
+    } else if (yearProp !== "all" && seasonProp !== "all") {
+      // Si hay filtros específicos, actualizar los estados internos
+      setSelectedYear(yearProp)
+      setSelectedSeason(seasonProp)
+
+      // Si hay un solo mes seleccionado, usarlo como filtro
+      if (selectedMonths.length === 1) {
+        setSelectedMonth(selectedMonths[0])
+      } else {
+        setSelectedMonth("all")
+      }
+
+      // Cargar los partidos para la temporada seleccionada
+      const temporadaNum = seasonProp === "Clausura" ? "1" : "2"
+      fetchPartidosByTemporada(yearProp, temporadaNum)
+    }
+  }, [yearProp, seasonProp, selectedMonths, fetchPartidosByTemporada])
+
   // Efecto para cargar datos al montar el componente o al refrescar
   useEffect(() => {
+    // Cargar datos generales siempre
     fetchData()
-  }, [refreshKey, fetchData]) // Added fetchData as dependency
+
+    // Si hay un año y temporada seleccionados, cargar los partidos
+    if (selectedYear !== "all" && selectedSeason !== "all") {
+      const temporadaNum = selectedSeason === "Clausura" ? "1" : "2"
+      fetchPartidosByTemporada(selectedYear, temporadaNum)
+    } else {
+      setShowPartidos(false)
+    }
+  }, [refreshKey, fetchData, fetchPartidosByTemporada, selectedYear, selectedSeason])
 
   // Obtener años únicos para el selector
   const availableYears = useMemo(() => {
@@ -175,6 +271,57 @@ export default function MainCharts() {
 
   // Filtrar datos según el año y temporada seleccionados
   const filteredData = useMemo(() => {
+    // Si estamos mostrando partidos y tenemos datos de partidos
+    if (showPartidos && partidosData.length > 0) {
+      let filtered = [...partidosData]
+
+      // Si hay meses seleccionados, filtrar por esos meses
+      if (selectedMonths.length > 0) {
+        filtered = filtered.filter((item) => {
+          const itemDate = new Date(item.fechaOriginal)
+          const monthNames = [
+            "Enero",
+            "Febrero",
+            "Marzo",
+            "Abril",
+            "Mayo",
+            "Junio",
+            "Julio",
+            "Agosto",
+            "Septiembre",
+            "Octubre",
+            "Noviembre",
+            "Diciembre",
+          ]
+          return selectedMonths.includes(monthNames[itemDate.getMonth()])
+        })
+      }
+      // Si hay un mes específico seleccionado en el selector de mes
+      else if (selectedMonth !== "all") {
+        filtered = filtered.filter((item) => {
+          const itemDate = new Date(item.fechaOriginal)
+          const monthNames = [
+            "Enero",
+            "Febrero",
+            "Marzo",
+            "Abril",
+            "Mayo",
+            "Junio",
+            "Julio",
+            "Agosto",
+            "Septiembre",
+            "Octubre",
+            "Noviembre",
+            "Diciembre",
+          ]
+          return monthNames[itemDate.getMonth()] === selectedMonth
+        })
+      }
+
+      return filtered
+    }
+
+    // Modo mes (única vista disponible ahora)
     let filtered = [...ventasGastosData]
 
     // Filtrar por año
@@ -188,7 +335,15 @@ export default function MainCharts() {
     }
 
     return filtered
-  }, [ventasGastosData, selectedYear, selectedSeason])
+  }, [
+    ventasGastosData,
+    partidosData,
+    selectedYear,
+    selectedSeason,
+    showPartidos,
+    selectedMonth,
+    selectedMonths,
+  ])
 
   // Manejadores de eventos
   const handleChartTypeChange = (event, newType) => {
@@ -207,6 +362,11 @@ export default function MainCharts() {
 
   const handleRefresh = () => {
     setRefreshKey((prev) => prev + 1)
+  }
+
+  // Manejador para el cambio de mes
+  const handleMonthChange = (event) => {
+    setSelectedMonth(event.target.value)
   }
 
   // Calcular el valor máximo para el dominio del eje Y
@@ -254,12 +414,15 @@ export default function MainCharts() {
 
     const yAxisDomain = getYAxisDomain
 
+    // Configurar el intervalo del eje X para mostrar solo algunos nombres
+    const xAxisInterval = filteredData.length > 18 ? 2 : filteredData.length > 12 ? 1 : 0
+
     const commonAxisProps = {
       xAxis: (
         <XAxis
           dataKey="name"
           stroke="#ccc"
-          interval={0}
+          interval={xAxisInterval} // Mostrar solo algunos nombres
           angle={-45}
           textAnchor="end"
           height={75}
@@ -393,12 +556,23 @@ export default function MainCharts() {
   const getFilterTitle = () => {
     let title = "Ingresos y costos"
 
-    if (selectedYear !== "all" && selectedSeason !== "all") {
-      title += ` - ${selectedSeason} ${selectedYear}`
-    } else if (selectedYear !== "all") {
-      title += ` - ${selectedYear}`
-    } else if (selectedSeason !== "all") {
-      title += ` - ${selectedSeason}`
+    if (showPartidos) {
+      title = "Ingresos y costos por Partido"
+      if (selectedYear !== "all" && selectedSeason !== "all") {
+        title += ` - ${selectedSeason} ${selectedYear}`
+      }
+      if (selectedMonth !== "all") {
+        title += ` (${selectedMonth})`
+      }
+    } else {
+      title += " por Mes"
+      if (selectedYear !== "all" && selectedSeason !== "all") {
+        title += ` - ${selectedSeason} ${selectedYear}`
+      } else if (selectedYear !== "all") {
+        title += ` - ${selectedYear}`
+      } else if (selectedSeason !== "all") {
+        title += ` - ${selectedSeason}`
+      }
     }
 
     return title
@@ -493,6 +667,52 @@ export default function MainCharts() {
             </Select>
           </FormControl>
 
+          {/* Selector de Mes (solo visible cuando hay una temporada seleccionada) */}
+          {selectedYear !== "all" && selectedSeason !== "all" && (
+            <FormControl size="small" sx={{ minWidth: 120 }}>
+              <InputLabel id="month-select-label" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                Mes
+              </InputLabel>
+              <Select
+                labelId="month-select-label"
+                value={selectedMonth}
+                onChange={handleMonthChange}
+                label="Mes"
+                sx={{
+                  bgcolor: "rgba(26, 138, 152, 0.1)",
+                  color: "white",
+                  ".MuiOutlinedInput-notchedOutline": {
+                    borderColor: "rgba(26, 138, 152, 0.3)",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "rgba(26, 138, 152, 0.5)",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#1A8A98",
+                  },
+                  ".MuiSvgIcon-root": {
+                    color: "white",
+                  },
+                }}
+              >
+                <MenuItem value="all">Todos</MenuItem>
+                {selectedSeason === "Clausura"
+                  ? // Meses para Clausura (Enero-Junio)
+                    ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio"].map((month) => (
+                      <MenuItem key={month} value={month}>
+                        {month}
+                      </MenuItem>
+                    ))
+                  : // Meses para Apertura (Julio-Diciembre)
+                    ["Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"].map((month) => (
+                      <MenuItem key={month} value={month}>
+                        {month}
+                      </MenuItem>
+                    ))}
+              </Select>
+            </FormControl>
+          )}
+
           {/* Selector de tipo de gráfico */}
           <ToggleButtonGroup
             value={chartType}
@@ -551,8 +771,35 @@ export default function MainCharts() {
       </Box>
 
       {/* Filtros activos */}
-      {(selectedYear !== "all" || selectedSeason !== "all") && (
+      {(selectedYear !== "all" || selectedSeason !== "all" || showPartidos) && (
         <Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
+          {showPartidos && (
+            <Chip
+              label="Vista por Partidos"
+              size="small"
+              sx={{
+                bgcolor: "rgba(26, 138, 152, 0.2)",
+                color: "white",
+              }}
+            />
+          )}
+          {selectedMonth !== "all" && (
+            <Chip
+              label={`Mes: ${selectedMonth}`}
+              onDelete={() => setSelectedMonth("all")}
+              size="small"
+              sx={{
+                bgcolor: "rgba(26, 138, 152, 0.2)",
+                color: "white",
+                "& .MuiChip-deleteIcon": {
+                  color: "rgba(255, 255, 255, 0.7)",
+                  "&:hover": {
+                    color: "white",
+                  },
+                },
+              }}
+            />
+          )}
           {selectedYear !== "all" && (
             <Chip
               label={`Año: ${selectedYear}`}

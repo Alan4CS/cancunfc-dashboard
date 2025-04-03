@@ -2,8 +2,7 @@ import { useState, useEffect } from "react"
 import { Box, Paper, Typography, Stack, Chip, IconButton, Fade } from "@mui/material"
 import { Close as CloseIcon, FilterAlt as FilterAltIcon } from "@mui/icons-material"
 
-export default function YearSelector({ year, setYear }) {
-  const [selectedMonths, setSelectedMonths] = useState([])
+export default function YearSelector({ year, setYear, selectedMonths = [], setSelectedMonths }) {
   const [showMonths, setShowMonths] = useState(false)
 
   // Datos de temporadas con información de apertura y clausura
@@ -53,16 +52,21 @@ export default function YearSelector({ year, setYear }) {
   useEffect(() => {
     if (year) {
       setShowMonths(true)
-      setSelectedMonths([])
     } else {
       setShowMonths(false)
       setSelectedMonths([])
     }
-  }, [year])
+  }, [year, setSelectedMonths])
 
   // Función para manejar la selección de meses
   const handleMonthToggle = (month) => {
-    setSelectedMonths((prev) => (prev.includes(month) ? prev.filter((m) => m !== month) : [...prev, month]))
+    // Si el mes ya está seleccionado, deseleccionarlo
+    if (selectedMonths.includes(month)) {
+      setSelectedMonths([])
+    } else {
+      // Si no está seleccionado, seleccionar solo este mes (reemplazando cualquier selección anterior)
+      setSelectedMonths([month])
+    }
   }
 
   // Función para reiniciar el filtro
@@ -70,6 +74,20 @@ export default function YearSelector({ year, setYear }) {
     setYear("")
     setSelectedMonths([])
     setShowMonths(false)
+  }
+
+  // Función para manejar la selección de temporadas
+  const handleSeasonSelect = (seasonId) => {
+    // Si ya está seleccionada, deseleccionar
+    if (year === seasonId) {
+      setYear("")
+      setShowMonths(false)
+      setSelectedMonths([])
+    } else {
+      setYear(seasonId)
+      setShowMonths(true)
+      setSelectedMonths([])
+    }
   }
 
   return (
@@ -173,7 +191,7 @@ export default function YearSelector({ year, setYear }) {
                   },
                   border: year === season.id ? "2px solid #1A8A98" : "none",
                 }}
-                onClick={() => setYear(season.id)}
+                onClick={() => handleSeasonSelect(season.id)}
               >
                 {/* Imagen de fondo */}
                 <Box

@@ -19,8 +19,10 @@ const drawerWidth = 240
 const drawerCollapsedWidth = 64
 
 export default function Dashboard() {
-  // Cambiado el valor inicial a cadena vacía para que no haya temporada seleccionada al inicio
+  // Estado para la temporada seleccionada
   const [year, setYear] = useState("")
+  // Estado para los meses seleccionados
+  const [selectedMonths, setSelectedMonths] = useState([])
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(true)
   const [showYearSelector, setShowYearSelector] = useState(false)
@@ -33,6 +35,25 @@ export default function Dashboard() {
     setShowYearSelector(!showYearSelector)
   }
 
+  // Función para resetear todos los filtros
+  const resetAllFilters = () => {
+    setYear("")
+    setSelectedMonths([])
+    setShowYearSelector(false)
+  }
+
+  // Función para extraer el año y la temporada del formato "YYYY-X"
+  const getYearAndSeason = () => {
+    if (!year) return { selectedYear: "all", selectedSeason: "all" }
+
+    const parts = year.split("-")
+    const selectedYear = parts[0]
+    const selectedSeason = parts[1] === "A" ? "Clausura" : "Apertura"
+
+    return { selectedYear, selectedSeason }
+  }
+
+  const { selectedYear, selectedSeason } = getYearAndSeason()
   const currentWidth = isExpanded ? drawerWidth : drawerCollapsedWidth
 
   return (
@@ -106,9 +127,12 @@ export default function Dashboard() {
                         },
                       }}
                     >
-                      <CalendarRange size={35} />
+                      <CalendarRange size={24} />
                     </IconButton>
                   </Tooltip>
+                  <Typography variant="h6" color="white" fontWeight="medium">
+                    Dashboard Financiero
+                  </Typography>
                 </Box>
 
                 {year && (
@@ -124,6 +148,7 @@ export default function Dashboard() {
                   >
                     <Typography variant="body2" color="#1A8A98" fontWeight="medium">
                       {year}
+                      {selectedMonths.length > 0 && ` (${selectedMonths.length} meses)`}
                     </Typography>
                   </Box>
                 )}
@@ -133,20 +158,34 @@ export default function Dashboard() {
               <Collapse in={showYearSelector} timeout="auto">
                 <Fade in={showYearSelector} timeout={500}>
                   <Box sx={{ mb: 4 }}>
-                    <YearSelector year={year} setYear={setYear} />
+                    <YearSelector
+                      year={year}
+                      setYear={setYear}
+                      selectedMonths={selectedMonths}
+                      setSelectedMonths={setSelectedMonths}
+                    />
                   </Box>
                 </Fade>
               </Collapse>
 
               {/* Tarjetas de resumen */}
-              <Box sx={{ mb: 4 }}>
-                <SummaryCards />
+               <Box sx={{ mb: 4 }}>
+                <SummaryCards
+                  selectedYear={year ? year.split("-")[0] : null}
+                  selectedTemporada={year ? (year.split("-")[1] === "A" ? "Clausura" : "Apertura") : null}
+                  selectedMonths={selectedMonths}
+                />
               </Box>
 
               {/* Gráficos principales y Top Partidos */}
               <Box sx={{ display: "flex", flexDirection: { xs: "column", lg: "row" }, gap: 3, mb: 4 }}>
                 <Box sx={{ flex: "1 1 66%", width: "100%" }}>
-                  <MainCharts />
+                  <MainCharts
+                    selectedYear={year ? selectedYear : "all"}
+                    selectedSeason={year ? selectedSeason : "all"}
+                    selectedMonths={selectedMonths}
+                    resetFilters={resetAllFilters}
+                  />
                 </Box>
                 <Box sx={{ flex: "1 1 33%", width: "100%" }}>
                   <TopPartidos />
@@ -160,10 +199,10 @@ export default function Dashboard() {
 
               {/* Competencia Chart y Subcategoria Pie */}
               <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 3, mb: 4 }}>
-                <Box sx={{ flex: "1 1 40%", width: "100%" }}>
+                <Box sx={{ flex: "1 1 33%", width: "100%" }}>
                   <CompetenciaChart />
                 </Box>
-                <Box sx={{ flex: "1 1 60%", width: "100%" }}>
+                <Box sx={{ flex: "1 1 66%", width: "100%" }}>
                   <SubcategoriaPie />
                 </Box>
               </Box>
