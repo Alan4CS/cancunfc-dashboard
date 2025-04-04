@@ -158,16 +158,16 @@ const handleTabChange = (event, newValue) => {
       try {
         // Fetch data for month view
         const [ventasMesRes, gastosMesRes, taquillaMesRes] = await Promise.all([
-          axios.get("http://cancunfc-dashboard-production.up.railway.app/api/ventas_por_subcategoria_mes"),
-          axios.get("http://cancunfc-dashboard-production.up.railway.app/api/gastos_por_subcategoria_mes"),
-          axios.get("http://cancunfc-dashboard-production.up.railway.app/api/taquilla_por_subcategoria_mes"),
+          axios.get("https://cancunfc-dashboard-production.up.railway.app/api/ventas_por_subcategoria_mes"),
+          axios.get("https://cancunfc-dashboard-production.up.railway.app/api/gastos_por_subcategoria_mes"),
+          axios.get("https://cancunfc-dashboard-production.up.railway.app/api/taquilla_por_subcategoria_mes"),
         ])
 
         // Fetch data for season view
         const [ventasTemporadaRes, gastosTemporadaRes, taquillaTemporadaRes] = await Promise.all([
-          axios.get("http://cancunfc-dashboard-production.up.railway.app/api/ventas_por_subcategoria_temporada"),
-          axios.get("http://cancunfc-dashboard-production.up.railway.app/api/gastos_por_subcategoria_temporada"),
-          axios.get("http://cancunfc-dashboard-production.up.railway.app/api/taquilla_por_subcategoria_temporada"),
+          axios.get("https://cancunfc-dashboard-production.up.railway.app/api/ventas_por_subcategoria_temporada"),
+          axios.get("https://cancunfc-dashboard-production.up.railway.app/api/gastos_por_subcategoria_temporada"),
+          axios.get("https://cancunfc-dashboard-production.up.railway.app/api/taquilla_por_subcategoria_temporada"),
         ])
 
         // Set state for all data types
