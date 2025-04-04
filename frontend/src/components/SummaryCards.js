@@ -7,19 +7,19 @@ import { RefreshCwIcon as RefreshIcon, CalendarIcon } from "lucide-react"
 const cardConfig = [
   {
     title: "Ingresos Totales",
-    endpoint: "http://localhost:5000/api/ingresos_totales",
+    endpoint: "http://cancunfc-dashboard-production.up.railway.app/api/ingresos_totales",
     key: "total_ingresos",
     color: "#1A8A98",
   },
   {
     title: "Gastos Totales",
-    endpoint: "http://localhost:5000/api/gastos_totales",
+    endpoint: "http://cancunfc-dashboard-production.up.railway.app/api/gastos_totales",
     key: "total_gastos",
     color: "#e74c3c",
   },
   {
     title: "Taquilla Total",
-    endpoint: "http://localhost:5000/api/taquilla_total",
+    endpoint: "http://cancunfc-dashboard-production.up.railway.app/api/taquilla_total",
     key: "taquilla_total",
     color: "#2ecc71",
   },
@@ -67,7 +67,7 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
         if (selectedMonths && selectedMonths.length > 0) {
           // Hacer la petición al endpoint de meses por temporada
           const response = await axios.get(
-            `http://localhost:5000/api/ingresos_gastos_taquilla_por_mes_temporada?año=${selectedYear}&temporada=${temporadaNum}`,
+            `http://cancunfc-dashboard-production.up.railway.app/api/ingresos_gastos_taquilla_por_mes_temporada?año=${selectedYear}&temporada=${temporadaNum}`,
           )
 
           // Filtrar solo los meses seleccionados
@@ -116,7 +116,7 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
         } else {
           // Si no hay meses seleccionados, usar el endpoint de temporada completa
           const response = await axios.get(
-            `http://localhost:5000/api/ingresos_gastos_taquilla_general_temporada?año=${selectedYear}&temporada=${temporadaNum}`,
+            `http://cancunfc-dashboard-production.up.railway.app/api/ingresos_gastos_taquilla_general_temporada?año=${selectedYear}&temporada=${temporadaNum}`,
           )
 
           // Crear el array de datos para las tarjetas

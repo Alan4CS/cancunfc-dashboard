@@ -178,7 +178,7 @@ export default function MainCharts({
     setError(null)
     try {
       // Obtener datos por mes
-      const responseMes = await axios.get("http://localhost:5000/api/ventas_gastos_taquilla_mes")
+      const responseMes = await axios.get("http://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_mes")
       const transformedMesData = transformData(responseMes.data)
       setVentasGastosData(transformedMesData)
     } catch (error) {
@@ -193,7 +193,7 @@ export default function MainCharts({
   const fetchPartidosByTemporada = useCallback(async (year, temporadaNum) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/ingresos_gastos_taquilla_por_partido_temporada?año=${year}&temporada=${temporadaNum}`,
+        `http://cancunfc-dashboard-production.up.railway.app/api/ingresos_gastos_taquilla_por_partido_temporada?año=${year}&temporada=${temporadaNum}`,
       )
 
       // Transformar los datos para el formato que espera el gráfico

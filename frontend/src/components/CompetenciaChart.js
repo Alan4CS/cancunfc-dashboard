@@ -38,7 +38,7 @@ export default function CompetenciaChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/ventas_gastos_taquilla_competencia")
+        const response = await axios.get("http://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_competencia")
         setCompetenciaData(response.data)
       } catch (err) {
         setError("Error al cargar los datos. Intente nuevamente.")
