@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useMemo, useCallback } from "react"
 import {
   Paper,
@@ -207,7 +205,7 @@ export default function MainCharts({
     try {
       // Obtener datos por mes
       const responseMes = await axios.get(
-        "http://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_mes",
+        "https://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_mes",
       )
       const transformedMesData = transformData(responseMes.data)
       setVentasGastosData(transformedMesData)
@@ -223,7 +221,7 @@ export default function MainCharts({
   const fetchPartidosByTemporada = useCallback(async (year, temporadaNum) => {
     try {
       const response = await axios.get(
-        `http://cancunfc-dashboard-production.up.railway.app/api/ingresos_gastos_taquilla_por_partido_temporada?año=${year}&temporada=${temporadaNum}`,
+        `https://cancunfc-dashboard-production.up.railway.app/api/ingresos_gastos_taquilla_por_partido_temporada?año=${year}&temporada=${temporadaNum}`,
       )
 
       // Transformar los datos para el formato que espera el gráfico
