@@ -1,5 +1,17 @@
+"use client"
+
 import { useState } from "react"
-import {Box, Container, CssBaseline, ThemeProvider, IconButton, Typography, Collapse, Divider, Fade, Tooltip,
+import {
+  Box,
+  Container,
+  CssBaseline,
+  ThemeProvider,
+  IconButton,
+  Typography,
+  Collapse,
+  Divider,
+  Fade,
+  Tooltip,
 } from "@mui/material"
 // Importar componentes
 import Sidebar from "../components/sidebar"
@@ -9,7 +21,7 @@ import MainCharts from "../components/MainCharts"
 import TopPartidos from "../components/TopPartidos"
 import SubcategoriasChart from "../components/SubcategoriasChart"
 import YearSelector from "../components/YearSelector"
-import theme from "../style/theme"
+import { createAppTheme } from "../style/theme"
 import CompetenciaChart from "../components/CompetenciaChart"
 import SubcategoriaPie from "../components/SubcategoriasPie"
 import { CalendarRange } from "lucide-react"
@@ -26,6 +38,25 @@ export default function Dashboard() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(true)
   const [showYearSelector, setShowYearSelector] = useState(false)
+  // Estado para el tema
+  const [themeMode, setThemeMode] = useState(() => {
+    // Recuperar el tema guardado en localStorage o usar "dark" por defecto
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("themeMode") || "dark"
+    }
+    return "dark"
+  })
+
+  // Crear el tema basado en el modo actual
+  const theme = createAppTheme(themeMode)
+
+  // Función para cambiar el tema
+  const toggleTheme = () => {
+    const newThemeMode = themeMode === "dark" ? "light" : "dark"
+    setThemeMode(newThemeMode)
+    // Guardar la preferencia en localStorage
+    localStorage.setItem("themeMode", newThemeMode)
+  }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
@@ -74,7 +105,12 @@ export default function Dashboard() {
               }),
           }}
         >
-          <Header handleDrawerToggle={handleDrawerToggle} isExpanded={isExpanded} />
+          <Header
+            handleDrawerToggle={handleDrawerToggle}
+            isExpanded={isExpanded}
+            themeMode={themeMode}
+            toggleTheme={toggleTheme}
+          />
         </Box>
 
         <Box sx={{ display: "flex", flexGrow: 1, marginTop: "64px" }}>
@@ -84,6 +120,7 @@ export default function Dashboard() {
             handleDrawerToggle={handleDrawerToggle}
             isExpanded={isExpanded}
             setIsExpanded={setIsExpanded}
+            themeMode={themeMode}
           />
 
           {/* Contenido principal */}
@@ -130,7 +167,7 @@ export default function Dashboard() {
                       <CalendarRange size={24} />
                     </IconButton>
                   </Tooltip>
-                  <Typography variant="h6" color="white" fontWeight="medium">
+                  <Typography variant="h6" color="text.primary" fontWeight="medium">
                     Dashboard Financiero
                   </Typography>
                 </Box>
@@ -163,17 +200,19 @@ export default function Dashboard() {
                       setYear={setYear}
                       selectedMonths={selectedMonths}
                       setSelectedMonths={setSelectedMonths}
+                      themeMode={themeMode}
                     />
                   </Box>
                 </Fade>
               </Collapse>
 
               {/* Tarjetas de resumen */}
-               <Box sx={{ mb: 4 }}>
+              <Box sx={{ mb: 4 }}>
                 <SummaryCards
                   selectedYear={year ? year.split("-")[0] : null}
                   selectedTemporada={year ? (year.split("-")[1] === "A" ? "Clausura" : "Apertura") : null}
                   selectedMonths={selectedMonths}
+                  themeMode={themeMode}
                 />
               </Box>
 
@@ -185,32 +224,33 @@ export default function Dashboard() {
                     selectedSeason={year ? selectedSeason : "all"}
                     selectedMonths={selectedMonths}
                     resetFilters={resetAllFilters}
+                    themeMode={themeMode}
                   />
                 </Box>
                 <Box sx={{ flex: "1 1 33%", width: "100%" }}>
-                  <TopPartidos />
+                  <TopPartidos themeMode={themeMode} />
                 </Box>
               </Box>
 
               {/* Subcategorías */}
               <Box sx={{ mb: 4 }}>
-                <SubcategoriasChart />
+                <SubcategoriasChart themeMode={themeMode} />
               </Box>
 
               {/* Competencia Chart y Subcategoria Pie */}
               <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 3, mb: 4 }}>
                 <Box sx={{ flex: "1 1 33%", width: "100%" }}>
-                  <CompetenciaChart />
+                  <CompetenciaChart themeMode={themeMode} />
                 </Box>
                 <Box sx={{ flex: "1 1 66%", width: "100%" }}>
-                  <SubcategoriaPie />
+                  <SubcategoriaPie themeMode={themeMode} />
                 </Box>
               </Box>
 
               {/* Footer simple */}
               <Divider sx={{ my: 4, bgcolor: "rgba(255, 255, 255, 0.1)" }} />
               <Box sx={{ textAlign: "center", py: 2 }}>
-                <Typography variant="caption" color="rgba(255, 255, 255, 0.5)">
+                <Typography variant="caption" color="text.secondary">
                   Dashboard Financiero © {new Date().getFullYear()} - Cancún FC
                 </Typography>
               </Box>
@@ -221,3 +261,4 @@ export default function Dashboard() {
     </ThemeProvider>
   )
 }
+

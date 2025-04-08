@@ -1,6 +1,20 @@
+"use client"
+
 import { useState, useEffect, useCallback, useMemo } from "react"
-import { Paper, Box, Tabs, Tab, Typography, CircularProgress, Alert, Skeleton, IconButton, Tooltip as MuiTooltip,
-  ToggleButtonGroup, ToggleButton, Chip,
+import {
+  Paper,
+  Box,
+  Tabs,
+  Tab,
+  Typography,
+  CircularProgress,
+  Alert,
+  Skeleton,
+  IconButton,
+  Tooltip as MuiTooltip,
+  ToggleButtonGroup,
+  ToggleButton,
+  Chip,
 } from "@mui/material"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from "recharts"
 import axios from "axios"
@@ -60,7 +74,7 @@ const CustomTooltip = ({ active, payload, label }) => {
   )
 }
 
-export default function SubcategoriasChart() {
+export default function SubcategoriasChart({ themeMode = "dark" }) {
   const [tabValue, setTabValue] = useState(0)
   const [ventasData, setVentasData] = useState([])
   const [costosData, setCostosData] = useState([])
@@ -85,7 +99,9 @@ export default function SubcategoriasChart() {
   // Función para obtener las ventas por subcategoría - Optimizada con useCallback
   const fetchVentasData = useCallback(async () => {
     try {
-      const response = await axios.get("https://cancunfc-dashboard-production.up.railway.app/api/ventas_por_subcategoria_total")
+      const response = await axios.get(
+        "https://cancunfc-dashboard-production.up.railway.app/api/ventas_por_subcategoria_total",
+      )
 
       // Ordenar los datos de mayor a menor para mejor visualización
       const sortedData = response.data.sort((a, b) => b.total_ventas - a.total_ventas)
@@ -100,7 +116,9 @@ export default function SubcategoriasChart() {
   // Función para obtener los costos por subcategoría - Optimizada con useCallback
   const fetchCostosData = useCallback(async () => {
     try {
-      const response = await axios.get("https://cancunfc-dashboard-production.up.railway.app/api/gastos_por_subcategoria_total")
+      const response = await axios.get(
+        "https://cancunfc-dashboard-production.up.railway.app/api/gastos_por_subcategoria_total",
+      )
 
       // Ordenar los datos de mayor a menor para mejor visualización
       const sortedData = response.data.sort((a, b) => b.total_gasto - a.total_gasto)
@@ -121,7 +139,9 @@ export default function SubcategoriasChart() {
 
   const fetchTaquillaData = useCallback(async () => {
     try {
-      const response = await axios.get("https://cancunfc-dashboard-production.up.railway.app/api/taquilla_por_subcategoria_total")
+      const response = await axios.get(
+        "https://cancunfc-dashboard-production.up.railway.app/api/taquilla_por_subcategoria_total",
+      )
 
       // Ordenar los datos de mayor a menor para mejor visualización
       const sortedData = response.data.sort((a, b) => b.total_taquilla - a.total_taquilla)
@@ -252,7 +272,13 @@ export default function SubcategoriasChart() {
       return (
         <Alert
           severity="error"
-          sx={{ height: "100%", display: "flex", alignItems: "center" }}
+          sx={{
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            bgcolor: themeMode === "dark" ? "rgba(211, 47, 47, 0.1)" : "rgba(211, 47, 47, 0.05)",
+            color: themeMode === "dark" ? "#f44336" : "#d32f2f",
+          }}
           action={
             <IconButton color="inherit" size="small" onClick={handleRefresh} aria-label="Reintentar">
               <RefreshIcon size={18} />
@@ -266,7 +292,16 @@ export default function SubcategoriasChart() {
 
     if (!hasData) {
       return (
-        <Alert severity="info" sx={{ height: "100%", display: "flex", alignItems: "center" }}>
+        <Alert
+          severity="info"
+          sx={{
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            bgcolor: themeMode === "dark" ? "rgba(2, 136, 209, 0.1)" : "rgba(2, 136, 209, 0.05)",
+            color: themeMode === "dark" ? "#29b6f6" : "#0288d1",
+          }}
+        >
           No hay datos disponibles para mostrar.
         </Alert>
       )
@@ -292,14 +327,24 @@ export default function SubcategoriasChart() {
               <stop offset="100%" stopColor={gradientColor2} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.15)" strokeWidth={1.5} />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke={themeMode === "dark" ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.1)"}
+            strokeWidth={1.5}
+          />
           <XAxis
             type="number"
             tickFormatter={formatCurrency} // Usar la función de formato personalizada
-            stroke="#ccc"
+            stroke={themeMode === "dark" ? "#ccc" : "#666"}
             strokeWidth={1.5}
-            tick={{ fill: "#ccc", fontSize: 12 }}
-            axisLine={{ stroke: "rgba(255, 255, 255, 0.3)", strokeWidth: 1.5 }}
+            tick={{
+              fill: themeMode === "dark" ? "#ccc" : "#666",
+              fontSize: 12,
+            }}
+            axisLine={{
+              stroke: themeMode === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)",
+              strokeWidth: 1.5,
+            }}
             domain={[0, getMaxValue]} // Dominio personalizado con el valor máximo calculado
             allowDataOverflow={false} // Evita que los datos se salgan del área del gráfico
             padding={{ left: 0, right: 10 }} // Añadir padding al eje X
@@ -308,10 +353,17 @@ export default function SubcategoriasChart() {
             dataKey="Subcategoria"
             type="category"
             width={170}
-            tick={{ fill: "#fff", fontSize: 12, fontWeight: "medium" }}
-            stroke="#ccc"
+            tick={{
+              fill: themeMode === "dark" ? "#fff" : "#333",
+              fontSize: 12,
+              fontWeight: "medium",
+            }}
+            stroke={themeMode === "dark" ? "#ccc" : "#666"}
             strokeWidth={1.5}
-            axisLine={{ stroke: "rgba(255, 255, 255, 0.3)", strokeWidth: 1.5 }}
+            axisLine={{
+              stroke: themeMode === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)",
+              strokeWidth: 1.5,
+            }}
             padding={{ top: 15, bottom: 15 }} // Añadir padding al eje Y
           />
           <Tooltip content={<CustomTooltip />} />
@@ -327,7 +379,11 @@ export default function SubcategoriasChart() {
               dataKey={dataKey}
               position="right"
               formatter={formatCurrency} // Usar la función de formato personalizada
-              style={{ fill: "#fff", fontSize: 12, fontWeight: "medium" }}
+              style={{
+                fill: themeMode === "dark" ? "#fff" : "#333",
+                fontSize: 12,
+                fontWeight: "medium",
+              }}
               offset={10} // Desplazar las etiquetas para que no queden pegadas a las barras
             />
           </Bar>
@@ -341,9 +397,9 @@ export default function SubcategoriasChart() {
       sx={{
         p: 3,
         borderRadius: 2,
-        bgcolor: "#121212",
-        border: "1px solid rgba(26, 138, 152, 0.2)",
-        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+        bgcolor: themeMode === "dark" ? "#121212" : "#ffffff",
+        border: themeMode === "dark" ? "1px solid rgba(26, 138, 152, 0.2)" : "1px solid rgba(0, 0, 0, 0.1)",
+        boxShadow: themeMode === "dark" ? "0 4px 20px rgba(0, 0, 0, 0.2)" : "0 4px 20px rgba(0, 0, 0, 0.05)",
         height: "100%",
         display: "flex",
         flexDirection: "column",
@@ -373,17 +429,17 @@ export default function SubcategoriasChart() {
             size="small"
             sx={{
               ".MuiToggleButton-root": {
-                color: "rgba(255, 255, 255, 0.7)",
+                color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
                 borderColor: "rgba(26, 138, 152, 0.3)",
                 "&.Mui-selected": {
-                  backgroundColor: "rgba(26, 138, 152, 0.2)",
+                  backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
                   color: "#1A8A98",
                   "&:hover": {
-                    backgroundColor: "rgba(26, 138, 152, 0.3)",
+                    backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.3)" : "rgba(26, 138, 152, 0.15)",
                   },
                 },
                 "&:hover": {
-                  backgroundColor: "rgba(26, 138, 152, 0.1)",
+                  backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
                 },
               },
             }}
@@ -405,8 +461,11 @@ export default function SubcategoriasChart() {
               size="small"
               disabled={loading}
               sx={{
-                color: "rgba(255, 255, 255, 0.7)",
-                "&:hover": { color: "#1A8A98", bgcolor: "rgba(26, 138, 152, 0.1)" },
+                color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
+                "&:hover": {
+                  color: "#1A8A98",
+                  bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
+                },
               }}
               aria-label="Actualizar datos"
             >
@@ -421,10 +480,10 @@ export default function SubcategoriasChart() {
         onChange={handleTabChange}
         sx={{
           borderBottom: 1,
-          borderColor: "rgba(26, 138, 152, 0.2)",
+          borderColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(0, 0, 0, 0.1)",
           mb: 2,
           "& .MuiTab-root": {
-            color: "rgba(255, 255, 255, 0.7)",
+            color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
             "&.Mui-selected": {
               color: "#1A8A98",
             },
@@ -448,8 +507,8 @@ export default function SubcategoriasChart() {
           label={`Mostrando ${filteredData.length} subcategorías`}
           size="small"
           sx={{
-            bgcolor: "rgba(26, 138, 152, 0.1)",
-            color: "#fff",
+            bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
+            color: themeMode === "dark" ? "#fff" : "#1A8A98",
             border: "1px solid rgba(26, 138, 152, 0.3)",
             "& .MuiChip-icon": {
               color: "#1A8A98",
@@ -467,14 +526,14 @@ export default function SubcategoriasChart() {
             width: "10px",
           },
           "&::-webkit-scrollbar-track": {
-            background: "rgba(0, 0, 0, 0.2)",
+            background: themeMode === "dark" ? "rgba(0, 0, 0, 0.2)" : "rgba(0, 0, 0, 0.05)",
             borderRadius: "5px",
           },
           "&::-webkit-scrollbar-thumb": {
-            background: "rgba(26, 138, 152, 0.4)",
+            background: themeMode === "dark" ? "rgba(26, 138, 152, 0.4)" : "rgba(26, 138, 152, 0.2)",
             borderRadius: "5px",
             "&:hover": {
-              background: "rgba(26, 138, 152, 0.6)",
+              background: themeMode === "dark" ? "rgba(26, 138, 152, 0.6)" : "rgba(26, 138, 152, 0.3)",
             },
           },
         }}
@@ -487,3 +546,4 @@ export default function SubcategoriasChart() {
     </Paper>
   )
 }
+

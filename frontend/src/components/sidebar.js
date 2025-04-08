@@ -1,5 +1,18 @@
-import { Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText,
-  Typography, Avatar, IconButton, Tooltip,
+"use client"
+
+import {
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  IconButton,
+  Tooltip,
+  Typography,
+  Avatar,
 } from "@mui/material"
 import {
   Dashboard as DashboardIcon,
@@ -14,12 +27,11 @@ const drawerWidth = 240
 const drawerCollapsedWidth = 64
 
 const handleLogout = () => {
-  localStorage.removeItem("token"); // Eliminar el token del usuario
-  window.location.reload(); // Recargar la página para regresar al Login
-};
+  localStorage.removeItem("token") // Eliminar el token del usuario
+  window.location.reload() // Recargar la página para regresar al Login
+}
 
-
-export default function Sidebar({ mobileOpen, handleDrawerToggle, isExpanded, setIsExpanded }) {
+export default function Sidebar({ mobileOpen, handleDrawerToggle, isExpanded, setIsExpanded, themeMode }) {
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded)
   }
@@ -38,7 +50,7 @@ export default function Sidebar({ mobileOpen, handleDrawerToggle, isExpanded, se
       >
         {isExpanded ? (
           <>
-            <Avatar src="/image/FC.png" alt="Logo" sx={{ width: 60, height: 80, }} />
+            <Avatar src="/image/FC.png" alt="Logo" sx={{ width: 60, height: 80 }} />
             <Typography variant="body2" component="div" sx={{ color: "white", fontWeight: "bold", flexGrow: 1 }}>
               DASHBOARD
             </Typography>
@@ -171,7 +183,7 @@ export default function Sidebar({ mobileOpen, handleDrawerToggle, isExpanded, se
         <ListItem disablePadding>
           <Tooltip title={isExpanded ? "" : "Cerrar Sesión"} placement="right">
             <ListItemButton
-              onClick={handleLogout} // 🔥 Ahora el botón funciona
+              onClick={handleLogout}
               sx={{
                 minHeight: 48,
                 justifyContent: isExpanded ? "initial" : "center",
@@ -228,6 +240,7 @@ export default function Sidebar({ mobileOpen, handleDrawerToggle, isExpanded, se
             bgcolor: "#1A8A98",
             color: "white",
             borderRight: "none",
+            borderRadius: 0, // Sin esquinas redondeadas
           },
         }}
       >
@@ -245,6 +258,7 @@ export default function Sidebar({ mobileOpen, handleDrawerToggle, isExpanded, se
             bgcolor: "#1A8A98",
             color: "white",
             borderRight: "none",
+            borderRadius: 0, // Sin esquinas redondeadas
             overflowX: "hidden",
             transition: (theme) =>
               theme.transitions.create("width", {
@@ -260,3 +274,4 @@ export default function Sidebar({ mobileOpen, handleDrawerToggle, isExpanded, se
     </Box>
   )
 }
+

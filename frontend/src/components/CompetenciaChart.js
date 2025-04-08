@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect, useMemo } from "react"
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LabelList, PieChart, Pie } from "recharts"
 import axios from "axios"
@@ -20,7 +22,7 @@ const COLORS = [
   "#2ecc71", // Verde
 ]
 
-export default function CompetenciaChart() {
+export default function CompetenciaChart({ themeMode = "dark" }) {
   const [competenciaData, setCompetenciaData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -38,7 +40,9 @@ export default function CompetenciaChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_competencia")
+        const response = await axios.get(
+          "https://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_competencia",
+        )
         setCompetenciaData(response.data)
       } catch (err) {
         setError("Error al cargar los datos. Intente nuevamente.")
@@ -183,10 +187,18 @@ export default function CompetenciaChart() {
             angle={-45}
             textAnchor="end"
             height={70}
-            tick={{ fill: "#fff", fontSize: 12 }}
-            stroke="#ccc"
+            tick={{
+              fill: themeMode === "dark" ? "#fff" : "#333",
+              fontSize: 12,
+            }}
+            stroke={themeMode === "dark" ? "#ccc" : "#666"}
           />
-          <YAxis type="number" domain={[0, 100]} tickFormatter={(value) => `${value}%`} stroke="#ccc" />
+          <YAxis
+            type="number"
+            domain={[0, 100]}
+            tickFormatter={(value) => `${value}%`}
+            stroke={themeMode === "dark" ? "#ccc" : "#666"}
+          />
           <Tooltip content={<CustomTooltip />} />
           <Bar dataKey="value" radius={[4, 4, 0, 0]}>
             {data.map((entry, index) => (
@@ -196,7 +208,11 @@ export default function CompetenciaChart() {
               dataKey="value"
               position="top"
               formatter={(value) => `${value.toFixed(1)}%`}
-              style={{ fill: "#fff", fontSize: 12, fontWeight: "bold" }}
+              style={{
+                fill: themeMode === "dark" ? "#fff" : "#333",
+                fontSize: 12,
+                fontWeight: "bold",
+              }}
             />
           </Bar>
         </BarChart>
@@ -220,13 +236,17 @@ export default function CompetenciaChart() {
             paddingAngle={2}
             isAnimationActive={false}
             label={({ name, value }) => `${name}: ${value.toFixed(1)}%`}
-            labelLine={{ stroke: "rgba(255, 255, 255, 0.3)", strokeWidth: 1, strokeDasharray: "3 3" }}
+            labelLine={{
+              stroke: themeMode === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)",
+              strokeWidth: 1,
+              strokeDasharray: "3 3",
+            }}
           >
             {data.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={COLORS[index % COLORS.length]}
-                stroke="rgba(0, 0, 0, 0.3)"
+                stroke={themeMode === "dark" ? "rgba(0, 0, 0, 0.3)" : "rgba(255, 255, 255, 0.3)"}
                 strokeWidth={1}
                 cursor="default"
               />
@@ -254,8 +274,9 @@ export default function CompetenciaChart() {
           severity="error"
           sx={{
             my: 2,
-            backgroundColor: alpha(theme.palette.error.main, 0.1),
-            color: theme.palette.error.light,
+            backgroundColor:
+              themeMode === "dark" ? alpha(theme.palette.error.main, 0.1) : alpha(theme.palette.error.main, 0.05),
+            color: themeMode === "dark" ? theme.palette.error.light : theme.palette.error.main,
           }}
         >
           {error}
@@ -269,8 +290,9 @@ export default function CompetenciaChart() {
           severity="info"
           sx={{
             my: 2,
-            backgroundColor: alpha(theme.palette.info.main, 0.1),
-            color: theme.palette.info.light,
+            backgroundColor:
+              themeMode === "dark" ? alpha(theme.palette.info.main, 0.1) : alpha(theme.palette.info.main, 0.05),
+            color: themeMode === "dark" ? theme.palette.info.light : theme.palette.info.main,
           }}
         >
           No hay datos disponibles para mostrar.
@@ -286,9 +308,9 @@ export default function CompetenciaChart() {
       sx={{
         p: 3,
         borderRadius: 2,
-        bgcolor: "#121212",
-        border: "1px solid rgba(26, 138, 152, 0.1)",
-        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+        bgcolor: themeMode === "dark" ? "#121212" : "#ffffff",
+        border: themeMode === "dark" ? "1px solid rgba(26, 138, 152, 0.1)" : "1px solid rgba(0, 0, 0, 0.1)",
+        boxShadow: themeMode === "dark" ? "0 4px 20px rgba(0, 0, 0, 0.2)" : "0 4px 20px rgba(0, 0, 0, 0.05)",
         height: "100%",
         display: "flex",
         flexDirection: "column",
@@ -306,17 +328,17 @@ export default function CompetenciaChart() {
           aria-label="tipo de gráfico"
           sx={{
             ".MuiToggleButton-root": {
-              color: "rgba(255, 255, 255, 0.7)",
+              color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
               borderColor: "rgba(26, 138, 152, 0.3)",
               "&.Mui-selected": {
-                backgroundColor: "rgba(26, 138, 152, 0.2)",
+                backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
                 color: "#1A8A98",
                 "&:hover": {
-                  backgroundColor: "rgba(26, 138, 152, 0.3)",
+                  backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.3)" : "rgba(26, 138, 152, 0.15)",
                 },
               },
               "&:hover": {
-                backgroundColor: "rgba(26, 138, 152, 0.1)",
+                backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
               },
             },
           }}
@@ -340,8 +362,21 @@ export default function CompetenciaChart() {
       >
         {renderChart()}
       </Box>
-      <Box sx={{ mt: 2, p: 2, bgcolor: "rgba(26, 138, 152, 0.05)", borderRadius: 1 }}>
-        <Typography variant="caption" sx={{ color: "rgba(255, 255, 255, 0.7)", fontStyle: "italic" }}>
+      <Box
+        sx={{
+          mt: 2,
+          p: 2,
+          bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.05)" : "rgba(26, 138, 152, 0.03)",
+          borderRadius: 1,
+        }}
+      >
+        <Typography
+          variant="caption"
+          sx={{
+            color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.6)",
+            fontStyle: "italic",
+          }}
+        >
           * Pase el cursor sobre cada {chartType === "bar" ? "barra" : "segmento"} para ver detalles financieros
           completos de la competencia.
         </Typography>
@@ -349,3 +384,4 @@ export default function CompetenciaChart() {
     </Paper>
   )
 }
+

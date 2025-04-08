@@ -1,10 +1,37 @@
+"use client"
+
 import { useState, useEffect, useMemo, useCallback } from "react"
 import {
-  Paper, Typography, Box, CircularProgress, Alert, FormControl, Select, MenuItem, InputLabel, ToggleButtonGroup, ToggleButton, Skeleton,
-  useMediaQuery, useTheme, Chip,
+  Paper,
+  Typography,
+  Box,
+  CircularProgress,
+  Alert,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
+  ToggleButtonGroup,
+  ToggleButton,
+  Skeleton,
+  useMediaQuery,
+  useTheme,
+  Chip,
 } from "@mui/material"
 import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, BarChart, Bar, LineChart, Line,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  ReferenceLine,
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
 } from "recharts"
 import axios from "axios"
 import { BarChartIcon, LineChartIcon, TrendingUpIcon, RefreshCwIcon as RefreshIcon } from "lucide-react"
@@ -15,8 +42,8 @@ const CustomTooltip = ({ active, payload, label }) => {
   // Función para formatear números
   const formatnum = (num) => {
     // Asegurar que num sea un número
-    const value = Number(num);
-    
+    const value = Number(num)
+
     // Formatear con comas para los miles
     return `$${value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
   }
@@ -60,6 +87,7 @@ export default function MainCharts({
   selectedYear: yearProp = "all",
   selectedSeason: seasonProp = "all",
   selectedMonths = [],
+  themeMode = "dark", // Valor por defecto
 }) {
   const [ventasGastosData, setVentasGastosData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -178,7 +206,9 @@ export default function MainCharts({
     setError(null)
     try {
       // Obtener datos por mes
-      const responseMes = await axios.get("https://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_mes")
+      const responseMes = await axios.get(
+        "http://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_mes",
+      )
       const transformedMesData = transformData(responseMes.data)
       setVentasGastosData(transformedMesData)
     } catch (error) {
@@ -193,7 +223,7 @@ export default function MainCharts({
   const fetchPartidosByTemporada = useCallback(async (year, temporadaNum) => {
     try {
       const response = await axios.get(
-        `https://cancunfc-dashboard-production.up.railway.app/api/ingresos_gastos_taquilla_por_partido_temporada?año=${year}&temporada=${temporadaNum}`,
+        `http://cancunfc-dashboard-production.up.railway.app/api/ingresos_gastos_taquilla_por_partido_temporada?año=${year}&temporada=${temporadaNum}`,
       )
 
       // Transformar los datos para el formato que espera el gráfico
@@ -335,15 +365,7 @@ export default function MainCharts({
     }
 
     return filtered
-  }, [
-    ventasGastosData,
-    partidosData,
-    selectedYear,
-    selectedSeason,
-    showPartidos,
-    selectedMonth,
-    selectedMonths,
-  ])
+  }, [ventasGastosData, partidosData, selectedYear, selectedSeason, showPartidos, selectedMonth, selectedMonths])
 
   // Manejadores de eventos
   const handleChartTypeChange = (event, newType) => {
@@ -380,6 +402,10 @@ export default function MainCharts({
     // Añadir un 20% adicional para dar más espacio
     return [0, Math.ceil(absoluteMax * 1.2)]
   }, [filteredData])
+
+  // Ajustar colores de los ejes y la cuadrícula según el tema
+  const axisColor = themeMode === "dark" ? "#ccc" : "#666"
+  const gridColor = themeMode === "dark" ? "#333" : "#eee"
 
   // Renderizar el gráfico según el tipo seleccionado
   const renderChart = () => {
@@ -421,26 +447,26 @@ export default function MainCharts({
       xAxis: (
         <XAxis
           dataKey="name"
-          stroke="#ccc"
+          stroke={axisColor}
           interval={xAxisInterval} // Mostrar solo algunos nombres
           angle={-45}
           textAnchor="end"
           height={75}
-          tick={{ fontSize: isMobile ? 10 : 12 }}
+          tick={{ fontSize: isMobile ? 10 : 12, fill: axisColor }}
         />
       ),
       yAxis: (
         <YAxis
-          stroke="#ccc"
+          stroke={axisColor}
           domain={yAxisDomain}
           tickFormatter={formatNumber}
-          tick={{ fontSize: isMobile ? 10 : 12 }}
+          tick={{ fontSize: isMobile ? 10 : 12, fill: axisColor }}
         />
       ),
-      cartesianGrid: <CartesianGrid strokeDasharray="3 3" stroke="#333" />,
+      cartesianGrid: <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />,
       tooltip: <Tooltip content={<CustomTooltip />} />,
       legend: <Legend verticalAlign="top" height={36} wrapperStyle={{ paddingBottom: 10 }} iconType="circle" />,
-      referenceLine: <ReferenceLine y={0} stroke="#fff" strokeDasharray="3 3" />,
+      referenceLine: <ReferenceLine y={0} stroke={axisColor} strokeDasharray="3 3" />,
     }
 
     switch (chartType) {
@@ -584,10 +610,12 @@ export default function MainCharts({
         p: 3,
         borderRadius: 2,
         height: "100%",
-        bgcolor: "#121212",
-        border: "1px solid rgba(26, 138, 152, 0.1)",
+        bgcolor: themeMode === "dark" ? "#121212" : "#ffffff",
+        border: themeMode === "dark" ? "1px solid rgba(26, 138, 152, 0.1)" : "1px solid rgba(0, 0, 0, 0.1)",
         display: "flex",
         flexDirection: "column",
+        position: "relative", // Para evitar que se sobreponga
+        zIndex: 1, // Asegurar que no se sobreponga con otros elementos
       }}
     >
       <Box
@@ -600,7 +628,10 @@ export default function MainCharts({
         <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
           {/* Selector de Año */}
           <FormControl size="small" sx={{ minWidth: 120 }}>
-            <InputLabel id="year-select-label" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+            <InputLabel
+              id="year-select-label"
+              sx={{ color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)" }}
+            >
               Año
             </InputLabel>
             <Select
@@ -609,8 +640,8 @@ export default function MainCharts({
               onChange={handleYearChange}
               label="Año"
               sx={{
-                bgcolor: "rgba(26, 138, 152, 0.1)",
-                color: "white",
+                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
+                color: themeMode === "dark" ? "white" : "black",
                 ".MuiOutlinedInput-notchedOutline": {
                   borderColor: "rgba(26, 138, 152, 0.3)",
                 },
@@ -621,7 +652,7 @@ export default function MainCharts({
                   borderColor: "#1A8A98",
                 },
                 ".MuiSvgIcon-root": {
-                  color: "white",
+                  color: themeMode === "dark" ? "white" : "rgba(0, 0, 0, 0.7)",
                 },
               }}
             >
@@ -636,7 +667,10 @@ export default function MainCharts({
 
           {/* Selector de Temporada */}
           <FormControl size="small" sx={{ minWidth: 120 }}>
-            <InputLabel id="season-select-label" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+            <InputLabel
+              id="season-select-label"
+              sx={{ color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)" }}
+            >
               Temporada
             </InputLabel>
             <Select
@@ -645,8 +679,8 @@ export default function MainCharts({
               onChange={handleSeasonChange}
               label="Temporada"
               sx={{
-                bgcolor: "rgba(26, 138, 152, 0.1)",
-                color: "white",
+                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
+                color: themeMode === "dark" ? "white" : "black",
                 ".MuiOutlinedInput-notchedOutline": {
                   borderColor: "rgba(26, 138, 152, 0.3)",
                 },
@@ -657,7 +691,7 @@ export default function MainCharts({
                   borderColor: "#1A8A98",
                 },
                 ".MuiSvgIcon-root": {
-                  color: "white",
+                  color: themeMode === "dark" ? "white" : "rgba(0, 0, 0, 0.7)",
                 },
               }}
             >
@@ -670,7 +704,10 @@ export default function MainCharts({
           {/* Selector de Mes (solo visible cuando hay una temporada seleccionada) */}
           {selectedYear !== "all" && selectedSeason !== "all" && (
             <FormControl size="small" sx={{ minWidth: 120 }}>
-              <InputLabel id="month-select-label" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+              <InputLabel
+                id="month-select-label"
+                sx={{ color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)" }}
+              >
                 Mes
               </InputLabel>
               <Select
@@ -679,8 +716,8 @@ export default function MainCharts({
                 onChange={handleMonthChange}
                 label="Mes"
                 sx={{
-                  bgcolor: "rgba(26, 138, 152, 0.1)",
-                  color: "white",
+                  bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
+                  color: themeMode === "dark" ? "white" : "black",
                   ".MuiOutlinedInput-notchedOutline": {
                     borderColor: "rgba(26, 138, 152, 0.3)",
                   },
@@ -691,24 +728,24 @@ export default function MainCharts({
                     borderColor: "#1A8A98",
                   },
                   ".MuiSvgIcon-root": {
-                    color: "white",
+                    color: themeMode === "dark" ? "white" : "rgba(0, 0, 0, 0.7)",
                   },
                 }}
               >
                 <MenuItem value="all">Todos</MenuItem>
                 {selectedSeason === "Clausura"
                   ? // Meses para Clausura (Enero-Junio)
-                    ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio"].map((month) => (
-                      <MenuItem key={month} value={month}>
-                        {month}
-                      </MenuItem>
-                    ))
+                  ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio"].map((month) => (
+                    <MenuItem key={month} value={month}>
+                      {month}
+                    </MenuItem>
+                  ))
                   : // Meses para Apertura (Julio-Diciembre)
-                    ["Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"].map((month) => (
-                      <MenuItem key={month} value={month}>
-                        {month}
-                      </MenuItem>
-                    ))}
+                  ["Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"].map((month) => (
+                    <MenuItem key={month} value={month}>
+                      {month}
+                    </MenuItem>
+                  ))}
               </Select>
             </FormControl>
           )}
@@ -722,17 +759,17 @@ export default function MainCharts({
             size="small"
             sx={{
               ".MuiToggleButton-root": {
-                color: "rgba(255, 255, 255, 0.7)",
+                color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
                 borderColor: "rgba(26, 138, 152, 0.3)",
                 "&.Mui-selected": {
-                  backgroundColor: "rgba(26, 138, 152, 0.2)",
+                  backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
                   color: "#1A8A98",
                   "&:hover": {
-                    backgroundColor: "rgba(26, 138, 152, 0.3)",
+                    backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.3)" : "rgba(26, 138, 152, 0.2)",
                   },
                 },
                 "&:hover": {
-                  backgroundColor: "rgba(26, 138, 152, 0.1)",
+                  backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
                 },
               },
             }}
@@ -758,9 +795,9 @@ export default function MainCharts({
               p: "5px",
               borderRadius: "4px",
               cursor: "pointer",
-              color: "rgba(255, 255, 255, 0.7)",
+              color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
               "&:hover": {
-                backgroundColor: "rgba(26, 138, 152, 0.1)",
+                backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
                 color: "#1A8A98",
               },
             }}
@@ -778,8 +815,8 @@ export default function MainCharts({
               label="Vista por Partidos"
               size="small"
               sx={{
-                bgcolor: "rgba(26, 138, 152, 0.2)",
-                color: "white",
+                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
+                color: themeMode === "dark" ? "white" : "#1A8A98",
               }}
             />
           )}
@@ -789,12 +826,12 @@ export default function MainCharts({
               onDelete={() => setSelectedMonth("all")}
               size="small"
               sx={{
-                bgcolor: "rgba(26, 138, 152, 0.2)",
-                color: "white",
+                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
+                color: themeMode === "dark" ? "white" : "#1A8A98",
                 "& .MuiChip-deleteIcon": {
-                  color: "rgba(255, 255, 255, 0.7)",
+                  color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
                   "&:hover": {
-                    color: "white",
+                    color: themeMode === "dark" ? "white" : "black",
                   },
                 },
               }}
@@ -806,12 +843,12 @@ export default function MainCharts({
               onDelete={() => setSelectedYear("all")}
               size="small"
               sx={{
-                bgcolor: "rgba(26, 138, 152, 0.2)",
-                color: "white",
+                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
+                color: themeMode === "dark" ? "white" : "#1A8A98",
                 "& .MuiChip-deleteIcon": {
-                  color: "rgba(255, 255, 255, 0.7)",
+                  color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
                   "&:hover": {
-                    color: "white",
+                    color: themeMode === "dark" ? "white" : "black",
                   },
                 },
               }}
@@ -823,12 +860,12 @@ export default function MainCharts({
               onDelete={() => setSelectedSeason("all")}
               size="small"
               sx={{
-                bgcolor: "rgba(26, 138, 152, 0.2)",
-                color: "white",
+                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
+                color: themeMode === "dark" ? "white" : "#1A8A98",
                 "& .MuiChip-deleteIcon": {
-                  color: "rgba(255, 255, 255, 0.7)",
+                  color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
                   "&:hover": {
-                    color: "white",
+                    color: themeMode === "dark" ? "white" : "black",
                   },
                 },
               }}
@@ -852,10 +889,14 @@ export default function MainCharts({
 
       {/* Leyenda de ganancia */}
       <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
-        <Typography variant="caption" sx={{ color: "rgba(255, 255, 255, 0.6)", fontStyle: "italic" }}>
+        <Typography
+          variant="caption"
+          sx={{ color: themeMode === "dark" ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.6)", fontStyle: "italic" }}
+        >
           * Ganancia = Ventas + Taquilla - Gastos
         </Typography>
       </Box>
     </Paper>
   )
 }
+

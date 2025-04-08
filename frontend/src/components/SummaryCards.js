@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect, useCallback } from "react"
 import axios from "axios"
 import { Paper, Typography, Stack, CircularProgress, Box, IconButton, Tooltip, Chip } from "@mui/material"
@@ -31,13 +33,20 @@ const cardConfig = [
 ]
 
 // Modificar la definición del componente para aceptar props de año, temporada y meses seleccionados
-export default function SummaryCards({ selectedYear, selectedTemporada, selectedMonths = [] }) {
+export default function SummaryCards({ selectedYear, selectedTemporada, selectedMonths = [], themeMode = "dark" }) {
   // Estado para almacenar los datos
   const [summaryData, setSummaryData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [refreshKey, setRefreshKey] = useState(0)
   const [activeFilter, setActiveFilter] = useState(null) // Para mostrar qué filtro está activo
+
+  // Determine background and text colors based on theme
+  const bgColor = themeMode === "dark" ? "#121212" : "#ffffff"
+  const secondaryTextColor = themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.6)"
+  const borderColor = themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(0, 0, 0, 0.1)"
+  const hoverBgColor = themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)"
+  const boxShadow = themeMode === "dark" ? "0 0 10px rgba(26, 138, 152, 0.1)" : "0 0 10px rgba(26, 138, 152, 0.2)"
 
   // Función para formatear valores numéricos
   const formatCurrency = (value) => {
@@ -242,8 +251,8 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
             label={activeFilter}
             size="small"
             sx={{
-              bgcolor: "rgba(26, 138, 152, 0.1)",
-              color: "#fff",
+              bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
+              color: themeMode === "dark" ? "#fff" : "#1A8A98",
               border: "1px solid rgba(26, 138, 152, 0.3)",
               "& .MuiChip-icon": {
                 color: "#1A8A98",
@@ -258,8 +267,11 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
               size="small"
               disabled={loading}
               sx={{
-                color: "rgba(255, 255, 255, 0.7)",
-                "&:hover": { color: "#1A8A98", bgcolor: "rgba(26, 138, 152, 0.1)" },
+                color: secondaryTextColor,
+                "&:hover": {
+                  color: "#1A8A98",
+                  bgcolor: hoverBgColor,
+                },
               }}
             >
               {loading ? <CircularProgress size={20} color="inherit" /> : <RefreshIcon size={20} />}
@@ -278,28 +290,33 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
               flexDirection: "column",
               height: 120,
               flex: 1,
-              bgcolor: "#121212",
+              bgcolor: bgColor,
               borderRadius: 2,
-              border: "1px solid rgba(26, 138, 152, 0.1)",
+              border: `1px solid ${borderColor}`,
               position: "relative",
               overflow: "hidden",
+              boxShadow: themeMode === "dark" ? "0 4px 8px rgba(0, 0, 0, 0.2)" : "0 2px 8px rgba(0, 0, 0, 0.05)",
               "&:hover": {
                 borderColor: "rgba(26, 138, 152, 0.3)",
-                boxShadow: "0 0 10px rgba(26, 138, 152, 0.1)",
+                boxShadow: boxShadow,
               },
-              "&::after": {
+              // Replace the bottom color band with a left side band
+              "&::before": {
                 content: '""',
                 position: "absolute",
-                bottom: 0,
+                top: 0,
                 left: 0,
-                width: "100%",
-                height: "4px",
+                width: "6px",
+                height: "100%",
                 backgroundColor: item.color,
-                opacity: 0.7,
+              },
+              // Remove the bottom band
+              "&::after": {
+                content: "none",
               },
             }}
           >
-            <Typography component="p" variant="subtitle1" color="text.secondary">
+            <Typography component="p" variant="subtitle1" color={secondaryTextColor}>
               {item.title}
             </Typography>
             <Typography
@@ -308,7 +325,7 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
               sx={{
                 mt: 1,
                 fontWeight: "bold",
-                color: item.color || "#1A8A98",
+                color: item.color, // Always use the card's color regardless of theme
                 display: "flex",
                 alignItems: "center",
               }}
@@ -327,3 +344,4 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
     </Box>
   )
 }
+

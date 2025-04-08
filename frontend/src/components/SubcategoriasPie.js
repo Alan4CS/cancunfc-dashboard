@@ -1,12 +1,40 @@
+"use client"
+
 import { useState, useEffect, useMemo, useCallback } from "react"
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer} from "recharts"
-import { Box, Typography, CircularProgress, Alert, FormControl, Select, MenuItem, InputLabel, Paper, Tabs,
-  Tab, useTheme, alpha, Chip, Stack, ToggleButtonGroup, ToggleButton, IconButton, Slider, TextField, InputAdornment,
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts"
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  Alert,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
+  Paper,
+  Tabs,
+  Tab,
+  useTheme,
+  alpha,
+  Chip,
+  Stack,
+  ToggleButtonGroup,
+  ToggleButton,
+  IconButton,
+  Slider,
+  TextField,
+  InputAdornment,
 } from "@mui/material"
 import axios from "axios"
-import { PieChart as PieChartIcon, RefreshCw as RefreshCwIcon, Calendar as CalendarIcon, 
-  CalendarDays as CalendarDaysIcon, Search as SearchIcon, Filter as FilterIcon, 
-  SlidersHorizontal as SlidersHorizontalIcon } from "lucide-react"
+import {
+  PieChartIcon,
+  RefreshCwIcon,
+  CalendarIcon,
+  CalendarDaysIcon,
+  SearchIcon,
+  FilterIcon,
+  SlidersHorizontalIcon,
+} from "lucide-react"
 
 // Colores para los segmentos del gráfico
 const COLORS = [
@@ -89,8 +117,7 @@ const CustomTooltip = ({ active, payload }) => {
   )
 }
 
-
-export default function SubcategoriaPieCharts() {
+export default function SubcategoriaPieCharts({ themeMode = "dark" }) {
   // Estado para los datos
   const [ventasMesData, setVentasMesData] = useState([])
   const [gastosMesData, setGastosMesData] = useState([])
@@ -114,20 +141,20 @@ export default function SubcategoriaPieCharts() {
   const [searchTerm, setSearchTerm] = useState("")
   const theme = useTheme()
 
- // Manejar cambio de pestaña
-const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
-  
+  // Manejar cambio de pestaña
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue)
+  }
+
   // Manejar cambio de modo de vista
   const handleViewModeChange = (event, newMode) => {
     if (newMode !== null) {
-      setViewMode(newMode);
+      setViewMode(newMode)
       // Resetear filtros específicos al cambiar de modo
       if (newMode === "mes") {
-        setSelectedTemporada("all");
+        setSelectedTemporada("all")
       } else {
-        setSelectedMonth("all");
+        setSelectedMonth("all")
       }
     }
   }
@@ -226,63 +253,86 @@ const handleTabChange = (event, newValue) => {
   }, [ventasMesData, gastosMesData, taquillaMesData, ventasTemporadaData, gastosTemporadaData, taquillaTemporadaData])
 
   // Función para procesar datos por mes (memoizada con useCallback)
-  const processMesData = useCallback((data, valueKey) => {
-    // Aplicar filtros
-    let filtered = [...data]
+  const processMesData = useCallback(
+    (data, valueKey) => {
+      // Aplicar filtros
+      let filtered = [...data]
 
-    if (selectedYear !== "all") {
-      filtered = filtered.filter((item) => item.Año.toString() === selectedYear.toString())
-    }
-
-    if (selectedMonth !== "all") {
-      filtered = filtered.filter((item) => item.Mes === selectedMonth)
-    }
-
-    // Filtrar por término de búsqueda si existe
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase()
-      filtered = filtered.filter((item) => item.Subcategoria.toLowerCase().includes(term))
-    }
-
-    // Agrupar por subcategoría y sumar valores
-    const grouped = filtered.reduce((acc, item) => {
-      const subcategoria = item.Subcategoria
-      const value = Number.parseFloat(item[valueKey]) || 0
-
-      if (!acc[subcategoria]) {
-        acc[subcategoria] = 0
+      if (selectedYear !== "all") {
+        filtered = filtered.filter((item) => item.Año.toString() === selectedYear.toString())
       }
-      acc[subcategoria] += value
-      return acc
-    }, {})
 
-    // Convertir a formato para el gráfico
-    let result = Object.entries(grouped).map(([name, value]) => ({ name, value }))
+      if (selectedMonth !== "all") {
+        filtered = filtered.filter((item) => item.Mes === selectedMonth)
+      }
 
-    // Ordenar de mayor a menor
-    result.sort((a, b) => b.value - a.value)
+      // Filtrar por término de búsqueda si existe
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase()
+        filtered = filtered.filter((item) => item.Subcategoria.toLowerCase().includes(term))
+      }
 
-    // Calcular el total para los porcentajes
-    const total = result.reduce((sum, item) => sum + item.value, 0)
+      // Agrupar por subcategoría y sumar valores
+      const grouped = filtered.reduce((acc, item) => {
+        const subcategoria = item.Subcategoria
+        const value = Number.parseFloat(item[valueKey]) || 0
 
-    // Añadir porcentaje a cada elemento
-    result = result.map((item) => ({
-      ...item,
-      percentage: (item.value / total) * 100,
-    }))
+        if (!acc[subcategoria]) {
+          acc[subcategoria] = 0
+        }
+        acc[subcategoria] += value
+        return acc
+      }, {})
 
-    // Aplicar filtro de porcentaje mínimo
-    if (minPercentage > 0) {
-      const mainCategories = result.filter((item) => item.percentage >= minPercentage)
-      const otherCategories = result.filter((item) => item.percentage < minPercentage)
+      // Convertir a formato para el gráfico
+      let result = Object.entries(grouped).map(([name, value]) => ({ name, value }))
 
-      // Si hay categorías que no cumplen con el porcentaje mínimo, agruparlas en "Otros"
-      if (otherCategories.length > 0) {
+      // Ordenar de mayor a menor
+      result.sort((a, b) => b.value - a.value)
+
+      // Calcular el total para los porcentajes
+      const total = result.reduce((sum, item) => sum + item.value, 0)
+
+      // Añadir porcentaje a cada elemento
+      result = result.map((item) => ({
+        ...item,
+        percentage: (item.value / total) * 100,
+      }))
+
+      // Aplicar filtro de porcentaje mínimo
+      if (minPercentage > 0) {
+        const mainCategories = result.filter((item) => item.percentage >= minPercentage)
+        const otherCategories = result.filter((item) => item.percentage < minPercentage)
+
+        // Si hay categorías que no cumplen con el porcentaje mínimo, agruparlas en "Otros"
+        if (otherCategories.length > 0) {
+          const otherSum = otherCategories.reduce((sum, item) => sum + item.value, 0)
+          const otherPercentage = (otherSum / total) * 100
+
+          result = [
+            ...mainCategories,
+            {
+              name: "Otros",
+              value: otherSum,
+              percentage: otherPercentage,
+              count: otherCategories.length,
+            },
+          ]
+        } else {
+          result = mainCategories
+        }
+      }
+
+      // Limitar el número de categorías si es necesario
+      if (result.length > maxCategories) {
+        const topCategories = result.slice(0, maxCategories - 1)
+        const otherCategories = result.slice(maxCategories - 1)
+
         const otherSum = otherCategories.reduce((sum, item) => sum + item.value, 0)
         const otherPercentage = (otherSum / total) * 100
 
         result = [
-          ...mainCategories,
+          ...topCategories,
           {
             name: "Otros",
             value: otherSum,
@@ -290,91 +340,94 @@ const handleTabChange = (event, newValue) => {
             count: otherCategories.length,
           },
         ]
-      } else {
-        result = mainCategories
       }
-    }
 
-    // Limitar el número de categorías si es necesario
-    if (result.length > maxCategories) {
-      const topCategories = result.slice(0, maxCategories - 1)
-      const otherCategories = result.slice(maxCategories - 1)
-
-      const otherSum = otherCategories.reduce((sum, item) => sum + item.value, 0)
-      const otherPercentage = (otherSum / total) * 100
-
-      result = [
-        ...topCategories,
-        {
-          name: "Otros",
-          value: otherSum,
-          percentage: otherPercentage,
-          count: otherCategories.length,
-        },
-      ]
-    }
-
-    return result
-  }, [selectedYear, selectedMonth, searchTerm, minPercentage, maxCategories])
+      return result
+    },
+    [selectedYear, selectedMonth, searchTerm, minPercentage, maxCategories],
+  )
 
   // Función para procesar datos por temporada (memoizada con useCallback)
-  const processTemporadaData = useCallback((data, valueKey) => {
-    // Aplicar filtros
-    let filtered = [...data]
+  const processTemporadaData = useCallback(
+    (data, valueKey) => {
+      // Aplicar filtros
+      let filtered = [...data]
 
-    if (selectedYear !== "all") {
-      filtered = filtered.filter((item) => item.Año.toString() === selectedYear.toString())
-    }
-
-    if (selectedTemporada !== "all") {
-      filtered = filtered.filter((item) => item.Temporada === selectedTemporada)
-    }
-
-    // Filtrar por término de búsqueda si existe
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase()
-      filtered = filtered.filter((item) => item.Subcategoria.toLowerCase().includes(term))
-    }
-
-    // Agrupar por subcategoría y sumar valores
-    const grouped = filtered.reduce((acc, item) => {
-      const subcategoria = item.Subcategoria
-      const value = Number.parseFloat(item[valueKey]) || 0
-
-      if (!acc[subcategoria]) {
-        acc[subcategoria] = 0
+      if (selectedYear !== "all") {
+        filtered = filtered.filter((item) => item.Año.toString() === selectedYear.toString())
       }
-      acc[subcategoria] += value
-      return acc
-    }, {})
 
-    // Convertir a formato para el gráfico
-    let result = Object.entries(grouped).map(([name, value]) => ({ name, value }))
+      if (selectedTemporada !== "all") {
+        filtered = filtered.filter((item) => item.Temporada === selectedTemporada)
+      }
 
-    // Ordenar de mayor a menor
-    result.sort((a, b) => b.value - a.value)
+      // Filtrar por término de búsqueda si existe
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase()
+        filtered = filtered.filter((item) => item.Subcategoria.toLowerCase().includes(term))
+      }
 
-    // Calcular el total para los porcentajes
-    const total = result.reduce((sum, item) => sum + item.value, 0)
+      // Agrupar por subcategoría y sumar valores
+      const grouped = filtered.reduce((acc, item) => {
+        const subcategoria = item.Subcategoria
+        const value = Number.parseFloat(item[valueKey]) || 0
 
-    // Añadir porcentaje a cada elemento
-    result = result.map((item) => ({
-      ...item,
-      percentage: (item.value / total) * 100,
-    }))
+        if (!acc[subcategoria]) {
+          acc[subcategoria] = 0
+        }
+        acc[subcategoria] += value
+        return acc
+      }, {})
 
-    // Aplicar filtro de porcentaje mínimo
-    if (minPercentage > 0) {
-      const mainCategories = result.filter((item) => item.percentage >= minPercentage)
-      const otherCategories = result.filter((item) => item.percentage < minPercentage)
+      // Convertir a formato para el gráfico
+      let result = Object.entries(grouped).map(([name, value]) => ({ name, value }))
 
-      // Si hay categorías que no cumplen con el porcentaje mínimo, agruparlas en "Otros"
-      if (otherCategories.length > 0) {
+      // Ordenar de mayor a menor
+      result.sort((a, b) => b.value - a.value)
+
+      // Calcular el total para los porcentajes
+      const total = result.reduce((sum, item) => sum + item.value, 0)
+
+      // Añadir porcentaje a cada elemento
+      result = result.map((item) => ({
+        ...item,
+        percentage: (item.value / total) * 100,
+      }))
+
+      // Aplicar filtro de porcentaje mínimo
+      if (minPercentage > 0) {
+        const mainCategories = result.filter((item) => item.percentage >= minPercentage)
+        const otherCategories = result.filter((item) => item.percentage < minPercentage)
+
+        // Si hay categorías que no cumplen con el porcentaje mínimo, agruparlas en "Otros"
+        if (otherCategories.length > 0) {
+          const otherSum = otherCategories.reduce((sum, item) => sum + item.value, 0)
+          const otherPercentage = (otherSum / total) * 100
+
+          result = [
+            ...mainCategories,
+            {
+              name: "Otros",
+              value: otherSum,
+              percentage: otherPercentage,
+              count: otherCategories.length,
+            },
+          ]
+        } else {
+          result = mainCategories
+        }
+      }
+
+      // Limitar el número de categorías si es necesario
+      if (result.length > maxCategories) {
+        const topCategories = result.slice(0, maxCategories - 1)
+        const otherCategories = result.slice(maxCategories - 1)
+
         const otherSum = otherCategories.reduce((sum, item) => sum + item.value, 0)
         const otherPercentage = (otherSum / total) * 100
 
         result = [
-          ...mainCategories,
+          ...topCategories,
           {
             name: "Otros",
             value: otherSum,
@@ -382,62 +435,42 @@ const handleTabChange = (event, newValue) => {
             count: otherCategories.length,
           },
         ]
-      } else {
-        result = mainCategories
       }
-    }
 
-    // Limitar el número de categorías si es necesario
-    if (result.length > maxCategories) {
-      const topCategories = result.slice(0, maxCategories - 1)
-      const otherCategories = result.slice(maxCategories - 1)
-
-      const otherSum = otherCategories.reduce((sum, item) => sum + item.value, 0)
-      const otherPercentage = (otherSum / total) * 100
-
-      result = [
-        ...topCategories,
-        {
-          name: "Otros",
-          value: otherSum,
-          percentage: otherPercentage,
-          count: otherCategories.length,
-        },
-      ]
-    }
-
-    return result
-  }, [selectedYear, selectedTemporada, searchTerm, minPercentage, maxCategories])
+      return result
+    },
+    [selectedYear, selectedTemporada, searchTerm, minPercentage, maxCategories],
+  )
 
   // Datos procesados para cada tipo y vista
   const processedVentasMesData = useMemo(
     () => processMesData(ventasMesData, "total_ventas"),
-    [processMesData, ventasMesData]
+    [processMesData, ventasMesData],
   )
 
   const processedGastosMesData = useMemo(
     () => processMesData(gastosMesData, "total_gasto"),
-    [processMesData, gastosMesData]
+    [processMesData, gastosMesData],
   )
 
   const processedTaquillaMesData = useMemo(
     () => processMesData(taquillaMesData, "total_taquilla"),
-    [processMesData, taquillaMesData]
+    [processMesData, taquillaMesData],
   )
 
   const processedVentasTemporadaData = useMemo(
     () => processTemporadaData(ventasTemporadaData, "total_ventas"),
-    [processTemporadaData, ventasTemporadaData]
+    [processTemporadaData, ventasTemporadaData],
   )
 
   const processedGastosTemporadaData = useMemo(
     () => processTemporadaData(gastosTemporadaData, "total_gasto"),
-    [processTemporadaData, gastosTemporadaData]
+    [processTemporadaData, gastosTemporadaData],
   )
 
   const processedTaquillaTemporadaData = useMemo(
     () => processTemporadaData(taquillaTemporadaData, "total_taquilla"),
-    [processTemporadaData, taquillaTemporadaData]
+    [processTemporadaData, taquillaTemporadaData],
   )
 
   // Determinar qué datos mostrar según la pestaña seleccionada y el modo de vista
@@ -493,9 +526,6 @@ const handleTabChange = (event, newValue) => {
     }
   }
 
-  // Resto del componente (render) permanece igual...
-  // ... [el resto del código de renderizado permanece igual]
-
   // Renderizar el gráfico
   const renderChart = () => {
     if (loading) {
@@ -512,8 +542,9 @@ const handleTabChange = (event, newValue) => {
           severity="error"
           sx={{
             my: 2,
-            backgroundColor: alpha(theme.palette.error.main, 0.1),
-            color: theme.palette.error.light,
+            backgroundColor:
+              themeMode === "dark" ? alpha(theme.palette.error.main, 0.1) : alpha(theme.palette.error.main, 0.05),
+            color: themeMode === "dark" ? theme.palette.error.light : theme.palette.error.main,
           }}
         >
           {error}
@@ -528,8 +559,9 @@ const handleTabChange = (event, newValue) => {
           severity="info"
           sx={{
             my: 2,
-            backgroundColor: alpha(theme.palette.info.main, 0.1),
-            color: theme.palette.info.light,
+            backgroundColor:
+              themeMode === "dark" ? alpha(theme.palette.info.main, 0.1) : alpha(theme.palette.info.main, 0.05),
+            color: themeMode === "dark" ? theme.palette.info.light : theme.palette.info.main,
           }}
         >
           Los datos de taquilla por temporada no están disponibles. Por favor, use la vista por mes para ver los datos
@@ -544,8 +576,9 @@ const handleTabChange = (event, newValue) => {
           severity="info"
           sx={{
             my: 2,
-            backgroundColor: alpha(theme.palette.info.main, 0.1),
-            color: theme.palette.info.light,
+            backgroundColor:
+              themeMode === "dark" ? alpha(theme.palette.info.main, 0.1) : alpha(theme.palette.info.main, 0.05),
+            color: themeMode === "dark" ? theme.palette.info.light : theme.palette.info.main,
           }}
         >
           No hay datos disponibles para los filtros seleccionados.
@@ -558,8 +591,8 @@ const handleTabChange = (event, newValue) => {
         <PieChart>
           <Pie
             activeIndex={false}
-            activeShape={false}// Desactiva la forma activa (resaltado al hacer clic)
-            onClick={null}  // Desactiva el evento de clic
+            activeShape={false} // Desactiva la forma activa (resaltado al hacer clic)
+            onClick={null} // Desactiva el evento de clic
             data={currentData}
             dataKey="value"
             nameKey="name"
@@ -568,16 +601,14 @@ const handleTabChange = (event, newValue) => {
             innerRadius={80}
             outerRadius={140}
             paddingAngle={2}
-            labelLine={false}  // Deshabilita la línea de conexión
-            label={false}  // Deshabilita las etiquetas dentro de los segmentos
-            //label={({ name, percentage }) => `${name}: ${percentage.toFixed(1)}%`}
-            //labelLine={{ stroke: "rgba(255, 255, 255, 0.3)", strokeWidth: 1 }}
+            labelLine={false} // Deshabilita la línea de conexión
+            label={false} // Deshabilita las etiquetas dentro de los segmentos
           >
             {currentData.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={entry.name === "Otros" ? OTHERS_COLOR : COLORS[index % COLORS.length]}
-                stroke="rgba(0, 0, 0, 0.3)"
+                stroke={themeMode === "dark" ? "rgba(0, 0, 0, 0.3)" : "rgba(0, 0, 0, 0.1)"}
                 strokeWidth={1}
               />
             ))}
@@ -590,10 +621,10 @@ const handleTabChange = (event, newValue) => {
             wrapperStyle={{
               paddingLeft: 20,
               fontSize: 12,
-              color: "white",
+              color: themeMode === "dark" ? "white" : "text.primary",
             }}
             formatter={(value, entry) => (
-              <span style={{ color: "white" }}>
+              <span style={{ color: themeMode === "dark" ? "white" : "#333" }}>
                 {value} ({entry.payload.percentage.toFixed(1)}%)
               </span>
             )}
@@ -608,9 +639,9 @@ const handleTabChange = (event, newValue) => {
       sx={{
         p: 3,
         borderRadius: 2,
-        bgcolor: "#121212",
-        border: "1px solid rgba(26, 138, 152, 0.1)",
-        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+        bgcolor: themeMode === "dark" ? "#121212" : "#ffffff",
+        border: themeMode === "dark" ? "1px solid rgba(26, 138, 152, 0.1)" : "1px solid rgba(0, 0, 0, 0.1)",
+        boxShadow: themeMode === "dark" ? "0 4px 20px rgba(0, 0, 0, 0.2)" : "0 4px 20px rgba(0, 0, 0, 0.05)",
         height: "100%",
         display: "flex",
         flexDirection: "column",
@@ -629,17 +660,17 @@ const handleTabChange = (event, newValue) => {
             aria-label="modo de vista"
             sx={{
               ".MuiToggleButton-root": {
-                color: "rgba(255, 255, 255, 0.7)",
+                color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
                 borderColor: "rgba(26, 138, 152, 0.3)",
                 "&.Mui-selected": {
-                  backgroundColor: "rgba(26, 138, 152, 0.2)",
+                  backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
                   color: "#1A8A98",
                   "&:hover": {
-                    backgroundColor: "rgba(26, 138, 152, 0.3)",
+                    backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.3)" : "rgba(26, 138, 152, 0.15)",
                   },
                 },
                 "&:hover": {
-                  backgroundColor: "rgba(26, 138, 152, 0.1)",
+                  backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
                 },
               },
             }}
@@ -658,10 +689,18 @@ const handleTabChange = (event, newValue) => {
             onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
             size="small"
             sx={{
-              color: showAdvancedFilters ? "#1A8A98" : "rgba(255, 255, 255, 0.7)",
-              backgroundColor: showAdvancedFilters ? "rgba(26, 138, 152, 0.1)" : "transparent",
+              color: showAdvancedFilters
+                ? "#1A8A98"
+                : themeMode === "dark"
+                  ? "rgba(255, 255, 255, 0.7)"
+                  : "rgba(0, 0, 0, 0.7)",
+              backgroundColor: showAdvancedFilters
+                ? themeMode === "dark"
+                  ? "rgba(26, 138, 152, 0.1)"
+                  : "rgba(26, 138, 152, 0.05)"
+                : "transparent",
               "&:hover": {
-                backgroundColor: "rgba(26, 138, 152, 0.1)",
+                backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
                 color: "#1A8A98",
               },
             }}
@@ -673,9 +712,9 @@ const handleTabChange = (event, newValue) => {
             onClick={handleRefresh}
             size="small"
             sx={{
-              color: "rgba(255, 255, 255, 0.7)",
+              color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
               "&:hover": {
-                backgroundColor: "rgba(26, 138, 152, 0.1)",
+                backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
                 color: "#1A8A98",
               },
             }}
@@ -692,7 +731,7 @@ const handleTabChange = (event, newValue) => {
         sx={{
           mb: 3,
           "& .MuiTab-root": {
-            color: "rgba(255, 255, 255, 0.7)",
+            color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
             "&.Mui-selected": {
               color: "#1A8A98",
             },
@@ -720,11 +759,19 @@ const handleTabChange = (event, newValue) => {
             mb: 3,
             p: 2,
             borderRadius: 2,
-            bgcolor: "rgba(26, 138, 152, 0.05)",
-            border: "1px solid rgba(26, 138, 152, 0.1)",
+            bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.05)" : "rgba(26, 138, 152, 0.03)",
+            border: themeMode === "dark" ? "1px solid rgba(26, 138, 152, 0.1)" : "1px solid rgba(26, 138, 152, 0.08)",
           }}
         >
-          <Typography variant="subtitle2" sx={{ mb: 2, display: "flex", alignItems: "center", color: "#1A8A98" }}>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              mb: 2,
+              display: "flex",
+              alignItems: "center",
+              color: "#1A8A98",
+            }}
+          >
             <FilterIcon size={16} style={{ marginRight: "8px" }} />
             Filtros avanzados
           </Typography>
@@ -741,14 +788,17 @@ const handleTabChange = (event, newValue) => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SearchIcon size={16} color="rgba(255, 255, 255, 0.5)" />
+                      <SearchIcon
+                        size={16}
+                        color={themeMode === "dark" ? "rgba(255, 255, 255, 0.5)" : "rgba(0, 0, 0, 0.5)"}
+                      />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
-                    color: "white",
-                    bgcolor: "rgba(26, 138, 152, 0.1)",
+                    color: themeMode === "dark" ? "white" : "text.primary",
+                    bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
                     "& fieldset": {
                       borderColor: "rgba(26, 138, 152, 0.3)",
                     },
@@ -765,7 +815,14 @@ const handleTabChange = (event, newValue) => {
 
             {/* Porcentaje mínimo */}
             <Box sx={{ flex: 1 }}>
-              <Typography variant="caption" sx={{ color: "rgba(255, 255, 255, 0.7)", mb: 1, display: "block" }}>
+              <Typography
+                variant="caption"
+                sx={{
+                  color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "text.secondary",
+                  mb: 1,
+                  display: "block",
+                }}
+              >
                 Porcentaje mínimo: {minPercentage}%
               </Typography>
               <Slider
@@ -792,7 +849,14 @@ const handleTabChange = (event, newValue) => {
 
             {/* Número máximo de categorías */}
             <Box sx={{ flex: 1 }}>
-              <Typography variant="caption" sx={{ color: "rgba(255, 255, 255, 0.7)", mb: 1, display: "block" }}>
+              <Typography
+                variant="caption"
+                sx={{
+                  color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "text.secondary",
+                  mb: 1,
+                  display: "block",
+                }}
+              >
                 Máximo de categorías: {maxCategories}
               </Typography>
               <Slider
@@ -822,14 +886,20 @@ const handleTabChange = (event, newValue) => {
       {/* Filtros básicos */}
       <Box sx={{ display: "flex", gap: 2, mb: 3, flexWrap: "wrap" }}>
         <FormControl size="small" sx={{ minWidth: 120 }}>
-          <InputLabel sx={{ color: "rgba(255, 255, 255, 0.7)" }}>Año</InputLabel>
+          <InputLabel
+            sx={{
+              color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
+            }}
+          >
+            Año
+          </InputLabel>
           <Select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
             label="Año"
             sx={{
-              bgcolor: "rgba(26, 138, 152, 0.1)",
-              color: "white",
+              bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
+              color: themeMode === "dark" ? "white" : "text.primary",
               ".MuiOutlinedInput-notchedOutline": {
                 borderColor: "rgba(26, 138, 152, 0.3)",
               },
@@ -840,7 +910,7 @@ const handleTabChange = (event, newValue) => {
                 borderColor: "#1A8A98",
               },
               ".MuiSvgIcon-root": {
-                color: "white",
+                color: themeMode === "dark" ? "white" : "rgba(0, 0, 0, 0.7)",
               },
             }}
           >
@@ -855,14 +925,20 @@ const handleTabChange = (event, newValue) => {
 
         {viewMode === "mes" && (
           <FormControl size="small" sx={{ minWidth: 120 }}>
-            <InputLabel sx={{ color: "rgba(255, 255, 255, 0.7)" }}>Mes</InputLabel>
+            <InputLabel
+              sx={{
+                color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
+              }}
+            >
+              Mes
+            </InputLabel>
             <Select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
               label="Mes"
               sx={{
-                bgcolor: "rgba(26, 138, 152, 0.1)",
-                color: "white",
+                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
+                color: themeMode === "dark" ? "white" : "text.primary",
                 ".MuiOutlinedInput-notchedOutline": {
                   borderColor: "rgba(26, 138, 152, 0.3)",
                 },
@@ -873,7 +949,7 @@ const handleTabChange = (event, newValue) => {
                   borderColor: "#1A8A98",
                 },
                 ".MuiSvgIcon-root": {
-                  color: "white",
+                  color: themeMode === "dark" ? "white" : "rgba(0, 0, 0, 0.7)",
                 },
               }}
             >
@@ -889,14 +965,20 @@ const handleTabChange = (event, newValue) => {
 
         {viewMode === "temporada" && (
           <FormControl size="small" sx={{ minWidth: 120 }}>
-            <InputLabel sx={{ color: "rgba(255, 255, 255, 0.7)" }}>Temporada</InputLabel>
+            <InputLabel
+              sx={{
+                color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
+              }}
+            >
+              Temporada
+            </InputLabel>
             <Select
               value={selectedTemporada}
               onChange={(e) => setSelectedTemporada(e.target.value)}
               label="Temporada"
               sx={{
-                bgcolor: "rgba(26, 138, 152, 0.1)",
-                color: "white",
+                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
+                color: themeMode === "dark" ? "white" : "text.primary",
                 ".MuiOutlinedInput-notchedOutline": {
                   borderColor: "rgba(26, 138, 152, 0.3)",
                 },
@@ -907,7 +989,7 @@ const handleTabChange = (event, newValue) => {
                   borderColor: "#1A8A98",
                 },
                 ".MuiSvgIcon-root": {
-                  color: "white",
+                  color: themeMode === "dark" ? "white" : "rgba(0, 0, 0, 0.7)",
                 },
               }}
             >
@@ -931,12 +1013,12 @@ const handleTabChange = (event, newValue) => {
               onDelete={() => setSelectedYear("all")}
               size="small"
               sx={{
-                bgcolor: "rgba(26, 138, 152, 0.2)",
-                color: "white",
+                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
+                color: themeMode === "dark" ? "white" : "text.primary",
                 "& .MuiChip-deleteIcon": {
-                  color: "rgba(255, 255, 255, 0.7)",
+                  color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
                   "&:hover": {
-                    color: "white",
+                    color: themeMode === "dark" ? "white" : "black",
                   },
                 },
               }}
@@ -948,12 +1030,12 @@ const handleTabChange = (event, newValue) => {
               onDelete={() => setSelectedMonth("all")}
               size="small"
               sx={{
-                bgcolor: "rgba(26, 138, 152, 0.2)",
-                color: "white",
+                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
+                color: themeMode === "dark" ? "white" : "text.primary",
                 "& .MuiChip-deleteIcon": {
-                  color: "rgba(255, 255, 255, 0.7)",
+                  color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
                   "&:hover": {
-                    color: "white",
+                    color: themeMode === "dark" ? "white" : "black",
                   },
                 },
               }}
@@ -965,12 +1047,12 @@ const handleTabChange = (event, newValue) => {
               onDelete={() => setSelectedTemporada("all")}
               size="small"
               sx={{
-                bgcolor: "rgba(26, 138, 152, 0.2)",
-                color: "white",
+                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
+                color: themeMode === "dark" ? "white" : "text.primary",
                 "& .MuiChip-deleteIcon": {
-                  color: "rgba(255, 255, 255, 0.7)",
+                  color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
                   "&:hover": {
-                    color: "white",
+                    color: themeMode === "dark" ? "white" : "black",
                   },
                 },
               }}
@@ -982,12 +1064,12 @@ const handleTabChange = (event, newValue) => {
               onDelete={() => setSearchTerm("")}
               size="small"
               sx={{
-                bgcolor: "rgba(26, 138, 152, 0.2)",
-                color: "white",
+                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
+                color: themeMode === "dark" ? "white" : "text.primary",
                 "& .MuiChip-deleteIcon": {
-                  color: "rgba(255, 255, 255, 0.7)",
+                  color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
                   "&:hover": {
-                    color: "white",
+                    color: themeMode === "dark" ? "white" : "black",
                   },
                 },
               }}
@@ -1000,8 +1082,21 @@ const handleTabChange = (event, newValue) => {
       <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>{renderChart()}</Box>
 
       {/* Leyenda informativa */}
-      <Box sx={{ mt: 2, p: 2, bgcolor: "rgba(26, 138, 152, 0.05)", borderRadius: 1 }}>
-        <Typography variant="caption" sx={{ color: "rgba(255, 255, 255, 0.7)", fontStyle: "italic" }}>
+      <Box
+        sx={{
+          mt: 2,
+          p: 2,
+          bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.05)" : "rgba(26, 138, 152, 0.03)",
+          borderRadius: 1,
+        }}
+      >
+        <Typography
+          variant="caption"
+          sx={{
+            color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.6)",
+            fontStyle: "italic",
+          }}
+        >
           * Pase el cursor sobre cada segmento para ver detalles. Las subcategorías pequeñas se agrupan en "Otros" para
           mejorar la visualización. Utilice los filtros avanzados para ajustar el umbral de agrupación y el número
           máximo de categorías a mostrar.
@@ -1010,3 +1105,4 @@ const handleTabChange = (event, newValue) => {
     </Paper>
   )
 }
+
