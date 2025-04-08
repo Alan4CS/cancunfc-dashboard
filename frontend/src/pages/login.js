@@ -22,6 +22,8 @@ const Login = ({ setToken }) => {
             const data = await response.json()
             if (!response.ok) throw new Error(data.message)
 
+            localStorage.setItem("username", username)
+
             localStorage.setItem("token", data.token)
             setToken(data.token)
         } catch (err) {

@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useCallback } from "react"
 import axios from "axios"
 import { Paper, Typography, Stack, CircularProgress, Box, IconButton, Tooltip, Chip } from "@mui/material"

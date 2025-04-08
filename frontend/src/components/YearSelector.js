@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { Box, Paper, Typography, Stack, Chip, IconButton, Fade } from "@mui/material"
 import { Close as CloseIcon, FilterAlt as FilterAltIcon } from "@mui/icons-material"

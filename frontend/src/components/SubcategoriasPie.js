@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useMemo, useCallback } from "react"
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts"
 import {
