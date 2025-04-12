@@ -1,15 +1,5 @@
 import { useState } from "react"
-import {
-  Box,
-  Container,
-  CssBaseline,
-  ThemeProvider,
-  IconButton,
-  Typography,
-  Collapse,
-  Divider,
-  Fade,
-  Tooltip,
+import { Box, Container, CssBaseline, ThemeProvider, IconButton, Typography, Collapse, Divider, Fade, Tooltip,
 } from "@mui/material"
 // Importar componentes
 import Header from "../components/header"
@@ -20,7 +10,6 @@ import SubcategoriasChart from "../components/SubcategoriasChart"
 import YearSelector from "../components/YearSelector"
 import { createAppTheme } from "../style/theme"
 import CompetenciaChart from "../components/CompetenciaChart"
-import SubcategoriaPie from "../components/SubcategoriasPie"
 import { CalendarRange } from 'lucide-react'
 
 export default function Dashboard() {
@@ -76,7 +65,7 @@ export default function Dashboard() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", height: "100vh"}}>
         {/* Header fijo */}
         <Box
           sx={{
@@ -193,20 +182,35 @@ export default function Dashboard() {
               </Box>
             </Box>
 
-            {/* Subcategorías */}
-            <Box sx={{ mb: 4 }}>
-              <SubcategoriasChart themeMode={themeMode} />
-            </Box>
+            {/* Subcategorías y Competencia Chart */}
+            <Box sx={{ display: "flex", gap: 3, mb: 4 }}>
+              {/* Subcategorías Chart */}
+              <Box
+                sx={{
+                  flex: "1 1 70%", // El gráfico de subcategorías toma el 70% del ancho disponible
+                  minWidth: "0", // Evita que se sobrepase el contenedor
+                  maxHeight: "650px", // Establece una altura máxima para el gráfico
+                  overflowY: "auto", // Permite desplazamiento si el contenido excede
+                  flexShrink: 0, // Evita que el gráfico se reduzca más allá de su tamaño mínimo
+                }}
+              >
+                <SubcategoriasChart themeMode={themeMode} />
+              </Box>
 
-            {/* Competencia Chart y Subcategoria Pie */}
-            <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 3, mb: 4 }}>
-              <Box sx={{ flex: "1 1 33%", width: "100%" }}>
+              {/* Competencia Chart */}
+              <Box
+                sx={{
+                  flex: "1 1 28%", // El gráfico de competencia toma el 28% del ancho disponible
+                  minWidth: "0", // Evita que se sobrepase el contenedor
+                  maxHeight: "650px", // Establece una altura máxima para el gráfico
+                  flexShrink: 0, // Evita que el gráfico se reduzca más allá de su tamaño mínimo
+                  height: "650px", // Establece una altura fija para el gráfico de competencia
+                }}
+              >
                 <CompetenciaChart themeMode={themeMode} />
               </Box>
-              <Box sx={{ flex: "1 1 66%", width: "100%" }}>
-                <SubcategoriaPie themeMode={themeMode} />
-              </Box>
             </Box>
+
 
             {/* Footer simple */}
             <Divider sx={{ my: 4, bgcolor: "rgba(255, 255, 255, 0.1)" }} />

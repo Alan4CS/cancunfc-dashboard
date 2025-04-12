@@ -1,18 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react"
-import {
-  Paper,
-  Box,
-  Tabs,
-  Tab,
-  Typography,
-  CircularProgress,
-  Alert,
-  Skeleton,
-  IconButton,
-  Tooltip as MuiTooltip,
-  ToggleButtonGroup,
-  ToggleButton,
-  Chip,
+import { Paper, Box, Tabs, Tab, Typography, CircularProgress, Alert, Skeleton,
+  IconButton, Tooltip as MuiTooltip, ToggleButtonGroup, ToggleButton, Chip,
 } from "@mui/material"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from "recharts"
 import axios from "axios"
@@ -34,10 +22,11 @@ const CustomTooltip = ({ active, payload, label }) => {
 
   const dataKey = payload[0].dataKey
   const value = payload[0].value
+  const percentage = payload[0].payload.percentage || 0 // El porcentaje se extrae aquí
   const color = payload[0].color
 
   // Determinar el título según el dataKey
-  const title = dataKey === "total_ventas" ? "Ventas" : "Gastos"
+  const title = dataKey === "total_ventas" ? "Ventas" : dataKey === "total_gasto" ? "Gastos" : "Taquilla"
 
   return (
     <Box
@@ -68,9 +57,15 @@ const CustomTooltip = ({ active, payload, label }) => {
           {title}: ${value.toLocaleString()}
         </Typography>
       </Box>
+      <Box sx={{ display: "flex", alignItems: "center", ml: 3.5 }}>
+        <Typography variant="body2" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+          ({percentage.toFixed(1)}% del total de {title.toLowerCase()})
+        </Typography>
+      </Box>
     </Box>
   )
 }
+
 
 export default function SubcategoriasChart({ themeMode = "dark" }) {
   const [tabValue, setTabValue] = useState(0)
@@ -206,32 +201,48 @@ export default function SubcategoriasChart({ themeMode = "dark" }) {
     return title
   }
 
-  // Filtrar los datos según el tipo de filtro seleccionado
+  // Filtrar los datos según el tipo de filtro seleccionado y calcular porcentajes en base al total global
   const filteredData = useMemo(() => {
     let currentData = []
+    let dataKey = ""
 
     switch (tabValue) {
       case 0:
         currentData = ventasData
+        dataKey = "total_ventas"
         break
       case 1:
         currentData = costosData
+        dataKey = "total_gasto"
         break
       case 2:
         currentData = taquillaData
+        dataKey = "total_taquilla"
         break
       default:
         currentData = ventasData
+        dataKey = "total_ventas"
     }
 
+    // Calcular el total global de todas las subcategorías (sin aplicar filtros aún)
+    const totalGlobal = currentData.reduce((sum, item) => sum + (parseFloat(item[dataKey]) || 0), 0)
+
+    // Añadir el porcentaje a cada subcategoría, en relación con el total global
+    const dataWithPercentages = currentData.map((item) => ({
+      ...item,
+      percentage: totalGlobal > 0 ? (parseFloat(item[dataKey]) / totalGlobal) * 100 : 0, // Cálculo del porcentaje
+    }))
+
+    // Ahora aplicar el filtro de cantidad (Top 5, Top 10, etc.)
+    let filtered = [...dataWithPercentages]
     if (filterType === "top5") {
-      return currentData.slice(0, 5)
+      filtered = filtered.slice(0, 5)
     } else if (filterType === "top10") {
-      return currentData.slice(0, 10)
+      filtered = filtered.slice(0, 10)
     }
 
-    return currentData
-  }, [tabValue, ventasData, costosData, taquillaData, filterType])
+    return filtered
+  }, [tabValue, ventasData, costosData, taquillaData, filterType]) // Dependencias del hook
 
   // Determinar si hay datos disponibles
   const hasData = filteredData && filteredData.length > 0
@@ -248,7 +259,7 @@ export default function SubcategoriasChart({ themeMode = "dark" }) {
   const getMaxValue = useMemo(() => {
     if (!hasData) return 1000000
 
-    const dataKey = tabValue === 0 ? "total_ventas" : "total_gasto"
+    const dataKey = tabValue === 0 ? "total_ventas" : tabValue === 1 ? "total_gasto" : "total_taquilla"
     const maxValue = Math.max(...filteredData.map((item) => item[dataKey] || 0))
 
     // Añadir un 15% de margen para que se vea el final de la barra
@@ -312,76 +323,42 @@ export default function SubcategoriasChart({ themeMode = "dark" }) {
 
     return (
       <ResponsiveContainer width="100%" height={chartHeight}>
-        <BarChart
-          data={filteredData}
-          layout="vertical"
-          margin={{ top: 10, right: 80, left: 5, bottom: 10 }}
-          barSize={30} // Barras más anchas
-          barGap={6}
-        >
+        <BarChart data={filteredData} layout="vertical" margin={{ top: 10, right: 120, left: 5, bottom: 10 }} barSize={30} barGap={6}>
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor={gradientColor1} />
               <stop offset="100%" stopColor={gradientColor2} />
             </linearGradient>
           </defs>
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke={themeMode === "dark" ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.1)"}
-            strokeWidth={1.5}
-          />
+          <CartesianGrid strokeDasharray="3 3" stroke={themeMode === "dark" ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.1)"} strokeWidth={1.5} />
           <XAxis
             type="number"
-            tickFormatter={formatCurrency} // Usar la función de formato personalizada
+            tickFormatter={formatCurrency}
             stroke={themeMode === "dark" ? "#ccc" : "#666"}
             strokeWidth={1.5}
-            tick={{
-              fill: themeMode === "dark" ? "#ccc" : "#666",
-              fontSize: 12,
-            }}
-            axisLine={{
-              stroke: themeMode === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)",
-              strokeWidth: 1.5,
-            }}
-            domain={[0, getMaxValue]} // Dominio personalizado con el valor máximo calculado
-            allowDataOverflow={false} // Evita que los datos se salgan del área del gráfico
-            padding={{ left: 0, right: 10 }} // Añadir padding al eje X
+            tick={{ fill: themeMode === "dark" ? "#ccc" : "#666", fontSize: 12 }}
+            axisLine={{ stroke: themeMode === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)", strokeWidth: 1.5 }}
+            domain={[0, getMaxValue]}
+            allowDataOverflow={false}
+            padding={{ left: 0, right: 10 }}
           />
           <YAxis
             dataKey="Subcategoria"
             type="category"
             width={170}
-            tick={{
-              fill: themeMode === "dark" ? "#fff" : "#333",
-              fontSize: 12,
-              fontWeight: "medium",
-            }}
+            tick={{ fill: themeMode === "dark" ? "#fff" : "#333", fontSize: 12, fontWeight: "medium" }}
             stroke={themeMode === "dark" ? "#ccc" : "#666"}
             strokeWidth={1.5}
-            axisLine={{
-              stroke: themeMode === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)",
-              strokeWidth: 1.5,
-            }}
-            padding={{ top: 15, bottom: 15 }} // Añadir padding al eje Y
+            axisLine={{ stroke: themeMode === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)", strokeWidth: 1.5 }}
+            padding={{ top: 15, bottom: 15 }}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Bar
-            dataKey={dataKey}
-            fill={`url(#${gradientId})`}
-            radius={[0, 8, 8, 0]} // Bordes redondeados más pronunciados
-            animationDuration={1200}
-            animationEasing="ease-out"
-            style={{ filter: "drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.4))" }} // Sombra más pronunciada
-          >
+          <Bar dataKey={dataKey} fill={`url(#${gradientId})`} radius={[0, 8, 8, 0]} animationDuration={1200} animationEasing="ease-out" style={{ filter: "drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.4))" }}>
             <LabelList
               dataKey={dataKey}
               position="right"
-              formatter={formatCurrency} // Usar la función de formato personalizada
-              style={{
-                fill: themeMode === "dark" ? "#fff" : "#333",
-                fontSize: 12,
-                fontWeight: "medium",
-              }}
+              formatter={formatCurrency}
+              style={{ fill: themeMode === "dark" ? "#fff" : "#333", fontSize: 12, fontWeight: "medium" }}
               offset={10} // Desplazar las etiquetas para que no queden pegadas a las barras
             />
           </Bar>
@@ -544,4 +521,3 @@ export default function SubcategoriasChart({ themeMode = "dark" }) {
     </Paper>
   )
 }
-

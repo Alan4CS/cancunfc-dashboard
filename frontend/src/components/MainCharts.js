@@ -1,35 +1,9 @@
 import { useState, useEffect, useMemo, useCallback } from "react"
-import {
-  Paper,
-  Typography,
-  Box,
-  CircularProgress,
-  Alert,
-  FormControl,
-  Select,
-  MenuItem,
-  InputLabel,
-  ToggleButtonGroup,
-  ToggleButton,
-  Skeleton,
-  useMediaQuery,
-  useTheme,
-  Chip,
+import { Paper, Typography, Box, CircularProgress, Alert, ToggleButtonGroup, ToggleButton, Skeleton,
+  useMediaQuery, useTheme, FormControl, Select, MenuItem, InputLabel,
 } from "@mui/material"
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  ReferenceLine,
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  ReferenceLine, BarChart, Bar, LineChart, Line,
 } from "recharts"
 import axios from "axios"
 import { BarChartIcon, LineChartIcon, TrendingUpIcon, RefreshCwIcon as RefreshIcon } from "lucide-react"
@@ -91,14 +65,11 @@ export default function MainCharts({
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [chartType, setChartType] = useState("area")
-  const [selectedYear, setSelectedYear] = useState("all")
-  const [selectedSeason, setSelectedSeason] = useState("all")
   const [refreshKey, setRefreshKey] = useState(0)
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const [partidosData, setPartidosData] = useState([])
-  const [showPartidos, setShowPartidos] = useState(false)
-  const [selectedMonth, setSelectedMonth] = useState("all")
+  const [viewMode, setViewMode] = useState("meses") // "meses" o "partidos"
 
   // Función para formatear números grandes
   const formatNumber = (num) => {
@@ -234,18 +205,19 @@ export default function MainCharts({
         // Añadir información adicional que pueda ser útil
         fechaOriginal: partido.Fecha,
         ganancia: Number(partido.total_ventas) + Number(partido.total_taquilla) - Number(partido.total_gastos),
+        mes:
+          new Date(partido.Fecha).toLocaleString("es-ES", { month: "long" }).charAt(0).toUpperCase() +
+          new Date(partido.Fecha).toLocaleString("es-ES", { month: "long" }).slice(1),
       }))
 
       // Ordenar por fecha
       const sortedData = transformedData.sort((a, b) => a.fecha - b.fecha)
 
       setPartidosData(sortedData)
-      setShowPartidos(true)
       return sortedData
     } catch (error) {
       console.error("Error al obtener los partidos por temporada:", error)
       setError("No se pudieron cargar los partidos. Por favor, intente nuevamente más tarde.")
-      setShowPartidos(false)
       return []
     }
   }, [])
@@ -255,25 +227,17 @@ export default function MainCharts({
     // Si yearProp es "all", significa que no hay filtros seleccionados
     if (yearProp === "all" || !yearProp) {
       // Resetear los estados internos para mostrar la información general
-      setSelectedYear("all")
-      setSelectedSeason("all")
-      setSelectedMonth("all")
-      setShowPartidos(false)
+      setViewMode("meses")
     } else if (yearProp !== "all" && seasonProp !== "all") {
       // Si hay filtros específicos, actualizar los estados internos
-      setSelectedYear(yearProp)
-      setSelectedSeason(seasonProp)
-
-      // Si hay un solo mes seleccionado, usarlo como filtro
-      if (selectedMonths.length === 1) {
-        setSelectedMonth(selectedMonths[0])
-      } else {
-        setSelectedMonth("all")
-      }
-
       // Cargar los partidos para la temporada seleccionada
       const temporadaNum = seasonProp === "Clausura" ? "1" : "2"
       fetchPartidosByTemporada(yearProp, temporadaNum)
+
+      // Si hay un mes seleccionado, forzar la vista de partidos
+      if (selectedMonths.length === 1) {
+        setViewMode("partidos")
+      }
     }
   }, [yearProp, seasonProp, selectedMonths, fetchPartidosByTemporada])
 
@@ -283,24 +247,16 @@ export default function MainCharts({
     fetchData()
 
     // Si hay un año y temporada seleccionados, cargar los partidos
-    if (selectedYear !== "all" && selectedSeason !== "all") {
-      const temporadaNum = selectedSeason === "Clausura" ? "1" : "2"
-      fetchPartidosByTemporada(selectedYear, temporadaNum)
-    } else {
-      setShowPartidos(false)
+    if (yearProp !== "all" && seasonProp !== "all") {
+      const temporadaNum = seasonProp === "Clausura" ? "1" : "2"
+      fetchPartidosByTemporada(yearProp, temporadaNum)
     }
-  }, [refreshKey, fetchData, fetchPartidosByTemporada, selectedYear, selectedSeason])
-
-  // Obtener años únicos para el selector
-  const availableYears = useMemo(() => {
-    const years = [...new Set(ventasGastosData.map((item) => item.año))].sort()
-    return years
-  }, [ventasGastosData])
+  }, [refreshKey, fetchData, fetchPartidosByTemporada, yearProp, seasonProp])
 
   // Filtrar datos según el año y temporada seleccionados
   const filteredData = useMemo(() => {
     // Si estamos mostrando partidos y tenemos datos de partidos
-    if (showPartidos && partidosData.length > 0) {
+    if (viewMode === "partidos" && partidosData.length > 0) {
       let filtered = [...partidosData]
 
       // Si hay meses seleccionados, filtrar por esos meses
@@ -324,27 +280,6 @@ export default function MainCharts({
           return selectedMonths.includes(monthNames[itemDate.getMonth()])
         })
       }
-      // Si hay un mes específico seleccionado en el selector de mes
-      else if (selectedMonth !== "all") {
-        filtered = filtered.filter((item) => {
-          const itemDate = new Date(item.fechaOriginal)
-          const monthNames = [
-            "Enero",
-            "Febrero",
-            "Marzo",
-            "Abril",
-            "Mayo",
-            "Junio",
-            "Julio",
-            "Agosto",
-            "Septiembre",
-            "Octubre",
-            "Noviembre",
-            "Diciembre",
-          ]
-          return monthNames[itemDate.getMonth()] === selectedMonth
-        })
-      }
 
       return filtered
     }
@@ -353,17 +288,22 @@ export default function MainCharts({
     let filtered = [...ventasGastosData]
 
     // Filtrar por año
-    if (selectedYear !== "all") {
-      filtered = filtered.filter((item) => item.año.toString() === selectedYear)
+    if (yearProp !== "all") {
+      filtered = filtered.filter((item) => item.año.toString() === yearProp)
     }
 
     // Filtrar por temporada
-    if (selectedSeason !== "all") {
-      filtered = filtered.filter((item) => item.temporada === selectedSeason)
+    if (seasonProp !== "all") {
+      filtered = filtered.filter((item) => item.temporada === seasonProp)
+    }
+
+    // Filtrar por meses seleccionados
+    if (selectedMonths.length > 0) {
+      filtered = filtered.filter((item) => selectedMonths.includes(item.mes))
     }
 
     return filtered
-  }, [ventasGastosData, partidosData, selectedYear, selectedSeason, showPartidos, selectedMonth, selectedMonths])
+  }, [ventasGastosData, partidosData, yearProp, seasonProp, viewMode, selectedMonths])
 
   // Manejadores de eventos
   const handleChartTypeChange = (event, newType) => {
@@ -372,21 +312,13 @@ export default function MainCharts({
     }
   }
 
-  const handleYearChange = (event) => {
-    setSelectedYear(event.target.value)
-  }
-
-  const handleSeasonChange = (event) => {
-    setSelectedSeason(event.target.value)
-  }
-
   const handleRefresh = () => {
     setRefreshKey((prev) => prev + 1)
   }
 
-  // Manejador para el cambio de mes
-  const handleMonthChange = (event) => {
-    setSelectedMonth(event.target.value)
+  // Manejador para cambiar entre vista de partidos y meses
+  const handleViewModeChange = (event) => {
+    setViewMode(event.target.value)
   }
 
   // Calcular el valor máximo para el dominio del eje Y
@@ -492,7 +424,7 @@ export default function MainCharts({
             {commonAxisProps.legend}
             {commonAxisProps.referenceLine}
             <Line
-              type="monotone"
+              type="linear"
               dataKey="ventas"
               name="Ventas"
               stroke="#2ecc71"
@@ -500,7 +432,7 @@ export default function MainCharts({
               activeDot={{ r: 6 }}
             />
             <Line
-              type="monotone"
+              type="linear"
               dataKey="gastos"
               name="Gastos"
               stroke="#e74c3c"
@@ -508,7 +440,7 @@ export default function MainCharts({
               activeDot={{ r: 6 }}
             />
             <Line
-              type="monotone"
+              type="linear"
               dataKey="taquilla"
               name="Taquilla"
               stroke="#1A8A98"
@@ -542,7 +474,7 @@ export default function MainCharts({
             {commonAxisProps.legend}
             {commonAxisProps.referenceLine}
             <Area
-              type="monotone"
+              type="linear"
               dataKey="ventas"
               name="Ventas"
               stroke="#2ecc71"
@@ -552,7 +484,7 @@ export default function MainCharts({
               activeDot={{ r: 6 }}
             />
             <Area
-              type="monotone"
+              type="linear"
               dataKey="gastos"
               name="Gastos"
               stroke="#e74c3c"
@@ -562,7 +494,7 @@ export default function MainCharts({
               activeDot={{ r: 6 }}
             />
             <Area
-              type="monotone"
+              type="linear"
               dataKey="taquilla"
               name="Taquilla"
               stroke="#1A8A98"
@@ -580,27 +512,30 @@ export default function MainCharts({
   const getFilterTitle = () => {
     let title = "Ingresos y costos"
 
-    if (showPartidos) {
+    if (viewMode === "partidos") {
       title = "Ingresos y costos por Partido"
-      if (selectedYear !== "all" && selectedSeason !== "all") {
-        title += ` - ${selectedSeason} ${selectedYear}`
+      if (yearProp !== "all" && seasonProp !== "all") {
+        title += ` - ${seasonProp} ${yearProp}`
       }
-      if (selectedMonth !== "all") {
-        title += ` (${selectedMonth})`
+      if (selectedMonths.length === 1) {
+        title += ` (${selectedMonths[0]})`
       }
     } else {
       title += " por Mes"
-      if (selectedYear !== "all" && selectedSeason !== "all") {
-        title += ` - ${selectedSeason} ${selectedYear}`
-      } else if (selectedYear !== "all") {
-        title += ` - ${selectedYear}`
-      } else if (selectedSeason !== "all") {
-        title += ` - ${selectedSeason}`
+      if (yearProp !== "all" && seasonProp !== "all") {
+        title += ` - ${seasonProp} ${yearProp}`
+      } else if (yearProp !== "all") {
+        title += ` - ${yearProp}`
+      } else if (seasonProp !== "all") {
+        title += ` - ${seasonProp}`
       }
     }
 
     return title
   }
+
+  // Determinar si se debe mostrar el selector de vista
+  const showViewSelector = yearProp !== "all" && seasonProp !== "all" && selectedMonths.length === 0
 
   return (
     <Paper
@@ -623,96 +558,21 @@ export default function MainCharts({
           {getFilterTitle()}
         </Typography>
 
-        <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-          {/* Selector de Año */}
-          <FormControl size="small" sx={{ minWidth: 120 }}>
-            <InputLabel
-              id="year-select-label"
-              sx={{ color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)" }}
-            >
-              Año
-            </InputLabel>
-            <Select
-              labelId="year-select-label"
-              value={selectedYear}
-              onChange={handleYearChange}
-              label="Año"
-              sx={{
-                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
-                color: themeMode === "dark" ? "white" : "black",
-                ".MuiOutlinedInput-notchedOutline": {
-                  borderColor: "rgba(26, 138, 152, 0.3)",
-                },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "rgba(26, 138, 152, 0.5)",
-                },
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#1A8A98",
-                },
-                ".MuiSvgIcon-root": {
-                  color: themeMode === "dark" ? "white" : "rgba(0, 0, 0, 0.7)",
-                },
-              }}
-            >
-              <MenuItem value="all">Todos</MenuItem>
-              {availableYears.map((year) => (
-                <MenuItem key={year} value={year.toString()}>
-                  {year}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          {/* Selector de Temporada */}
-          <FormControl size="small" sx={{ minWidth: 120 }}>
-            <InputLabel
-              id="season-select-label"
-              sx={{ color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)" }}
-            >
-              Temporada
-            </InputLabel>
-            <Select
-              labelId="season-select-label"
-              value={selectedSeason}
-              onChange={handleSeasonChange}
-              label="Temporada"
-              sx={{
-                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
-                color: themeMode === "dark" ? "white" : "black",
-                ".MuiOutlinedInput-notchedOutline": {
-                  borderColor: "rgba(26, 138, 152, 0.3)",
-                },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "rgba(26, 138, 152, 0.5)",
-                },
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#1A8A98",
-                },
-                ".MuiSvgIcon-root": {
-                  color: themeMode === "dark" ? "white" : "rgba(0, 0, 0, 0.7)",
-                },
-              }}
-            >
-              <MenuItem value="all">Todas</MenuItem>
-              <MenuItem value="Clausura">Clausura</MenuItem>
-              <MenuItem value="Apertura">Apertura</MenuItem>
-            </Select>
-          </FormControl>
-
-          {/* Selector de Mes (solo visible cuando hay una temporada seleccionada) */}
-          {selectedYear !== "all" && selectedSeason !== "all" && (
+        <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", alignItems: "center" }}>
+          {/* Selector para cambiar entre vista de partidos y meses */}
+          {showViewSelector && (
             <FormControl size="small" sx={{ minWidth: 120 }}>
               <InputLabel
-                id="month-select-label"
+                id="view-mode-select-label"
                 sx={{ color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)" }}
               >
-                Mes
+                Vista
               </InputLabel>
               <Select
-                labelId="month-select-label"
-                value={selectedMonth}
-                onChange={handleMonthChange}
-                label="Mes"
+                labelId="view-mode-select-label"
+                value={viewMode}
+                onChange={handleViewModeChange}
+                label="Vista"
                 sx={{
                   bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
                   color: themeMode === "dark" ? "white" : "black",
@@ -730,20 +590,8 @@ export default function MainCharts({
                   },
                 }}
               >
-                <MenuItem value="all">Todos</MenuItem>
-                {selectedSeason === "Clausura"
-                  ? // Meses para Clausura (Enero-Junio)
-                  ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio"].map((month) => (
-                    <MenuItem key={month} value={month}>
-                      {month}
-                    </MenuItem>
-                  ))
-                  : // Meses para Apertura (Julio-Diciembre)
-                  ["Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"].map((month) => (
-                    <MenuItem key={month} value={month}>
-                      {month}
-                    </MenuItem>
-                  ))}
+                <MenuItem value="meses">Por Meses</MenuItem>
+                <MenuItem value="partidos">Por Partidos</MenuItem>
               </Select>
             </FormControl>
           )}
@@ -805,73 +653,6 @@ export default function MainCharts({
         </Box>
       </Box>
 
-      {/* Filtros activos */}
-      {(selectedYear !== "all" || selectedSeason !== "all" || showPartidos) && (
-        <Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
-          {showPartidos && (
-            <Chip
-              label="Vista por Partidos"
-              size="small"
-              sx={{
-                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
-                color: themeMode === "dark" ? "white" : "#1A8A98",
-              }}
-            />
-          )}
-          {selectedMonth !== "all" && (
-            <Chip
-              label={`Mes: ${selectedMonth}`}
-              onDelete={() => setSelectedMonth("all")}
-              size="small"
-              sx={{
-                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
-                color: themeMode === "dark" ? "white" : "#1A8A98",
-                "& .MuiChip-deleteIcon": {
-                  color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
-                  "&:hover": {
-                    color: themeMode === "dark" ? "white" : "black",
-                  },
-                },
-              }}
-            />
-          )}
-          {selectedYear !== "all" && (
-            <Chip
-              label={`Año: ${selectedYear}`}
-              onDelete={() => setSelectedYear("all")}
-              size="small"
-              sx={{
-                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
-                color: themeMode === "dark" ? "white" : "#1A8A98",
-                "& .MuiChip-deleteIcon": {
-                  color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
-                  "&:hover": {
-                    color: themeMode === "dark" ? "white" : "black",
-                  },
-                },
-              }}
-            />
-          )}
-          {selectedSeason !== "all" && (
-            <Chip
-              label={`Temporada: ${selectedSeason}`}
-              onDelete={() => setSelectedSeason("all")}
-              size="small"
-              sx={{
-                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
-                color: themeMode === "dark" ? "white" : "#1A8A98",
-                "& .MuiChip-deleteIcon": {
-                  color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
-                  "&:hover": {
-                    color: themeMode === "dark" ? "white" : "black",
-                  },
-                },
-              }}
-            />
-          )}
-        </Box>
-      )}
-
       {/* Gráfico */}
       <Box sx={{ height: 500, flexGrow: 1 }}>
         {loading ? (
@@ -897,4 +678,3 @@ export default function MainCharts({
     </Paper>
   )
 }
-
