@@ -1,14 +1,16 @@
 import { useState, useEffect, useCallback } from "react"
-import { Paper, Typography, Box, CircularProgress, Alert, Dialog, DialogContent, Button, IconButton, LinearProgress,
+import {
+  Paper, Typography, Box, CircularProgress, Alert, Dialog, DialogContent, Button, IconButton, LinearProgress,
   Chip, useTheme, alpha,
 } from "@mui/material"
-import { Close as CloseIcon, CalendarMonth as CalendarIcon, TrendingUp as TrendingUpIcon, AttachMoney as MoneyIcon,
+import {
+  Close as CloseIcon, CalendarMonth as CalendarIcon, TrendingUp as TrendingUpIcon, AttachMoney as MoneyIcon,
   ShoppingCart as ShoppingCartIcon, CreditCard as CreditCardIcon, ConfirmationNumber as TicketIcon, Stadium as StadiumIcon,
   ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon,
 } from "@mui/icons-material"
 import axios from "axios"
 
-export default function TopPartidos({ selectedYear, selectedSeason, selectedMonth }) {
+export default function TopPartidos({ selectedYear, selectedSeason, selectedMonth, themeMode = "dark" }) {
   const [topPartidosData, setTopPartidosData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -39,8 +41,19 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
         // Agregar el mes seleccionado a los parámetros si está definido
         if (selectedMonth && selectedMonth !== "all") {
           // Convertir el nombre del mes a su número correspondiente (1-12)
-          const monthMap = { Enero: "1", Febrero: "2", Marzo: "3", Abril: "4", Mayo: "5", Junio: "6",
-            Julio: "7", Agosto: "8", Septiembre: "9", Octubre: "10", Noviembre: "11", Diciembre: "12",
+          const monthMap = {
+            Enero: "1",
+            Febrero: "2",
+            Marzo: "3",
+            Abril: "4",
+            Mayo: "5",
+            Junio: "6",
+            Julio: "7",
+            Agosto: "8",
+            Septiembre: "9",
+            Octubre: "10",
+            Noviembre: "11",
+            Diciembre: "12",
           }
 
           // Si es un número de mes, usarlo directamente; si es nombre, convertirlo
@@ -89,8 +102,19 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
       let filteredData = processedData
 
       if (selectedMonth && selectedMonth !== "all") {
-        const monthMap = { Enero: 0, Febrero: 1, Marzo: 2, Abril: 3, Mayo: 4, Junio: 5, Julio: 6, Agosto: 7,
-          Septiembre: 8, Octubre: 9, Noviembre: 10, Diciembre: 11,
+        const monthMap = {
+          Enero: 0,
+          Febrero: 1,
+          Marzo: 2,
+          Abril: 3,
+          Mayo: 4,
+          Junio: 5,
+          Julio: 6,
+          Agosto: 7,
+          Septiembre: 8,
+          Octubre: 9,
+          Noviembre: 10,
+          Diciembre: 11,
         }
 
         const targetMonth = monthMap[selectedMonth]
@@ -217,8 +241,8 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
           severity="info"
           sx={{
             my: 2,
-            bgcolor: "rgba(26, 138, 152, 0.1)",
-            color: "white",
+            bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
+            color: themeMode === "dark" ? "white" : "text.primary",
             border: "1px solid rgba(26, 138, 152, 0.2)",
           }}
         >
@@ -253,7 +277,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
               width: "8px",
             },
             "&::-webkit-scrollbar-track": {
-              background: "rgba(0, 0, 0, 0.1)",
+              background: themeMode === "dark" ? "rgba(0, 0, 0, 0.1)" : "rgba(0, 0, 0, 0.05)",
               borderRadius: "10px",
             },
             "&::-webkit-scrollbar-thumb": {
@@ -274,14 +298,15 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                 mb: 2,
                 p: { xs: 1.5, sm: 2 },
                 borderRadius: 2,
-                bgcolor: "rgba(26, 138, 152, 0.05)",
-                border: "1px solid rgba(26, 138, 152, 0.1)",
+                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.05)" : "rgba(26, 138, 152, 0.03)",
+                border:
+                  themeMode === "dark" ? "1px solid rgba(26, 138, 152, 0.1)" : "1px solid rgba(26, 138, 152, 0.08)",
                 transition: "all 0.2s ease-in-out",
                 "&:hover": {
-                  bgcolor: "rgba(26, 138, 152, 0.1)",
+                  bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.06)",
                   cursor: "pointer",
                   transform: "translateY(-2px)",
-                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+                  boxShadow: themeMode === "dark" ? "0 4px 12px rgba(0, 0, 0, 0.15)" : "0 4px 12px rgba(0, 0, 0, 0.08)",
                 },
               }}
               onClick={() => handleOpenModal(partido)} // Abrir el modal al hacer clic
@@ -304,12 +329,23 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                 {index + 1}
               </Box>
               <Box sx={{ flexGrow: 1 }}>
-                <Typography variant="body1" sx={{ fontWeight: "bold", lineHeight: 1.2, color: "white" }}>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontWeight: "bold",
+                    lineHeight: 1.2,
+                    color: themeMode === "dark" ? "white" : "text.primary",
+                  }}
+                >
                   {partido.Nombre_Partido}
                 </Typography>
                 <Typography
                   variant="caption"
-                  sx={{ color: "rgba(255, 255, 255, 0.6)", display: "flex", alignItems: "center" }}
+                  sx={{
+                    color: themeMode === "dark" ? "rgba(255, 255, 255, 0.6)" : "text.secondary",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
                 >
                   <CalendarIcon sx={{ fontSize: 14, mr: 0.5 }} />
                   {new Date(partido.Fecha).toLocaleDateString()}
@@ -334,11 +370,11 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                     mt: 0.5,
                     height: 20,
                     fontSize: "0.625rem",
-                    bgcolor: "rgba(26, 138, 152, 0.1)",
+                    bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
                     color: "#1A8A98",
                     border: "1px solid rgba(26, 138, 152, 0.3)",
                     "&:hover": {
-                      bgcolor: "rgba(26, 138, 152, 0.2)",
+                      bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
                     },
                   }}
                 />
@@ -357,7 +393,9 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
               right: 0,
               height: "60px",
               background:
-                "linear-gradient(to bottom, rgba(18, 18, 18, 0), rgba(18, 18, 18, 0.9) 70%, rgba(18, 18, 18, 1))",
+                themeMode === "dark"
+                  ? "linear-gradient(to bottom, rgba(18, 18, 18, 0), rgba(18, 18, 18, 0.9) 70%, rgba(18, 18, 18, 1))"
+                  : "linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9) 70%, rgba(255, 255, 255, 1))",
               pointerEvents: "none", // Para que no interfiera con los clics
               zIndex: 2,
             }}
@@ -440,10 +478,13 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
         PaperProps={{
           sx: {
             borderRadius: 3,
-            bgcolor: "#121212",
-            backgroundImage: "linear-gradient(rgba(26, 138, 152, 0.05), rgba(0, 0, 0, 0))",
-            border: "1px solid rgba(26, 138, 152, 0.2)",
-            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+            bgcolor: themeMode === "dark" ? "#121212" : "#ffffff",
+            backgroundImage:
+              themeMode === "dark"
+                ? "linear-gradient(rgba(26, 138, 152, 0.05), rgba(0, 0, 0, 0))"
+                : "linear-gradient(rgba(26, 138, 152, 0.02), rgba(255, 255, 255, 0))",
+            border: themeMode === "dark" ? "1px solid rgba(26, 138, 152, 0.2)" : "1px solid rgba(0, 0, 0, 0.1)",
+            boxShadow: themeMode === "dark" ? "0 8px 32px rgba(0, 0, 0, 0.3)" : "0 8px 32px rgba(0, 0, 0, 0.1)",
             overflow: "hidden",
           },
         }}
@@ -453,7 +494,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
             position: "relative",
             p: 3,
             pb: 1,
-            borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+            borderBottom: themeMode === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid rgba(0, 0, 0, 0.1)",
           }}
         >
           <IconButton
@@ -463,10 +504,10 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
               position: "absolute",
               right: 16,
               top: 16,
-              color: "rgba(255, 255, 255, 0.7)",
+              color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
               "&:hover": {
-                color: "white",
-                bgcolor: "rgba(255, 255, 255, 0.1)",
+                color: themeMode === "dark" ? "white" : "black",
+                bgcolor: themeMode === "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)",
               },
             }}
           >
@@ -486,8 +527,19 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
           </Typography>
 
           <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-            <CalendarIcon sx={{ color: "rgba(255, 255, 255, 0.7)", mr: 1, fontSize: 18 }} />
-            <Typography variant="body2" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+            <CalendarIcon
+              sx={{
+                color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
+                mr: 1,
+                fontSize: 18,
+              }}
+            />
+            <Typography
+              variant="body2"
+              sx={{
+                color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
+              }}
+            >
               {new Date(selectedPartido.Fecha).toLocaleDateString("es-MX", {
                 weekday: "long",
                 year: "numeric",
@@ -505,7 +557,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
               variant="h6"
               sx={{
                 mb: 2,
-                color: "white",
+                color: themeMode === "dark" ? "white" : "text.primary",
                 display: "flex",
                 alignItems: "center",
               }}
@@ -519,13 +571,24 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                 sx={{
                   p: 2,
                   borderRadius: 2,
-                  bgcolor: alpha(theme.palette.primary.main, 0.1),
-                  border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                  bgcolor:
+                    themeMode === "dark"
+                      ? alpha(theme.palette.primary.main, 0.1)
+                      : alpha(theme.palette.primary.main, 0.05),
+                  border: `1px solid ${themeMode === "dark"
+                    ? alpha(theme.palette.primary.main, 0.2)
+                    : alpha(theme.palette.primary.main, 0.1)
+                    }`,
                   flex: "1 1 calc(25% - 16px)",
                   minWidth: "200px",
                 }}
               >
-                <Typography variant="overline" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "text.secondary",
+                  }}
+                >
                   Ganancia Neta
                 </Typography>
                 <Typography
@@ -546,13 +609,18 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                 sx={{
                   p: 2,
                   borderRadius: 2,
-                  bgcolor: alpha("#2ecc71", 0.1),
-                  border: `1px solid ${alpha("#2ecc71", 0.2)}`,
+                  bgcolor: themeMode === "dark" ? alpha("#2ecc71", 0.1) : alpha("#2ecc71", 0.05),
+                  border: `1px solid ${themeMode === "dark" ? alpha("#2ecc71", 0.2) : alpha("#2ecc71", 0.1)}`,
                   flex: "1 1 calc(25% - 16px)",
                   minWidth: "200px",
                 }}
               >
-                <Typography variant="overline" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "text.secondary",
+                  }}
+                >
                   Ventas
                 </Typography>
                 <Typography
@@ -573,13 +641,18 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                 sx={{
                   p: 2,
                   borderRadius: 2,
-                  bgcolor: alpha("#e74c3c", 0.1),
-                  border: `1px solid ${alpha("#e74c3c", 0.2)}`,
+                  bgcolor: themeMode === "dark" ? alpha("#e74c3c", 0.1) : alpha("#e74c3c", 0.05),
+                  border: `1px solid ${themeMode === "dark" ? alpha("#e74c3c", 0.2) : alpha("#e74c3c", 0.1)}`,
                   flex: "1 1 calc(25% - 16px)",
                   minWidth: "200px",
                 }}
               >
-                <Typography variant="overline" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "text.secondary",
+                  }}
+                >
                   Gastos
                 </Typography>
                 <Typography
@@ -600,13 +673,18 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                 sx={{
                   p: 2,
                   borderRadius: 2,
-                  bgcolor: alpha("#f39c12", 0.1),
-                  border: `1px solid ${alpha("#f39c12", 0.2)}`,
+                  bgcolor: themeMode === "dark" ? alpha("#f39c12", 0.1) : alpha("#f39c12", 0.05),
+                  border: `1px solid ${themeMode === "dark" ? alpha("#f39c12", 0.2) : alpha("#f39c12", 0.1)}`,
                   flex: "1 1 calc(25% - 16px)",
                   minWidth: "200px",
                 }}
               >
-                <Typography variant="overline" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "text.secondary",
+                  }}
+                >
                   Taquilla
                 </Typography>
                 <Typography
@@ -633,11 +711,11 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                 minWidth: "300px",
                 p: 3,
                 borderRadius: 2,
-                bgcolor: "rgba(0, 0, 0, 0.3)",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
+                bgcolor: themeMode === "dark" ? "rgba(0, 0, 0, 0.3)" : "rgba(0, 0, 0, 0.02)",
+                border: themeMode === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid rgba(0, 0, 0, 0.1)",
               }}
             >
-              <Typography variant="h6" sx={{ mb: 2, color: "white" }}>
+              <Typography variant="h6" sx={{ mb: 2, color: themeMode === "dark" ? "white" : "text.primary" }}>
                 Distribución de Ingresos
               </Typography>
 
@@ -687,10 +765,16 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
               </Box>
 
               <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography variant="body2" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                <Typography
+                  variant="body2"
+                  sx={{ color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "text.secondary" }}
+                >
                   Total Ingresos:
                 </Typography>
-                <Typography variant="body1" sx={{ fontWeight: "bold", color: "white" }}>
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: "bold", color: themeMode === "dark" ? "white" : "text.primary" }}
+                >
                   {formatCurrency(totalIngresos)}
                 </Typography>
               </Box>
@@ -703,15 +787,15 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                 minWidth: "300px",
                 p: 3,
                 borderRadius: 2,
-                bgcolor: "rgba(0, 0, 0, 0.3)",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
+                bgcolor: themeMode === "dark" ? "rgba(0, 0, 0, 0.3)" : "rgba(0, 0, 0, 0.02)",
+                border: themeMode === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid rgba(0, 0, 0, 0.1)",
               }}
             >
               <Typography
                 variant="h6"
                 sx={{
                   mb: 2,
-                  color: "white",
+                  color: themeMode === "dark" ? "white" : "text.primary",
                   display: "flex",
                   alignItems: "center",
                 }}
@@ -722,25 +806,37 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
 
               <Box sx={{ mb: 3 }}>
                 <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-                  <Typography variant="body2" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "text.secondary" }}
+                  >
                     Asistencia estimada
                   </Typography>
-                  <Typography variant="body2" sx={{ color: "white", fontWeight: "bold" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: themeMode === "dark" ? "white" : "text.primary", fontWeight: "bold" }}
+                  >
                     {Math.round(asistenciaEstimada).toLocaleString()} personas
                   </Typography>
                 </Box>
 
                 <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-                  <Typography variant="body2" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "text.secondary" }}
+                  >
                     Capacidad total
                   </Typography>
-                  <Typography variant="body2" sx={{ color: "white" }}>
+                  <Typography variant="body2" sx={{ color: themeMode === "dark" ? "white" : "text.primary" }}>
                     {capacidadEstadio.toLocaleString()} personas
                   </Typography>
                 </Box>
 
                 <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-                  <Typography variant="body2" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "text.secondary" }}
+                  >
                     Porcentaje de ocupación
                   </Typography>
                   <Typography
@@ -778,7 +874,13 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                   border: `1px solid ${alpha("#1A8A98", 0.1)}`,
                 }}
               >
-                <Typography variant="caption" sx={{ color: "rgba(255, 255, 255, 0.6)", fontStyle: "italic" }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: themeMode === "dark" ? "rgba(255, 255, 255, 0.6)" : "text.secondary",
+                    fontStyle: "italic",
+                  }}
+                >
                   * La ocupación estimada se calcula en base a los ingresos por taquilla y el precio promedio de
                   entrada.
                 </Typography>
@@ -813,8 +915,8 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
       sx={{
         p: 2,
         borderRadius: 2,
-        bgcolor: "#121212",
-        border: "1px solid rgba(26, 138, 152, 0.1)",
+        bgcolor: themeMode === "dark" ? "#121212" : "#ffffff",
+        border: themeMode === "dark" ? "1px solid rgba(26, 138, 152, 0.1)" : "1px solid rgba(0, 0, 0, 0.1)",
         height: "100%",
         display: "flex",
         flexDirection: "column",
