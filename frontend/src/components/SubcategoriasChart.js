@@ -1,6 +1,20 @@
+"use client"
+
 import { useState, useEffect, useCallback, useMemo } from "react"
-import { Paper, Box, Tabs, Tab, Typography, CircularProgress, Alert, Skeleton,
-  IconButton, Tooltip as MuiTooltip, ToggleButtonGroup, ToggleButton, Chip,
+import {
+  Paper,
+  Box,
+  Tabs,
+  Tab,
+  Typography,
+  CircularProgress,
+  Alert,
+  Skeleton,
+  IconButton,
+  Tooltip as MuiTooltip,
+  ToggleButtonGroup,
+  ToggleButton,
+  Chip,
 } from "@mui/material"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from "recharts"
 import axios from "axios"
@@ -9,11 +23,11 @@ import { RefreshCwIcon as RefreshIcon, FilterIcon } from "lucide-react"
 // Función para formatear valores numéricos (k para miles, M para millones)
 const formatCurrency = (value) => {
   if (value >= 1000000) {
-    return `$${(value / 1000000).toFixed(1)}M`
+    return `${(value / 1000000).toFixed(1)}M`
   } else if (value >= 1000) {
-    return `$${(value / 1000).toFixed(0)}k`
+    return `${(value / 1000).toFixed(0)}k`
   }
-  return `$${value}`
+  return `${value}`
 }
 
 // Componente personalizado para el tooltip
@@ -22,7 +36,6 @@ const CustomTooltip = ({ active, payload, label }) => {
 
   const dataKey = payload[0].dataKey
   const value = payload[0].value
-  const percentage = payload[0].payload.percentage || 0 // El porcentaje se extrae aquí
   const color = payload[0].color
 
   // Determinar el título según el dataKey
@@ -57,17 +70,11 @@ const CustomTooltip = ({ active, payload, label }) => {
           {title}: ${value.toLocaleString()}
         </Typography>
       </Box>
-      <Box sx={{ display: "flex", alignItems: "center", ml: 3.5 }}>
-        <Typography variant="body2" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
-          ({percentage.toFixed(1)}% del total de {title.toLowerCase()})
-        </Typography>
-      </Box>
     </Box>
   )
 }
 
-
-export default function SubcategoriasChart({ themeMode = "dark" }) {
+export default function SubcategoriasChart({ themeMode = "dark", showOnly = null }) {
   const [tabValue, setTabValue] = useState(0)
   const [ventasData, setVentasData] = useState([])
   const [costosData, setCostosData] = useState([])
@@ -79,8 +86,21 @@ export default function SubcategoriasChart({ themeMode = "dark" }) {
 
   // Función para cambiar de tab
   const handleTabChange = (event, newValue) => {
+    // Si estamos en una página específica, no permitir cambiar a tabs no relevantes
+    if (showOnly === "ingresos" && newValue === 1) return // No permitir cambiar a gastos en página de ingresos
+    if (showOnly === "gastos" && (newValue === 0 || newValue === 2)) return // No permitir cambiar a ventas o taquilla en página de gastos
+
     setTabValue(newValue)
   }
+
+  // Establecer el tab inicial según la página
+  useEffect(() => {
+    if (showOnly === "ingresos") {
+      setTabValue(0) // Ventas
+    } else if (showOnly === "gastos") {
+      setTabValue(1) // Gastos
+    }
+  }, [showOnly])
 
   // Función para cambiar el filtro
   const handleFilterChange = (event, newValue) => {
@@ -153,14 +173,21 @@ export default function SubcategoriasChart({ themeMode = "dark" }) {
       setError(null)
 
       try {
-        // Añadir la petición para obtener los datos de taquilla
-        const [ventasSuccess, costosSuccess, taquillaSuccess] = await Promise.all([
-          fetchVentasData(),
-          fetchCostosData(),
-          fetchTaquillaData(),
-        ])
+        // Determinar qué datos cargar según la página
+        const promises = []
 
-        if (!ventasSuccess || !costosSuccess || !taquillaSuccess) {
+        if (!showOnly || showOnly === "ingresos") {
+          promises.push(fetchVentasData())
+          promises.push(fetchTaquillaData())
+        }
+
+        if (!showOnly || showOnly === "gastos") {
+          promises.push(fetchCostosData())
+        }
+
+        const results = await Promise.all(promises)
+
+        if (results.some((result) => !result)) {
           setError("Error al cargar algunos datos. Intente nuevamente.")
         }
       } catch (err) {
@@ -172,7 +199,7 @@ export default function SubcategoriasChart({ themeMode = "dark" }) {
     }
 
     fetchData()
-  }, [fetchVentasData, fetchCostosData, fetchTaquillaData, refreshKey])
+  }, [fetchVentasData, fetchCostosData, fetchTaquillaData, refreshKey, showOnly])
 
   // Determinar el título según la pestaña seleccionada
   const getTitle = () => {
@@ -201,48 +228,32 @@ export default function SubcategoriasChart({ themeMode = "dark" }) {
     return title
   }
 
-  // Filtrar los datos según el tipo de filtro seleccionado y calcular porcentajes en base al total global
+  // Filtrar los datos según el tipo de filtro seleccionado
   const filteredData = useMemo(() => {
     let currentData = []
-    let dataKey = ""
 
     switch (tabValue) {
       case 0:
         currentData = ventasData
-        dataKey = "total_ventas"
         break
       case 1:
         currentData = costosData
-        dataKey = "total_gasto"
         break
       case 2:
         currentData = taquillaData
-        dataKey = "total_taquilla"
         break
       default:
         currentData = ventasData
-        dataKey = "total_ventas"
     }
 
-    // Calcular el total global de todas las subcategorías (sin aplicar filtros aún)
-    const totalGlobal = currentData.reduce((sum, item) => sum + (parseFloat(item[dataKey]) || 0), 0)
-
-    // Añadir el porcentaje a cada subcategoría, en relación con el total global
-    const dataWithPercentages = currentData.map((item) => ({
-      ...item,
-      percentage: totalGlobal > 0 ? (parseFloat(item[dataKey]) / totalGlobal) * 100 : 0, // Cálculo del porcentaje
-    }))
-
-    // Ahora aplicar el filtro de cantidad (Top 5, Top 10, etc.)
-    let filtered = [...dataWithPercentages]
     if (filterType === "top5") {
-      filtered = filtered.slice(0, 5)
+      return currentData.slice(0, 5)
     } else if (filterType === "top10") {
-      filtered = filtered.slice(0, 10)
+      return currentData.slice(0, 10)
     }
 
-    return filtered
-  }, [tabValue, ventasData, costosData, taquillaData, filterType]) // Dependencias del hook
+    return currentData
+  }, [tabValue, ventasData, costosData, taquillaData, filterType])
 
   // Determinar si hay datos disponibles
   const hasData = filteredData && filteredData.length > 0
@@ -323,42 +334,76 @@ export default function SubcategoriasChart({ themeMode = "dark" }) {
 
     return (
       <ResponsiveContainer width="100%" height={chartHeight}>
-        <BarChart data={filteredData} layout="vertical" margin={{ top: 10, right: 120, left: 5, bottom: 10 }} barSize={30} barGap={6}>
+        <BarChart
+          data={filteredData}
+          layout="vertical"
+          margin={{ top: 10, right: 80, left: 5, bottom: 10 }}
+          barSize={30} // Barras más anchas
+          barGap={6}
+        >
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor={gradientColor1} />
               <stop offset="100%" stopColor={gradientColor2} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke={themeMode === "dark" ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.1)"} strokeWidth={1.5} />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke={themeMode === "dark" ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.1)"}
+            strokeWidth={1.5}
+          />
           <XAxis
             type="number"
-            tickFormatter={formatCurrency}
+            tickFormatter={formatCurrency} // Usar la función de formato personalizada
             stroke={themeMode === "dark" ? "#ccc" : "#666"}
             strokeWidth={1.5}
-            tick={{ fill: themeMode === "dark" ? "#ccc" : "#666", fontSize: 12 }}
-            axisLine={{ stroke: themeMode === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)", strokeWidth: 1.5 }}
-            domain={[0, getMaxValue]}
-            allowDataOverflow={false}
-            padding={{ left: 0, right: 10 }}
+            tick={{
+              fill: themeMode === "dark" ? "#ccc" : "#666",
+              fontSize: 12,
+            }}
+            axisLine={{
+              stroke: themeMode === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)",
+              strokeWidth: 1.5,
+            }}
+            domain={[0, getMaxValue]} // Dominio personalizado con el valor máximo calculado
+            allowDataOverflow={false} // Evita que los datos se salgan del área del gráfico
+            padding={{ left: 0, right: 10 }} // Añadir padding al eje X
           />
           <YAxis
             dataKey="Subcategoria"
             type="category"
             width={170}
-            tick={{ fill: themeMode === "dark" ? "#fff" : "#333", fontSize: 12, fontWeight: "medium" }}
+            tick={{
+              fill: themeMode === "dark" ? "#fff" : "#333",
+              fontSize: 12,
+              fontWeight: "medium",
+            }}
             stroke={themeMode === "dark" ? "#ccc" : "#666"}
             strokeWidth={1.5}
-            axisLine={{ stroke: themeMode === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)", strokeWidth: 1.5 }}
-            padding={{ top: 15, bottom: 15 }}
+            axisLine={{
+              stroke: themeMode === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)",
+              strokeWidth: 1.5,
+            }}
+            padding={{ top: 15, bottom: 15 }} // Añadir padding al eje Y
           />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey={dataKey} fill={`url(#${gradientId})`} radius={[0, 8, 8, 0]} animationDuration={1200} animationEasing="ease-out" style={{ filter: "drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.4))" }}>
+          <Bar
+            dataKey={dataKey}
+            fill={`url(#${gradientId})`}
+            radius={[0, 8, 8, 0]} // Bordes redondeados más pronunciados
+            animationDuration={1200}
+            animationEasing="ease-out"
+            style={{ filter: "drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.4))" }} // Sombra más pronunciada
+          >
             <LabelList
               dataKey={dataKey}
               position="right"
-              formatter={formatCurrency}
-              style={{ fill: themeMode === "dark" ? "#fff" : "#333", fontSize: 12, fontWeight: "medium" }}
+              formatter={formatCurrency} // Usar la función de formato personalizada
+              style={{
+                fill: themeMode === "dark" ? "#fff" : "#333",
+                fontSize: 12,
+                fontWeight: "medium",
+              }}
               offset={10} // Desplazar las etiquetas para que no queden pegadas a las barras
             />
           </Bar>
@@ -450,30 +495,85 @@ export default function SubcategoriasChart({ themeMode = "dark" }) {
         </Box>
       </Box>
 
-      <Tabs
-        value={tabValue}
-        onChange={handleTabChange}
-        sx={{
-          borderBottom: 1,
-          borderColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(0, 0, 0, 0.1)",
-          mb: 2,
-          "& .MuiTab-root": {
-            color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
-            "&.Mui-selected": {
-              color: "#1A8A98",
+      {/* Solo mostrar las pestañas relevantes según la página */}
+      {!showOnly && (
+        <Tabs
+          value={tabValue}
+          onChange={handleTabChange}
+          sx={{
+            borderBottom: 1,
+            borderColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(0, 0, 0, 0.1)",
+            mb: 2,
+            "& .MuiTab-root": {
+              color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
+              "&.Mui-selected": {
+                color: "#1A8A98",
+              },
             },
-          },
-          "& .MuiTabs-indicator": {
-            backgroundColor: "#1A8A98",
-            height: "3px",
-          },
-        }}
-        aria-label="Pestañas de subcategorías"
-      >
-        <Tab label="Subcategoría Ventas" id="tab-0" aria-controls="tabpanel-0" />
-        <Tab label="Subcategoría Costos" id="tab-1" aria-controls="tabpanel-1" />
-        <Tab label="Subcategoría Taquilla" id="tab-2" aria-controls="tabpanel-2" />
-      </Tabs>
+            "& .MuiTabs-indicator": {
+              backgroundColor: "#1A8A98",
+              height: "3px",
+            },
+          }}
+          aria-label="Pestañas de subcategorías"
+        >
+          <Tab label="Subcategoría Ventas" id="tab-0" aria-controls="tabpanel-0" />
+          <Tab label="Subcategoría Gastos" id="tab-1" aria-controls="tabpanel-1" />
+          <Tab label="Subcategoría Taquilla" id="tab-2" aria-controls="tabpanel-2" />
+        </Tabs>
+      )}
+
+      {/* En la página de ingresos, solo mostrar pestañas de ventas y taquilla */}
+      {showOnly === "ingresos" && (
+        <Tabs
+          value={tabValue}
+          onChange={handleTabChange}
+          sx={{
+            borderBottom: 1,
+            borderColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(0, 0, 0, 0.1)",
+            mb: 2,
+            "& .MuiTab-root": {
+              color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
+              "&.Mui-selected": {
+                color: "#1A8A98",
+              },
+            },
+            "& .MuiTabs-indicator": {
+              backgroundColor: "#1A8A98",
+              height: "3px",
+            },
+          }}
+          aria-label="Pestañas de subcategorías"
+        >
+          <Tab label="Subcategoría Ventas" id="tab-0" aria-controls="tabpanel-0" />
+          <Tab label="Subcategoría Taquilla" id="tab-2" aria-controls="tabpanel-2" />
+        </Tabs>
+      )}
+
+      {/* En la página de gastos, solo mostrar pestaña de gastos */}
+      {showOnly === "gastos" && (
+        <Tabs
+          value={0}
+          sx={{
+            borderBottom: 1,
+            borderColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(0, 0, 0, 0.1)",
+            mb: 2,
+            "& .MuiTab-root": {
+              color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)",
+              "&.Mui-selected": {
+                color: "#1A8A98",
+              },
+            },
+            "& .MuiTabs-indicator": {
+              backgroundColor: "#1A8A98",
+              height: "3px",
+            },
+          }}
+          aria-label="Pestañas de subcategorías"
+        >
+          <Tab label="Subcategoría Gastos" id="tab-0" aria-controls="tabpanel-0" />
+        </Tabs>
+      )}
 
       {/* Mostrar chip con la cantidad de elementos */}
       <Box sx={{ mb: 2 }}>

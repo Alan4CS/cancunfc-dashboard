@@ -1,12 +1,14 @@
 import { useState } from "react"
 import { Box, Button, TextField, Typography, Paper, InputAdornment, IconButton, Avatar } from "@mui/material"
 import { User, Lock, Eye, EyeOff } from "lucide-react"
+import { useNavigate } from "react-router-dom" // Importa useNavigate para redirigir
 
 const Login = ({ setToken }) => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
     const [showPassword, setShowPassword] = useState(false)
+    const navigate = useNavigate() // Hook de navegación
 
     const handleLogin = async (e) => {
         e.preventDefault()
@@ -23,9 +25,11 @@ const Login = ({ setToken }) => {
             if (!response.ok) throw new Error(data.message)
 
             localStorage.setItem("username", username)
-
             localStorage.setItem("token", data.token)
             setToken(data.token)
+
+            // Redirigir al Dashboard después de login
+            navigate("/")  // Redirige al dashboard (página principal)
         } catch (err) {
             setError(err.message)
         }
@@ -258,4 +262,3 @@ const Login = ({ setToken }) => {
 }
 
 export default Login
-

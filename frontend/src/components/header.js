@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react"
-import { AppBar, Toolbar, Typography, IconButton, Box, Drawer, List, ListItem, ListItemButton, ListItemIcon,
+import { Link, useLocation } from "react-router-dom"
+import {
+  AppBar, Toolbar, Typography, IconButton, Box, Drawer, List, ListItem, ListItemButton, ListItemIcon,
   ListItemText, Divider, Tooltip, Avatar, useMediaQuery, useTheme, Menu, MenuItem, Button,
 } from "@mui/material"
-import { Menu as MenuIcon, Person as PersonIcon, Dashboard as DashboardIcon, AttachMoney as AttachMoneyIcon,
+import {
+  Menu as MenuIcon, Person as PersonIcon, Dashboard as DashboardIcon, AttachMoney as AttachMoneyIcon,
   CreditCard as CreditCardIcon, Logout as LogoutIcon, DarkMode as DarkModeIcon, LightMode as LightModeIcon,
   MoreVert as MoreVertIcon,
 } from "@mui/icons-material"
@@ -14,6 +17,11 @@ export default function Header({ themeMode, toggleTheme }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("md"))
   const isSmall = useMediaQuery(theme.breakpoints.down("sm"))
+
+  // Usar useLocation para determinar la página actual
+  const location = useLocation()
+  const currentPath = location.pathname
+  const currentPage = currentPath === "/" ? "dashboard" : currentPath.substring(1)
 
   // Añadir estado para el nombre de usuario
   const [username, setUsername] = useState("Usuario")
@@ -48,7 +56,7 @@ export default function Header({ themeMode, toggleTheme }) {
 
   const handleLogout = () => {
     localStorage.removeItem("token") // Eliminar el token del usuario
-    window.location.reload() // Recargar la página para regresar al Login
+    window.location.href = "/login" // Redirigir al login
     handleUserMenuClose()
   }
 
@@ -65,7 +73,9 @@ export default function Header({ themeMode, toggleTheme }) {
       <List>
         <ListItem disablePadding>
           <ListItemButton
-            selected
+            component={Link}
+            to="/"
+            selected={currentPage === "dashboard"}
             sx={{
               "&.Mui-selected": {
                 bgcolor: "rgba(255, 255, 255, 0.2)",
@@ -84,7 +94,14 @@ export default function Header({ themeMode, toggleTheme }) {
         </ListItem>
         <ListItem disablePadding>
           <ListItemButton
+            component={Link}
+            to="/ingresos"
+            selected={currentPage === "ingresos"}
             sx={{
+              "&.Mui-selected": {
+                bgcolor: "rgba(255, 255, 255, 0.2)",
+                "&:hover": { bgcolor: "rgba(255, 255, 255, 0.3)" },
+              },
               "&:hover": {
                 bgcolor: "rgba(255, 255, 255, 0.1)",
               },
@@ -98,7 +115,14 @@ export default function Header({ themeMode, toggleTheme }) {
         </ListItem>
         <ListItem disablePadding>
           <ListItemButton
+            component={Link}
+            to="/gastos"
+            selected={currentPage === "gastos"}
             sx={{
+              "&.Mui-selected": {
+                bgcolor: "rgba(255, 255, 255, 0.2)",
+                "&:hover": { bgcolor: "rgba(255, 255, 255, 0.3)" },
+              },
               "&:hover": {
                 bgcolor: "rgba(255, 255, 255, 0.1)",
               },
@@ -204,36 +228,45 @@ export default function Header({ themeMode, toggleTheme }) {
           {!isMobile && (
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Button
+                component={Link}
+                to="/"
                 startIcon={<DashboardIcon />}
                 sx={{
                   color: "white",
                   mx: 1,
+                  bgcolor: currentPage === "dashboard" ? "rgba(255, 255, 255, 0.2)" : "transparent",
                   "&:hover": {
-                    bgcolor: "rgba(255, 255, 255, 0.1)",
+                    bgcolor: currentPage === "dashboard" ? "rgba(255, 255, 255, 0.3)" : "rgba(255, 255, 255, 0.1)",
                   },
                 }}
               >
                 Dashboard
               </Button>
               <Button
+                component={Link}
+                to="/ingresos"
                 startIcon={<AttachMoneyIcon />}
                 sx={{
                   color: "white",
                   mx: 1,
+                  bgcolor: currentPage === "ingresos" ? "rgba(255, 255, 255, 0.2)" : "transparent",
                   "&:hover": {
-                    bgcolor: "rgba(255, 255, 255, 0.1)",
+                    bgcolor: currentPage === "ingresos" ? "rgba(255, 255, 255, 0.3)" : "rgba(255, 255, 255, 0.1)",
                   },
                 }}
               >
                 Ingresos
               </Button>
               <Button
+                component={Link}
+                to="/gastos"
                 startIcon={<CreditCardIcon />}
                 sx={{
                   color: "white",
                   mx: 1,
+                  bgcolor: currentPage === "gastos" ? "rgba(255, 255, 255, 0.2)" : "transparent",
                   "&:hover": {
-                    bgcolor: "rgba(255, 255, 255, 0.1)",
+                    bgcolor: currentPage === "gastos" ? "rgba(255, 255, 255, 0.3)" : "rgba(255, 255, 255, 0.1)",
                   },
                 }}
               >
@@ -305,7 +338,6 @@ export default function Header({ themeMode, toggleTheme }) {
               </MenuItem>
             </Menu>
 
-
             {/* Menú de opciones para móvil */}
             {isSmall && (
               <>
@@ -329,9 +361,7 @@ export default function Header({ themeMode, toggleTheme }) {
                         themeMode === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid rgba(0, 0, 0, 0.1)",
                     },
                   }}
-                >
-      
-                </Menu>
+                ></Menu>
               </>
             )}
           </Box>

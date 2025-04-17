@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { Box, Container, CssBaseline, ThemeProvider, IconButton, Typography, Collapse, Divider, Fade, Tooltip,
+import {
+  Box, Container, CssBaseline, ThemeProvider, IconButton, Typography, Collapse, Divider, Fade, Tooltip,
 } from "@mui/material"
 // Importar componentes
 import Header from "../components/header"
@@ -10,7 +11,7 @@ import SubcategoriasChart from "../components/SubcategoriasChart"
 import YearSelector from "../components/YearSelector"
 import { createAppTheme } from "../style/theme"
 import CompetenciaChart from "../components/CompetenciaChart"
-import { CalendarRange } from 'lucide-react'
+import { CalendarRange } from "lucide-react"
 
 export default function Dashboard() {
   // Estado para la temporada seleccionada
@@ -65,7 +66,7 @@ export default function Dashboard() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: "flex", flexDirection: "column", height: "100vh"}}>
+      <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
         {/* Header fijo */}
         <Box
           sx={{
@@ -75,7 +76,7 @@ export default function Dashboard() {
             top: 0,
           }}
         >
-          <Header themeMode={themeMode} toggleTheme={toggleTheme} />
+          <Header themeMode={themeMode} toggleTheme={toggleTheme} currentPage="dashboard" />
         </Box>
 
         {/* Contenido principal */}
@@ -178,12 +179,12 @@ export default function Dashboard() {
                 />
               </Box>
               <Box sx={{ flex: "1 1 33%", width: "100%" }}>
-              <TopPartidos
-                selectedYear={selectedYear}
-                selectedSeason={selectedSeason}
-                selectedMonth={selectedMonths.length > 0 ? selectedMonths[0] : "all"} 
-                themeMode={themeMode}
-              />
+                <TopPartidos
+                  selectedYear={selectedYear}
+                  selectedSeason={selectedSeason}
+                  selectedMonth={selectedMonths.length > 0 ? selectedMonths[0] : "all"}
+                  themeMode={themeMode}
+                />
               </Box>
             </Box>
 
@@ -215,7 +216,6 @@ export default function Dashboard() {
                 <CompetenciaChart themeMode={themeMode} />
               </Box>
             </Box>
-
 
             {/* Footer simple */}
             <Divider sx={{ my: 4, bgcolor: "rgba(255, 255, 255, 0.1)" }} />
