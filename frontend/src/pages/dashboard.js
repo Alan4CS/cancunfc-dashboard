@@ -178,7 +178,12 @@ export default function Dashboard() {
                 />
               </Box>
               <Box sx={{ flex: "1 1 33%", width: "100%" }}>
-                <TopPartidos themeMode={themeMode} />
+              <TopPartidos
+                selectedYear={selectedYear}
+                selectedSeason={selectedSeason}
+                selectedMonth={selectedMonths.length > 0 ? selectedMonths[0] : "all"} 
+                themeMode={themeMode}
+              />
               </Box>
             </Box>
 
