@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useCallback, useMemo } from "react"
 import {
   Paper,
@@ -74,7 +72,7 @@ const CustomTooltip = ({ active, payload, label }) => {
   )
 }
 
-export default function SubcategoriasChart({ themeMode = "dark", showOnly = null }) {
+export default function SubcategoriasChart({ selectedYear, selectedSeason, selectedMonth, themeMode = "dark", showOnly = null }) {
   const [tabValue, setTabValue] = useState(0)
   const [ventasData, setVentasData] = useState([])
   const [costosData, setCostosData] = useState([])
@@ -112,36 +110,57 @@ export default function SubcategoriasChart({ themeMode = "dark", showOnly = null
   // Función para obtener las ventas por subcategoría - Optimizada con useCallback
   const fetchVentasData = useCallback(async () => {
     try {
-      const response = await axios.get(
-        "https://cancunfc-dashboard-production.up.railway.app/api/ventas_por_subcategoria_total",
-      )
-
-      // Ordenar los datos de mayor a menor para mejor visualización
-      const sortedData = response.data.sort((a, b) => b.total_ventas - a.total_ventas)
+      let url = "https://cancunfc-dashboard-production.up.railway.app/api/ventas_por_subcategoria_total"
+      let params = {}
+  
+      if (selectedYear && selectedSeason && selectedYear !== "all" && selectedSeason !== "all") {
+        url = "https://cancunfc-dashboard-production.up.railway.app/api/ventas_por_subcategoria_temporada_filtro"
+        const temporadaNum = selectedSeason === "Clausura" ? "1" : "2"
+        params = {
+          año: selectedYear,
+          temporada: temporadaNum,
+        }
+      }
+  
+      const response = await axios.get(url, { params })
+      const data = response.data.ventas_por_subcategoria || response.data
+  
+      const sortedData = data.sort((a, b) => b.total_ventas - a.total_ventas)
       setVentasData(sortedData)
       return true
     } catch (err) {
       console.error("Error al obtener ventas por subcategoría:", err)
       return false
     }
-  }, [])
-
+  }, [selectedYear, selectedSeason])
+    
   // Función para obtener los costos por subcategoría - Optimizada con useCallback
   const fetchCostosData = useCallback(async () => {
     try {
-      const response = await axios.get(
-        "https://cancunfc-dashboard-production.up.railway.app/api/gastos_por_subcategoria_total",
-      )
-
-      // Ordenar los datos de mayor a menor para mejor visualización
-      const sortedData = response.data.sort((a, b) => b.total_gasto - a.total_gasto)
+      let url = "https://cancunfc-dashboard-production.up.railway.app/api/gastos_por_subcategoria_total"
+      let params = {}
+  
+      if (selectedYear && selectedSeason && selectedYear !== "all" && selectedSeason !== "all") {
+        url = "https://cancunfc-dashboard-production.up.railway.app/api/gastos_por_subcategoria_temporada_filtro"
+        const temporadaNum = selectedSeason === "Clausura" ? "1" : "2"
+        params = {
+          año: selectedYear,
+          temporada: temporadaNum,
+        }
+      }
+  
+      const response = await axios.get(url, { params })
+      const data = response.data.gastos_por_subcategoria || response.data
+  
+      const sortedData = data.sort((a, b) => b.total_gasto - a.total_gasto)
       setCostosData(sortedData)
       return true
     } catch (err) {
       console.error("Error al obtener costos por subcategoría:", err)
       return false
     }
-  }, [])
+  }, [selectedYear, selectedSeason])
+  
 
   // Función para refrescar los datos
   const handleRefresh = () => {
@@ -152,19 +171,30 @@ export default function SubcategoriasChart({ themeMode = "dark", showOnly = null
 
   const fetchTaquillaData = useCallback(async () => {
     try {
-      const response = await axios.get(
-        "https://cancunfc-dashboard-production.up.railway.app/api/taquilla_por_subcategoria_total",
-      )
-
-      // Ordenar los datos de mayor a menor para mejor visualización
-      const sortedData = response.data.sort((a, b) => b.total_taquilla - a.total_taquilla)
+      let url = "https://cancunfc-dashboard-production.up.railway.app/api/taquilla_por_subcategoria_total"
+      let params = {}
+  
+      if (selectedYear && selectedSeason && selectedYear !== "all" && selectedSeason !== "all") {
+        url = "https://cancunfc-dashboard-production.up.railway.app/api/taquilla_por_subcategoria_temporada_filtro"
+        const temporadaNum = selectedSeason === "Clausura" ? "1" : "2"
+        params = {
+          año: selectedYear,
+          temporada: temporadaNum,
+        }
+      }
+  
+      const response = await axios.get(url, { params })
+      const data = response.data.taquilla_por_subcategoria || response.data
+  
+      const sortedData = data.sort((a, b) => b.total_taquilla - a.total_taquilla)
       setTaquillaData(sortedData)
       return true
     } catch (err) {
       console.error("Error al obtener taquilla por subcategoría:", err)
       return false
     }
-  }, [])
+  }, [selectedYear, selectedSeason])
+  
 
   // useEffect para hacer las peticiones a los endpoints
   useEffect(() => {

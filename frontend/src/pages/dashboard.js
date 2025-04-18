@@ -200,7 +200,7 @@ export default function Dashboard() {
                   flexShrink: 0, // Evita que el gráfico se reduzca más allá de su tamaño mínimo
                 }}
               >
-                <SubcategoriasChart themeMode={themeMode} />
+                <SubcategoriasChart themeMode={themeMode} selectedYear={selectedYear} selectedSeason={selectedSeason}/>
               </Box>
 
               {/* Competencia Chart */}
