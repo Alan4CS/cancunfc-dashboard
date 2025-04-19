@@ -38,7 +38,7 @@ const CustomTooltip = ({ active, payload, label }) => {
   const percentage = payload[0].payload.percentage // Obtener el porcentaje
 
   // Determinar el título según el dataKey
-  const title = dataKey === "total_ventas" ? "Ventas" : dataKey === "total_gastos" ? "Gastos" : "Taquilla"
+  const title = dataKey === "total_ventas" ? "Ventas" : dataKey === "total_gasto" ? "Gastos" : "Taquilla"
 
   return (
     <Box
@@ -195,9 +195,9 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
       const data = response.data.gastos_por_subcategoria || response.data
   
       // Aplicar cálculo del porcentaje
-      const dataWithPercentage = calculatePercentage(data, "total_gastos")
+      const dataWithPercentage = calculatePercentage(data, "total_gasto")
   
-      const sortedData = dataWithPercentage.sort((a, b) => b.total_gastos - a.total_gastos)
+      const sortedData = dataWithPercentage.sort((a, b) => b.total_gasto - a.total_gasto)
       setCostosData(sortedData)
       return true
     } catch (err) {
@@ -355,7 +355,7 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
   const getMaxValue = useMemo(() => {
     if (!hasData) return 1000000
 
-    const dataKey = tabValue === 0 ? "total_ventas" : tabValue === 1 ? "total_gastos" : "total_taquilla"
+    const dataKey = tabValue === 0 ? "total_ventas" : tabValue === 1 ? "total_gasto" : "total_taquilla"
     const maxValue = Math.max(...filteredData.map((item) => item[dataKey] || 0))
 
     // Añadir un 15% de margen para que se vea el final de la barra
@@ -412,7 +412,7 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
       )
     }
 
-    const dataKey = tabValue === 0 ? "total_ventas" : tabValue === 1 ? "total_gastos" : "total_taquilla"
+    const dataKey = tabValue === 0 ? "total_ventas" : tabValue === 1 ? "total_gasto" : "total_taquilla"
     const gradientId = tabValue === 0 ? "ventasGradient" : tabValue === 1 ? "gastosGradient" : "taquillaGradient"
     const gradientColor1 = tabValue === 0 ? "#2ecc71" : tabValue === 1 ? "#f39c12" : "#1A8A98"
     const gradientColor2 = tabValue === 0 ? "#1e8449" : tabValue === 1 ? "#d35400" : "#106570"
