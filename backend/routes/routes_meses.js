@@ -208,4 +208,71 @@ router.get("/taquilla_por_subcategoria_mes_filtro", (req, res) => {
     });
 });
 
+// Endpoint para extraer ventas por subcategoria por mes
+router.get("/ventas_gastos_taquilla_competencia_mes_filtro", (req, res) => {
+    const { año, mes } = req.query;  // Recibe los parámetros 'año' y 'mes'
+
+    // Verificar que se reciban los parámetros
+    if (!año || !mes) {
+        return res.status(400).json({ error: "Faltan parámetros: año y mes" });
+    }
+
+    // Mapeo de los meses a los números correspondientes
+    const meses = {
+        Enero: 'Enero',
+        Febrero: 'Febrero',
+        Marzo: 'Marzo',
+        Abril: 'Abril',
+        Mayo: 'Mayo',
+        Junio: 'Junio',
+        Julio: 'Julio',
+        Agosto: 'Agosto',
+        Septiembre: 'Septiembre',
+        Octubre: 'Octubre',
+        Noviembre: 'Noviembre',
+        Diciembre: 'Diciembre'
+    };
+
+    // Verificar que el mes sea válido
+    if (!meses[mes]) {
+        return res.status(400).json({ error: "Mes inválido" });
+    }
+
+    const query = `
+        SELECT 
+            dc.Nombre_Competencia,
+            SUM(CASE WHEN ds.Categoria = 'Gastos' THEN ht.Monto ELSE 0 END) AS Total_Gastos,
+            SUM(CASE WHEN ds.Categoria = 'Ventas' THEN ht.Monto ELSE 0 END) AS Total_Ventas,
+            SUM(CASE WHEN ds.Categoria = 'Taquilla' THEN ht.Monto ELSE 0 END) AS Total_Taquilla
+        FROM hechos_transacciones ht
+        JOIN dim_tiempo dt ON ht.Tiempo_ID = dt.Tiempo_ID
+        JOIN dim_subcategoria ds ON ht.Subcategoria_ID = ds.Subcategoria_ID
+        JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
+        WHERE dt.Año = ? 
+        AND dt.Mes = ?  -- Mes específico
+        GROUP BY dc.Nombre_Competencia
+        ORDER BY dc.Nombre_Competencia;
+    `;
+
+    // Ejecutar la consulta con los parámetros de año y mes
+    db.query(query, [año, meses[mes]], (err, results) => {
+        if (err) {
+            console.error("❌ Error al obtener los datos por mes y competencia:", err);
+            return res.status(500).json({ error: "Error al obtener los datos por mes y competencia" });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "No se encontraron datos para el mes y año solicitados" });
+        }
+
+        // Enviar los resultados de la consulta
+        res.json({
+            año: año,
+            mes: mes,
+            resumen_competencia_temporada: results  // Devuelve los resultados de las ventas por subcategoría
+        });
+    });
+});
+
+
 module.exports = router;
