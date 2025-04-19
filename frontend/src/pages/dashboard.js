@@ -200,7 +200,7 @@ export default function Dashboard() {
                   flexShrink: 0, // Evita que el gráfico se reduzca más allá de su tamaño mínimo
                 }}
               >
-                <SubcategoriasChart themeMode={themeMode} selectedYear={selectedYear} selectedSeason={selectedSeason}/>
+                <SubcategoriasChart themeMode={themeMode} selectedYear={selectedYear} selectedSeason={selectedSeason} selectedMonth={selectedMonths[0] || null} />
               </Box>
 
               {/* Competencia Chart */}
@@ -213,7 +213,7 @@ export default function Dashboard() {
                   height: "650px", // Establece una altura fija para el gráfico de competencia
                 }}
               >
-                <CompetenciaChart themeMode={themeMode} />
+                <CompetenciaChart themeMode={themeMode} selectedYear={selectedYear} selectedSeason={selectedSeason}/>
               </Box>
             </Box>
 

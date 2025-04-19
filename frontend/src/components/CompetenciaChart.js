@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useMemo } from "react"
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LabelList, PieChart, Pie } from "recharts"
 import axios from "axios"
@@ -22,7 +20,7 @@ const COLORS = [
   "#2ecc71", // Verde
 ]
 
-export default function CompetenciaChart({ themeMode = "dark" }) {
+export default function CompetenciaChart({ themeMode = "dark", selectedYear, selectedSeason, selectedMonth }) {
   const [competenciaData, setCompetenciaData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -40,10 +38,29 @@ export default function CompetenciaChart({ themeMode = "dark" }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "https://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_competencia",
-        )
-        setCompetenciaData(response.data)
+        setLoading(true)
+        setError(null)
+  
+        let url = "https://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_competencia"
+        let params = {}
+  
+        if (selectedYear && selectedSeason && selectedYear !== "all" && selectedSeason !== "all") {
+          url = "https://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_competencia_temporada"
+  
+          // Convertir la temporada a 1 o 2
+          const temporadaNum = selectedSeason === "Clausura" ? "1" : "2"
+          params = {
+            año: selectedYear,
+            temporada: temporadaNum,
+          }
+        }
+  
+        const response = await axios.get(url, { params })
+  
+        const rawData =
+          response.data.resumen_competencia_temporada || response.data // si viene del filtrado o del general
+  
+        setCompetenciaData(rawData)
       } catch (err) {
         setError("Error al cargar los datos. Intente nuevamente.")
         console.error("Error al obtener los datos", err)
@@ -51,8 +68,9 @@ export default function CompetenciaChart({ themeMode = "dark" }) {
         setLoading(false)
       }
     }
+  
     fetchData()
-  }, [])
+  }, [selectedYear, selectedSeason])  
 
   // Calculate the total income across all competitions (Ventas + Taquilla - Gastos)
   const totalIngresos = useMemo(() => {
