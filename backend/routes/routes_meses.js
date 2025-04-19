@@ -107,7 +107,7 @@ router.get("/gastos_por_subcategoria_mes_filtro", (req, res) => {
     const query = `
         SELECT 
             ds.Nombre_Subcategoria AS Subcategoria,
-            SUM(ht.Monto) AS total_gastos
+            SUM(ht.Monto) AS total_gasto
         FROM hechos_transacciones ht
         JOIN dim_tiempo dt ON ht.Tiempo_ID = dt.Tiempo_ID
         JOIN dim_subcategoria ds ON ht.Subcategoria_ID = ds.Subcategoria_ID
@@ -117,7 +117,7 @@ router.get("/gastos_por_subcategoria_mes_filtro", (req, res) => {
         AND dc.Nombre_Competencia = 'Liga'  -- Solo Competencia "Liga"
         AND ds.Categoria = 'Gastos'
         GROUP BY ds.Nombre_Subcategoria
-        ORDER BY total_gastos DESC;
+        ORDER BY total_gasto DESC;
     `;
 
     // Ejecutar la consulta con los parámetros de año y mes
