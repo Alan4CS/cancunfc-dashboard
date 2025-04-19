@@ -47,7 +47,6 @@ router.get("/ventas_por_subcategoria_mes_filtro", (req, res) => {
         JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
         WHERE dt.Año = ? 
         AND dt.Mes = ?  -- Mes específico
-        AND dc.Nombre_Competencia = 'Liga'  -- Solo Competencia "Liga"
         AND ds.Categoria = 'Ventas'
         GROUP BY ds.Nombre_Subcategoria
         ORDER BY total_ventas DESC;
@@ -114,7 +113,6 @@ router.get("/gastos_por_subcategoria_mes_filtro", (req, res) => {
         JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
         WHERE dt.Año = ? 
         AND dt.Mes = ?  -- Mes específico
-        AND dc.Nombre_Competencia = 'Liga'  -- Solo Competencia "Liga"
         AND ds.Categoria = 'Gastos'
         GROUP BY ds.Nombre_Subcategoria
         ORDER BY total_gasto DESC;
@@ -182,7 +180,6 @@ router.get("/taquilla_por_subcategoria_mes_filtro", (req, res) => {
         JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
         WHERE dt.Año = ? 
         AND dt.Mes = ?  -- Mes específico
-        AND dc.Nombre_Competencia = 'Liga'  -- Solo Competencia "Liga"
         AND ds.Categoria = 'Taquilla'
         GROUP BY ds.Nombre_Subcategoria
         ORDER BY total_taquilla DESC;
