@@ -237,7 +237,7 @@ router.get("/gastos_por_subcategoria_temporada_filtro", (req, res) => {
         query = `
             SELECT 
                 ds.Nombre_Subcategoria AS Subcategoria,
-                SUM(ht.Monto) AS total_gasto
+                SUM(ht.Monto) AS total_gastos
             FROM hechos_transacciones ht
             JOIN dim_tiempo dt ON ht.Tiempo_ID = dt.Tiempo_ID
             JOIN dim_subcategoria ds ON ht.Subcategoria_ID = ds.Subcategoria_ID
