@@ -7,7 +7,7 @@ const bcrypt = require("bcryptjs");
 const SECRET_KEY = "mi_secreto_super_seguro"; // Clave para firmar el JWT
 
 // Endpoint para extraer ventas por subcategoria por mes
-router.get("/ventas_por_subcategoria_mes", (req, res) => {
+router.get("/ventas_por_subcategoria_mes_filtro", (req, res) => {
     const { año, mes } = req.query;  // Recibe los parámetros 'año' y 'mes'
 
     // Verificar que se reciban los parámetros
