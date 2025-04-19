@@ -163,9 +163,17 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
       setVentasData(sortedData)
       return true
     } catch (err) {
-      console.error("Error al obtener ventas por subcategoría:", err)
-      return false
+      const msg = err.response?.data?.message;
+    
+      if (msg === "No se encontraron datos para el mes y año solicitados") {
+        setVentasData([]); // o el set correspondiente
+        return true; // No es un fallo crítico
+      }
+    
+      console.error("Error al obtener ventas por subcategoría:", err);
+      return false;
     }
+    
   }, [selectedYear, selectedSeason, selectedMonth])
   
     
@@ -201,9 +209,17 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
       setCostosData(sortedData)
       return true
     } catch (err) {
-      console.error("Error al obtener costos por subcategoría:", err)
-      return false
+      const msg = err.response?.data?.message;
+    
+      if (msg === "No se encontraron datos para el mes y año solicitados") {
+        setCostosData([]); // o el set correspondiente
+        return true; // No es un fallo crítico
+      }
+    
+      console.error("Error al obtener ventas por subcategoría:", err);
+      return false;
     }
+    
   }, [selectedYear, selectedSeason, selectedMonth])
   
 
@@ -246,9 +262,17 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
       setTaquillaData(sortedData)
       return true
     } catch (err) {
-      console.error("Error al obtener taquilla por subcategoría:", err)
-      return false
+      const msg = err.response?.data?.message;
+    
+      if (msg === "No se encontraron datos para el mes y año solicitados") {
+        setTaquillaData([]); // o el set correspondiente
+        return true; // No es un fallo crítico
+      }
+    
+      console.error("Error al obtener ventas por subcategoría:", err);
+      return false;
     }
+    
   }, [selectedYear, selectedSeason, selectedMonth])  
 
   // useEffect para hacer las peticiones a los endpoints
@@ -394,24 +418,15 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
         </Alert>
       )
     }
-
+    
     if (!hasData) {
       return (
-        <Alert
-          severity="info"
-          sx={{
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            bgcolor: themeMode === "dark" ? "rgba(2, 136, 209, 0.1)" : "rgba(2, 136, 209, 0.05)",
-            color: themeMode === "dark" ? "#29b6f6" : "#0288d1",
-          }}
-        >
-          No hay datos disponibles para mostrar.
+        <Alert severity="info" sx={{ height: "100%", display: "flex", alignItems: "center" }}>
+          No hay datos disponibles para los filtros seleccionados.
         </Alert>
       )
     }
-
+    
     const dataKey = tabValue === 0 ? "total_ventas" : tabValue === 1 ? "total_gasto" : "total_taquilla"
     const gradientId = tabValue === 0 ? "ventasGradient" : tabValue === 1 ? "gastosGradient" : "taquillaGradient"
     const gradientColor1 = tabValue === 0 ? "#2ecc71" : tabValue === 1 ? "#f39c12" : "#1A8A98"

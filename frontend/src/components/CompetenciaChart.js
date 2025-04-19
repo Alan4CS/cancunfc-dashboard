@@ -14,17 +14,11 @@ import {
 } from "@mui/material"
 import { BarChart2, PieChartIcon } from "lucide-react"
 
-// Colores para los segmentos del gráfico
-const COLORS = [
-  "#1A8A98", // Turquesa (principal)
-  "#2ecc71", // Verde
-]
-
 export default function CompetenciaChart({ themeMode = "dark", selectedYear, selectedSeason, selectedMonth }) {
   const [competenciaData, setCompetenciaData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [chartType, setChartType] = useState("bar") // "bar" o "pie"
+  const [chartType, setChartType] = useState("pie") // "bar" o "pie"
   const theme = useTheme()
 
   // Manejar cambio de tipo de gráfico
@@ -33,6 +27,13 @@ export default function CompetenciaChart({ themeMode = "dark", selectedYear, sel
       setChartType(newType)
     }
   }
+
+  const getColorByCompetencia = (name) => {
+    if (name === "Liga") return "#1A8A98"      // Turquesa
+    if (name === "Amistoso") return "#2ecc71"  // Verde
+    return "#ccc" // Color default si llega algo inesperado
+  }
+  
 
   // Fetch the data from the backend API
   useEffect(() => {
@@ -43,11 +44,17 @@ export default function CompetenciaChart({ themeMode = "dark", selectedYear, sel
   
         let url = "https://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_competencia"
         let params = {}
-  
-        if (selectedYear && selectedSeason && selectedYear !== "all" && selectedSeason !== "all") {
+
+        if (selectedYear && selectedMonth && selectedYear !== "all" && selectedMonth !== "all") {
+          //  Si se selecciona un mes específico
+          url = "https://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_competencia_mes_filtro"
+          params = {
+            año: selectedYear,
+            mes: selectedMonth,
+          }
+        } else if (selectedYear && selectedSeason && selectedYear !== "all" && selectedSeason !== "all") {
+          // Si se selecciona una temporada
           url = "https://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_competencia_temporada"
-  
-          // Convertir la temporada a 1 o 2
           const temporadaNum = selectedSeason === "Clausura" ? "1" : "2"
           params = {
             año: selectedYear,
@@ -62,15 +69,23 @@ export default function CompetenciaChart({ themeMode = "dark", selectedYear, sel
   
         setCompetenciaData(rawData)
       } catch (err) {
+        const backendMessage = err.response?.data?.message
+
+        if (backendMessage === "No se encontraron datos para el mes y año solicitados") {
+          setCompetenciaData([]) // limpia datos si no hay
+          setError(null) // evita mostrar la alerta roja
+          return
+        }
+
+        console.error("Error real al obtener los datos", err)
         setError("Error al cargar los datos. Intente nuevamente.")
-        console.error("Error al obtener los datos", err)
       } finally {
         setLoading(false)
       }
     }
   
     fetchData()
-  }, [selectedYear, selectedSeason])  
+  }, [selectedYear, selectedSeason, selectedMonth])  
 
   // Calculate the total income across all competitions (Ventas + Taquilla - Gastos)
   const totalIngresos = useMemo(() => {
@@ -220,7 +235,7 @@ export default function CompetenciaChart({ themeMode = "dark", selectedYear, sel
           <Tooltip content={<CustomTooltip />} />
           <Bar dataKey="value" radius={[4, 4, 0, 0]}>
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              <Cell key={`cell-${index}`} fill={getColorByCompetencia(entry.name)} />
             ))}
             <LabelList
               dataKey="value"
@@ -243,27 +258,50 @@ export default function CompetenciaChart({ themeMode = "dark", selectedYear, sel
     return (
       <ResponsiveContainer width="100%" height={400}>
         <PieChart>
-          <Pie
-            data={data}
-            dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            innerRadius={60}
-            outerRadius={100}
-            paddingAngle={2}
-            isAnimationActive={false}
-            label={({ name, value }) => `${name}: ${value.toFixed(1)}%`}
-            labelLine={{
-              stroke: themeMode === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)",
-              strokeWidth: 1,
-              strokeDasharray: "3 3",
-            }}
-          >
+        <Pie
+          data={data}
+          dataKey="value"
+          nameKey="name"
+          cx="50%"
+          cy="50%"
+          innerRadius={50}
+          outerRadius={120}
+          paddingAngle={4}
+          stroke="#1a1a1a"
+          strokeWidth={2}
+          label={({ name, value, cx, cy, midAngle, outerRadius }) => {
+            const RADIAN = Math.PI / 180
+            const radius = outerRadius + 10
+            const x = cx + radius * Math.cos(-midAngle * RADIAN)
+            const y = cy + radius * Math.sin(-midAngle * RADIAN)
+          
+            return (
+              <text
+                x={x}
+                y={y}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fontSize={12}
+                fontWeight="bold"
+                fill="#ffffff"
+                stroke="#000000"
+                strokeWidth={0.8}
+                paintOrder="stroke"
+              >
+                {`${name}: ${value.toFixed(1)}%`}
+              </text>
+            )
+          }}          
+          labelLine={{
+            stroke: themeMode === "dark" ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.3)",
+            strokeWidth: 1.2,
+            strokeDasharray: "2 2",
+          }}
+        >
             {data.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
+                fill={getColorByCompetencia(entry.name)}
                 stroke={themeMode === "dark" ? "rgba(0, 0, 0, 0.3)" : "rgba(255, 255, 255, 0.3)"}
                 strokeWidth={1}
                 cursor="default"
@@ -308,12 +346,12 @@ export default function CompetenciaChart({ themeMode = "dark", selectedYear, sel
           severity="info"
           sx={{
             my: 2,
-            backgroundColor:
-              themeMode === "dark" ? alpha(theme.palette.info.main, 0.1) : alpha(theme.palette.info.main, 0.05),
-            color: themeMode === "dark" ? theme.palette.info.light : theme.palette.info.main,
+            bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
+            color: themeMode === "dark" ? "white" : "text.primary",
+            border: "1px solid rgba(26, 138, 152, 0.2)",
           }}
         >
-          No hay datos disponibles para mostrar.
+          No se encontraron datos con los filtros seleccionados.
         </Alert>
       )
     }

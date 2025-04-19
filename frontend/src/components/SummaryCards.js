@@ -82,12 +82,18 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
 
           // Si no hay datos para los meses seleccionados
           if (filteredMonths.length === 0) {
-            setError("No hay datos disponibles para los meses seleccionados")
-            setSummaryData([])
-            setLoading(false)
+            const emptyResults = cardConfig.map((card) => {
+              if (card.calculated) {
+                return { ...card, value: 0 }
+              }
+              return { ...card, value: 0 }
+            })
+          
+            setSummaryData(emptyResults)
+            setActiveFilter(`${selectedMonths.length} meses seleccionados`)
             return
           }
-
+                  
           // Calcular totales para los meses seleccionados
           const totalVentas = filteredMonths.reduce((sum, mes) => sum + Number(mes.total_ventas), 0)
           const totalGastos = filteredMonths.reduce((sum, mes) => sum + Number(mes.total_gastos), 0)

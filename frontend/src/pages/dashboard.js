@@ -213,7 +213,7 @@ export default function Dashboard() {
                   height: "650px", // Establece una altura fija para el gráfico de competencia
                 }}
               >
-                <CompetenciaChart themeMode={themeMode} selectedYear={selectedYear} selectedSeason={selectedSeason}/>
+                <CompetenciaChart themeMode={themeMode} selectedYear={selectedYear} selectedSeason={selectedSeason} selectedMonth={selectedMonths[0] || null} />
               </Box>
             </Box>
 
