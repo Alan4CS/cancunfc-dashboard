@@ -6,6 +6,7 @@ require("dotenv").config();
 const routesGenerales = require("./routes/routes_generales");
 const routesLogin = require("./routes/routes_login");
 const routesTemporada = require("./routes/routes_temporada");
+const routesMes = require("./routes/routes_meses");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use("/api", routesTemporada);
 app.use("/api", routesGenerales);
 app.use("/api", routesLogin);
+app.use("/api", routesMes);
 
 app.get("/", (req, res) => {
     res.send("✅ API del dashboard funcionando correctamente");
