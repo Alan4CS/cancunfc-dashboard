@@ -31,7 +31,6 @@ router.get("/ingresos_gastos_taquilla_general_temporada", (req, res) => {
             JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
             WHERE dt.Año = ? 
             AND dt.Mes IN ('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio')  -- Meses para Clausura
-            AND dc.Nombre_Competencia = 'Liga'
         `;
     } else if (temporada === "2") {
         // Apertura: julio - diciembre
@@ -46,7 +45,6 @@ router.get("/ingresos_gastos_taquilla_general_temporada", (req, res) => {
             JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
             WHERE dt.Año = ? 
             AND dt.Mes IN ('Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre')  -- Meses para Apertura
-            AND dc.Nombre_Competencia = 'Liga'
         `;
     } else {
         return res.status(400).json({ error: "El valor de temporada debe ser 1 (Clausura) o 2 (Apertura)" });
@@ -100,7 +98,6 @@ router.get("/ingresos_gastos_taquilla_por_mes_temporada", (req, res) => {
             JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
             WHERE dt.Año = ? 
             AND dt.Mes IN ('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio')  -- Meses para Clausura
-            AND dc.Nombre_Competencia = 'Liga'
             GROUP BY dt.Mes
         `;
     } else if (temporada === "2") {
@@ -117,7 +114,6 @@ router.get("/ingresos_gastos_taquilla_por_mes_temporada", (req, res) => {
             JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
             WHERE dt.Año = ? 
             AND dt.Mes IN ('Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre')  -- Meses para Apertura
-            AND dc.Nombre_Competencia = 'Liga'
             GROUP BY dt.Mes
         `;
     } else {
@@ -172,7 +168,6 @@ router.get("/ingresos_gastos_taquilla_por_partido_temporada", (req, res) => {
             JOIN dim_partido dp ON ht.Partido_ID = dp.Partido_ID
             WHERE dt.Año = ? 
             AND dt.Mes IN ('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio')  -- Meses para Clausura
-            AND dc.Nombre_Competencia = 'Liga'
             GROUP BY dp.Partido_ID, dp.Nombre_Partido, dt.Fecha
             ORDER BY dt.Fecha;
         `;
@@ -192,7 +187,6 @@ router.get("/ingresos_gastos_taquilla_por_partido_temporada", (req, res) => {
             JOIN dim_partido dp ON ht.Partido_ID = dp.Partido_ID
             WHERE dt.Año = ? 
             AND dt.Mes IN ('Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre')  -- Meses para Apertura
-            AND dc.Nombre_Competencia = 'Liga'
             GROUP BY dp.Partido_ID, dp.Nombre_Partido, dt.Fecha
             ORDER BY dt.Fecha;
         `;
@@ -244,7 +238,6 @@ router.get("/gastos_por_subcategoria_temporada_filtro", (req, res) => {
             JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
             WHERE dt.Año = ? 
             AND dt.Mes IN ('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio')  -- Meses para Clausura
-            AND dc.Nombre_Competencia = 'Liga'
             AND ds.Categoria = 'Gastos'
             GROUP BY ds.Nombre_Subcategoria
             ORDER BY total_gasto DESC;
@@ -261,7 +254,6 @@ router.get("/gastos_por_subcategoria_temporada_filtro", (req, res) => {
             JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
             WHERE dt.Año = ? 
             AND dt.Mes IN ('Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre')  -- Meses para Apertura
-            AND dc.Nombre_Competencia = 'Liga'
             AND ds.Categoria = 'Gastos'
             GROUP BY ds.Nombre_Subcategoria
             ORDER BY total_gasto DESC;
@@ -314,7 +306,6 @@ router.get("/ventas_por_subcategoria_temporada_filtro", (req, res) => {
             JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
             WHERE dt.Año = ? 
             AND dt.Mes IN ('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio')  -- Meses para Clausura
-            AND dc.Nombre_Competencia = 'Liga'
             AND ds.Categoria = 'Ventas'
             GROUP BY ds.Nombre_Subcategoria
             ORDER BY total_ventas DESC;
@@ -331,7 +322,6 @@ router.get("/ventas_por_subcategoria_temporada_filtro", (req, res) => {
             JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
             WHERE dt.Año = ? 
             AND dt.Mes IN ('Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre')  -- Meses para Apertura
-            AND dc.Nombre_Competencia = 'Liga'
             AND ds.Categoria = 'Ventas'
             GROUP BY ds.Nombre_Subcategoria
             ORDER BY total_ventas DESC;
@@ -384,7 +374,6 @@ router.get("/taquilla_por_subcategoria_temporada_filtro", (req, res) => {
             JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
             WHERE dt.Año = ? 
             AND dt.Mes IN ('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio')  -- Meses para Clausura
-            AND dc.Nombre_Competencia = 'Liga'
             AND ds.Categoria = 'Taquilla'
             GROUP BY ds.Nombre_Subcategoria
             ORDER BY total_taquilla DESC;
@@ -401,7 +390,6 @@ router.get("/taquilla_por_subcategoria_temporada_filtro", (req, res) => {
             JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
             WHERE dt.Año = ? 
             AND dt.Mes IN ('Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre')  -- Meses para Apertura
-            AND dc.Nombre_Competencia = 'Liga'
             AND ds.Categoria = 'Taquilla'
             GROUP BY ds.Nombre_Subcategoria
             ORDER BY total_taquilla DESC;

@@ -102,7 +102,6 @@ router.get("/ventas_gastos_taquilla_temporada", (req, res) => {
         JOIN dim_subcategoria ds ON ht.Subcategoria_ID = ds.Subcategoria_ID
         JOIN dim_competencia dc ON ht.Competencia_ID = dc.Competencia_ID
         WHERE dt.Año BETWEEN 2022 AND 2024
-          AND dc.Nombre_Competencia = 'Liga'  -- 🔹 Solo Competencia "Liga"
         GROUP BY dt.Año, Temporada, ds.Categoria
         ORDER BY dt.Año, 
                  FIELD(Temporada, '2022 Clausura', '2022 Apertura', '2023 Clausura', '2023 Apertura', '2024 Clausura', '2024 Apertura');
