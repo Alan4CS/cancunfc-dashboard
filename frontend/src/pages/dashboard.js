@@ -1,8 +1,7 @@
 import { useState } from "react"
-import {
-  Box, Container, CssBaseline, ThemeProvider, IconButton, Typography, Collapse, Divider, Fade, Tooltip,
+import { Box, Container, CssBaseline, ThemeProvider, Typography, Divider, Button,
 } from "@mui/material"
-// Importar componentes
+import { FilterAlt } from "@mui/icons-material"
 import Header from "../components/header"
 import SummaryCards from "../components/SummaryCards"
 import MainCharts from "../components/MainCharts"
@@ -11,46 +10,33 @@ import SubcategoriasChart from "../components/SubcategoriasChart"
 import YearSelector from "../components/YearSelector"
 import { createAppTheme } from "../style/theme"
 import CompetenciaChart from "../components/CompetenciaChart"
-import { CalendarRange } from "lucide-react"
 
 export default function Dashboard() {
-  // Estado para la temporada seleccionada
   const [year, setYear] = useState("")
-  // Estado para los meses seleccionados
   const [selectedMonths, setSelectedMonths] = useState([])
-  const [showYearSelector, setShowYearSelector] = useState(false)
-  // Estado para el tema
+  const [showYearSelector, setShowYearSelector] = useState(true)
+
   const [themeMode, setThemeMode] = useState(() => {
-    // Recuperar el tema guardado en localStorage o usar "dark" por defecto
     if (typeof window !== "undefined") {
       return localStorage.getItem("themeMode") || "dark"
     }
     return "dark"
   })
 
-  // Crear el tema basado en el modo actual
   const theme = createAppTheme(themeMode)
 
-  // Función para cambiar el tema
   const toggleTheme = () => {
     const newThemeMode = themeMode === "dark" ? "light" : "dark"
     setThemeMode(newThemeMode)
-    // Guardar la preferencia en localStorage
     localStorage.setItem("themeMode", newThemeMode)
   }
 
-  const toggleYearSelector = () => {
-    setShowYearSelector(!showYearSelector)
-  }
-
-  // Función para resetear todos los filtros
   const resetAllFilters = () => {
     setYear("")
     setSelectedMonths([])
     setShowYearSelector(false)
   }
 
-  // Función para extraer el año y la temporada del formato "YYYY-X"
   const getYearAndSeason = () => {
     if (!year) return { selectedYear: "all", selectedSeason: "all" }
 
@@ -67,7 +53,6 @@ export default function Dashboard() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-        {/* Header fijo */}
         <Box
           sx={{
             position: "fixed",
@@ -76,99 +61,108 @@ export default function Dashboard() {
             top: 0,
           }}
         >
-          <Header themeMode={themeMode} toggleTheme={toggleTheme} currentPage="dashboard" />
+          <Header
+            themeMode={themeMode}
+            toggleTheme={toggleTheme}
+            currentPage="dashboard"
+          />
         </Box>
 
-        {/* Contenido principal */}
         <Box
           component="main"
           sx={{
             flexGrow: 1,
             p: 3,
             width: "100%",
-            marginTop: "64px", // Altura del AppBar
+            marginTop: "64px",
             overflowY: "auto",
           }}
         >
           <Container maxWidth="xl">
-            {/* Encabezado con título y botón para filtro */}
+            {/* Encabezado del filtro y resumen */}
             <Box
               sx={{
-                mb: 3,
+                mb: 2,
                 display: "flex",
-                alignItems: "center",
                 justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: 2,
               }}
             >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Tooltip title={showYearSelector ? "Ocultar filtro de temporada" : "Mostrar filtro de temporada"}>
-                  <IconButton
-                    onClick={toggleYearSelector}
-                    size="medium"
-                    sx={{
-                      color: "rgba(26, 138, 152, 0.7)",
-                      mr: 2,
-                      p: 1.5,
-                      "&:hover": {
-                        color: "#1A8A98",
-                        bgcolor: "rgba(26, 138, 152, 0.1)",
-                      },
-                    }}
-                  >
-                    <CalendarRange size={24} />
-                  </IconButton>
-                </Tooltip>
-                <Typography variant="h6" color="text.primary" fontWeight="medium">
-                  Dashboard Financiero
-                </Typography>
-              </Box>
+              <Button
+                startIcon={<FilterAlt />}
+                onClick={() => setShowYearSelector((prev) => !prev)}
+                sx={{
+                  textTransform: "none",
+                  bgcolor: "#1A8A98",
+                  color: "#fff",
+                  borderRadius: 2,
+                  px: 2,
+                  py: 1,
+                  fontWeight: 500,
+                  "&:hover": {
+                    bgcolor: "#15737b",
+                  },
+                }}
+              >
+                {showYearSelector ? "Ocultar filtro" : "Mostrar filtro"}
+              </Button>
 
               {year && (
                 <Box
                   sx={{
                     px: 2,
-                    py: 0.5,
-                    bgcolor: "rgba(26, 138, 152, 0.2)",
+                    py: 0.8,
+                    bgcolor: "rgba(26, 138, 152, 0.1)",
                     borderRadius: 2,
-                    display: "flex",
-                    alignItems: "center",
                   }}
                 >
-                  <Typography variant="body2" color="#1A8A98" fontWeight="medium">
-                    {year}
-                    {selectedMonths.length > 0 && ` (${selectedMonths.length} meses)`}
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "#1A8A98", fontWeight: 500 }}
+                  >
+                    Temporada: {selectedSeason} {selectedYear}
+                    {selectedMonths.length === 1 && ` (${selectedMonths[0]})`}
+                    {selectedMonths.length > 1 &&
+                      ` (${selectedMonths.length} meses)`}
                   </Typography>
                 </Box>
               )}
             </Box>
 
-            {/* Selector de Año con animación */}
-            <Collapse in={showYearSelector} timeout="auto">
-              <Fade in={showYearSelector} timeout={500}>
-                <Box sx={{ mb: 4 }}>
-                  <YearSelector
-                    year={year}
-                    setYear={setYear}
-                    selectedMonths={selectedMonths}
-                    setSelectedMonths={setSelectedMonths}
-                    themeMode={themeMode}
-                  />
-                </Box>
-              </Fade>
-            </Collapse>
+            {/* Filtro visible si está activo */}
+            {showYearSelector && (
+              <Box sx={{ mb: 4 }}>
+                <YearSelector
+                  year={year}
+                  setYear={setYear}
+                  selectedMonths={selectedMonths}
+                  setSelectedMonths={setSelectedMonths}
+                  themeMode={themeMode}
+                />
+              </Box>
+            )}
 
             {/* Tarjetas de resumen */}
             <Box sx={{ mb: 4 }}>
               <SummaryCards
-                selectedYear={year ? year.split("-")[0] : null}
-                selectedTemporada={year ? (year.split("-")[1] === "A" ? "Clausura" : "Apertura") : null}
+                selectedYear={year ? selectedYear : null}
+                selectedTemporada={year ? selectedSeason : null}
                 selectedMonths={selectedMonths}
                 themeMode={themeMode}
               />
             </Box>
 
             {/* Gráficos principales y Top Partidos */}
-            <Box sx={{ display: "flex", flexDirection: { xs: "column", lg: "row" }, gap: 3, mb: 4 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", lg: "row" },
+                gap: 3,
+                mb: 4,
+              }}
+            >
               <Box sx={{ flex: "1 1 66%", width: "100%" }}>
                 <MainCharts
                   selectedYear={year ? selectedYear : "all"}
@@ -182,7 +176,9 @@ export default function Dashboard() {
                 <TopPartidos
                   selectedYear={selectedYear}
                   selectedSeason={selectedSeason}
-                  selectedMonth={selectedMonths.length > 0 ? selectedMonths[0] : "all"}
+                  selectedMonth={
+                    selectedMonths.length > 0 ? selectedMonths[0] : "all"
+                  }
                   themeMode={themeMode}
                 />
               </Box>
@@ -190,34 +186,42 @@ export default function Dashboard() {
 
             {/* Subcategorías y Competencia Chart */}
             <Box sx={{ display: "flex", gap: 3, mb: 4 }}>
-              {/* Subcategorías Chart */}
               <Box
                 sx={{
-                  flex: "1 1 70%", // El gráfico de subcategorías toma el 70% del ancho disponible
-                  minWidth: "0", // Evita que se sobrepase el contenedor
-                  maxHeight: "650px", // Establece una altura máxima para el gráfico
-                  overflowY: "auto", // Permite desplazamiento si el contenido excede
-                  flexShrink: 0, // Evita que el gráfico se reduzca más allá de su tamaño mínimo
+                  flex: "1 1 70%",
+                  minWidth: "0",
+                  maxHeight: "650px",
+                  overflowY: "auto",
+                  flexShrink: 0,
                 }}
               >
-                <SubcategoriasChart themeMode={themeMode} selectedYear={selectedYear} selectedSeason={selectedSeason} selectedMonth={selectedMonths[0] || null} />
+                <SubcategoriasChart
+                  themeMode={themeMode}
+                  selectedYear={selectedYear}
+                  selectedSeason={selectedSeason}
+                  selectedMonth={selectedMonths[0] || null}
+                />
               </Box>
 
-              {/* Competencia Chart */}
               <Box
                 sx={{
-                  flex: "1 1 28%", // El gráfico de competencia toma el 28% del ancho disponible
-                  minWidth: "0", // Evita que se sobrepase el contenedor
-                  maxHeight: "650px", // Establece una altura máxima para el gráfico
-                  flexShrink: 0, // Evita que el gráfico se reduzca más allá de su tamaño mínimo
-                  height: "650px", // Establece una altura fija para el gráfico de competencia
+                  flex: "1 1 28%",
+                  minWidth: "0",
+                  maxHeight: "650px",
+                  flexShrink: 0,
+                  height: "650px",
                 }}
               >
-                <CompetenciaChart themeMode={themeMode} selectedYear={selectedYear} selectedSeason={selectedSeason} selectedMonth={selectedMonths[0] || null} />
+                <CompetenciaChart
+                  themeMode={themeMode}
+                  selectedYear={selectedYear}
+                  selectedSeason={selectedSeason}
+                  selectedMonth={selectedMonths[0] || null}
+                />
               </Box>
             </Box>
 
-            {/* Footer simple */}
+            {/* Footer */}
             <Divider sx={{ my: 4, bgcolor: "rgba(255, 255, 255, 0.1)" }} />
             <Box sx={{ textAlign: "center", py: 2 }}>
               <Typography variant="caption" color="text.secondary">

@@ -10,7 +10,7 @@ import {
 } from "@mui/icons-material"
 import axios from "axios"
 
-export default function TopPartidos({ selectedYear, selectedSeason, selectedMonth, themeMode = "dark" }) {
+export default function TopPartidos({ selectedYear, selectedSeason, selectedMonth, themeMode = "dark", filterBy = "all"}) {
   const [topPartidosData, setTopPartidosData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -86,7 +86,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
         const fecha = partido.Fecha
 
         // Calcular la ganancia neta
-        const ganancia = ventas + taquilla - gastos
+        const ganancia = filterBy === "gastos" ? 0 : ventas + taquilla - gastos
 
         return {
           Nombre_Partido: nombrePartido,
@@ -127,7 +127,9 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
         }
       }
       // Ordenar por ganancia de mayor a menor
-      const sortedData = filteredData.sort((a, b) => b.ganancia - a.ganancia)
+      const sortedData = filteredData.sort((a, b) =>
+        filterBy === "gastos" ? b.Total_Gastos - a.Total_Gastos : b.ganancia - a.ganancia
+      )      
       setTopPartidosData(sortedData)
     } catch (err) {
       console.error("Error al obtener los partidos:", err)
@@ -135,7 +137,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
     } finally {
       setLoading(false)
     }
-  }, [selectedYear, selectedSeason, selectedMonth]) // Agregar selectedMonth a las dependencias
+  }, [selectedYear, selectedSeason, selectedMonth, filterBy]) // Agregar selectedMonth a las dependencias
 
   // useEffect para cargar los datos cuando el componente se monta o cambian los filtros
   useEffect(() => {
@@ -309,7 +311,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                   boxShadow: themeMode === "dark" ? "0 4px 12px rgba(0, 0, 0, 0.15)" : "0 4px 12px rgba(0, 0, 0, 0.08)",
                 },
               }}
-              onClick={() => handleOpenModal(partido)} // Abrir el modal al hacer clic
+              onClick={() => filterBy !== "gastos" && handleOpenModal(partido)} // Abrir el modal al hacer clic
             >
               <Box
                 sx={{
@@ -356,28 +358,40 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                   variant="body2"
                   sx={{
                     fontWeight: "bold",
-                    color: "#1A8A98",
+                    color: filterBy === "gastos" ? "#e74c3c" : "#1A8A98",
                     whiteSpace: "nowrap",
                     fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.5,
                   }}
                 >
-                  {formatCurrency(partido.ganancia)}
+                  {filterBy === "gastos" ? (
+                    <>
+                      <CreditCardIcon sx={{ fontSize: 16 }} />
+                      {formatCurrency(partido.Total_Gastos)}
+                    </>
+                  ) : (
+                    formatCurrency(partido.ganancia)
+                  )}
                 </Typography>
-                <Chip
-                  label="Ver detalles"
-                  size="small"
-                  sx={{
-                    mt: 0.5,
-                    height: 20,
-                    fontSize: "0.625rem",
-                    bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
-                    color: "#1A8A98",
-                    border: "1px solid rgba(26, 138, 152, 0.3)",
-                    "&:hover": {
-                      bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
-                    },
-                  }}
-                />
+                {filterBy !== "gastos" && (
+                  <Chip
+                    label="Ver detalles"
+                    size="small"
+                    sx={{
+                      mt: 0.5,
+                      height: 20,
+                      fontSize: "0.625rem",
+                      bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
+                      color: "#1A8A98",
+                      border: "1px solid rgba(26, 138, 152, 0.3)",
+                      "&:hover": {
+                        bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
+                      },
+                    }}
+                  />
+                )}
               </Box>
             </Box>
           ))}
@@ -388,7 +402,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
           <Box
             sx={{
               position: "absolute",
-              bottom: "33px", // Posicionado justo encima del botón "Ver más"
+              bottom: "32px", // Posicionado justo encima del botón "Ver más"
               left: 0,
               right: 0,
               height: "60px",
@@ -924,7 +938,13 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
         <Typography variant="subtitle1" fontWeight="bold" color="#1A8A98">
-          {showAllPartidos ? "Todos los partidos por ganancias netas" : "Top 6 partidos de ganancias netas"}
+        {filterBy === "gastos"
+          ? showAllPartidos
+            ? "Todos los partidos por gastos"
+            : "Top 5 partidos con más gastos"
+          : showAllPartidos
+          ? "Todos los partidos por ganancias netas"
+          : "Top 5 partidos de ganancias netas"}
           {selectedYear && selectedYear !== "all" && selectedSeason && selectedSeason !== "all" && (
             <span style={{ fontSize: "0.8em", marginLeft: "8px", opacity: 0.8 }}>
               ({selectedYear} - {selectedSeason}
@@ -934,7 +954,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
         </Typography>
       </Box>
       {renderPartidos()}
-      {renderModal()}
+      {filterBy !== "gastos" && renderModal()}
     </Paper>
   )
 }

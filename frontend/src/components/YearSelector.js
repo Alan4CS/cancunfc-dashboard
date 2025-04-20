@@ -1,9 +1,12 @@
+"use client"
+
 import { useState, useEffect } from "react"
-import { Box, Paper, Typography, Stack, Chip, IconButton, Fade } from "@mui/material"
-import { Close as CloseIcon, FilterAlt as FilterAltIcon } from "@mui/icons-material"
+import { Box, Paper, Typography, Stack, Chip, Fade, Button, Tooltip, useTheme, alpha } from "@mui/material"
+import { Close as CloseIcon, FilterAlt as FilterAltIcon, CalendarMonth as CalendarIcon } from "@mui/icons-material"
 
 export default function YearSelector({ year, setYear, selectedMonths = [], setSelectedMonths, themeMode = "dark" }) {
   const [showMonths, setShowMonths] = useState(false)
+  const theme = useTheme()
 
   // Datos de temporadas con información de apertura y clausura
   const seasons = [
@@ -39,7 +42,7 @@ export default function YearSelector({ year, setYear, selectedMonths = [], setSe
     },
     {
       id: "2024-B",
-      label: "Clausura 2024",
+      label: "Apertura 2024",
       image: "/image/2024B.jpg",
       months: ["Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
     },
@@ -109,6 +112,17 @@ export default function YearSelector({ year, setYear, selectedMonths = [], setSe
         border: `1px solid ${borderColor}`,
         boxShadow: boxShadow,
         p: 3,
+        position: "relative",
+        overflow: "hidden",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "4px",
+          background: "linear-gradient(90deg, #1A8A98, #2ecc71)",
+        },
       }}
     >
       {/* Título con botón de reinicio si hay un filtro activo */}
@@ -124,24 +138,40 @@ export default function YearSelector({ year, setYear, selectedMonths = [], setSe
         <Typography
           variant="h6"
           fontWeight="bold"
-          color={themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)"}
+          color={themeMode === "dark" ? "rgba(255, 255, 255, 0.9)" : "rgba(0, 0, 0, 0.8)"}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            "& svg": {
+              mr: 1,
+              color: "#1A8A98",
+            },
+          }}
         >
-          Selecciona una temporada
+          <CalendarIcon /> Selecciona una temporada
         </Typography>
 
         {year && (
-          <IconButton
-            onClick={resetFilter}
-            size="small"
-            sx={{
-              bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)",
-              "&:hover": {
-                bgcolor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
-              },
-            }}
-          >
-            <CloseIcon fontSize="small" color={themeMode === "dark" ? "white" : "action"} />
-          </IconButton>
+          <Tooltip title="Limpiar selección">
+            <Button
+              onClick={resetFilter}
+              size="small"
+              startIcon={<CloseIcon />}
+              variant="outlined"
+              sx={{
+                borderColor: "rgba(26, 138, 152, 0.3)",
+                color: "#1A8A98",
+                "&:hover": {
+                  borderColor: "#1A8A98",
+                  bgcolor: alpha("#1A8A98", 0.1),
+                },
+                borderRadius: "8px",
+                textTransform: "none",
+              }}
+            >
+              Limpiar
+            </Button>
+          </Tooltip>
         )}
       </Box>
 
@@ -149,7 +179,7 @@ export default function YearSelector({ year, setYear, selectedMonths = [], setSe
       <Box
         sx={{
           width: "100%",
-          backgroundColor: bgColor,
+          backgroundColor: alpha(theme.palette.background.paper, 0.5),
           border: `1px solid ${borderColor}`,
           borderRadius: 4,
           p: 2,
@@ -161,6 +191,10 @@ export default function YearSelector({ year, setYear, selectedMonths = [], setSe
             backgroundColor: "rgba(26, 138, 152, 0.3)",
             borderRadius: "4px",
           },
+          "&::-webkit-scrollbar-track": {
+            backgroundColor: themeMode === "dark" ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)",
+            borderRadius: "4px",
+          },
         }}
       >
         <Stack
@@ -169,6 +203,7 @@ export default function YearSelector({ year, setYear, selectedMonths = [], setSe
           sx={{
             minWidth: "min-content",
             justifyContent: { xs: "flex-start", md: "center" },
+            py: 1,
           }}
         >
           {seasons.map((season) => (
@@ -182,7 +217,16 @@ export default function YearSelector({ year, setYear, selectedMonths = [], setSe
               }}
             >
               {/* Texto por fuera de la imagen, en la parte superior */}
-              <Typography variant="body1" fontWeight="bold" color="#1A8A98" textAlign="center" sx={{ mb: 1 }}>
+              <Typography
+                variant="body1"
+                fontWeight="bold"
+                color="#1A8A98"
+                textAlign="center"
+                sx={{
+                  mb: 1,
+                  textShadow: themeMode === "dark" ? "0 0 10px rgba(26, 138, 152, 0.3)" : "none",
+                }}
+              >
                 {season.label}
               </Typography>
 
@@ -196,12 +240,24 @@ export default function YearSelector({ year, setYear, selectedMonths = [], setSe
                   overflow: "hidden",
                   cursor: "pointer",
                   boxShadow:
-                    year === season.id ? (themeMode === "dark" ? 3 : "0 6px 16px rgba(26, 138, 152, 0.25)") : 1,
-                  transition: "all 0.2s ease-in-out",
+                    year === season.id
+                      ? themeMode === "dark"
+                        ? "0 0 15px rgba(26, 138, 152, 0.5)"
+                        : "0 6px 16px rgba(26, 138, 152, 0.25)"
+                      : themeMode === "dark"
+                        ? "0 4px 8px rgba(0, 0, 0, 0.3)"
+                        : "0 2px 6px rgba(0, 0, 0, 0.1)",
+                  transition: "all 0.3s ease-in-out",
                   "&:hover": {
-                    transform: "translateY(-2px)",
+                    transform: "translateY(-4px)",
                     boxShadow:
-                      year === season.id ? (themeMode === "dark" ? 4 : "0 8px 20px rgba(26, 138, 152, 0.3)") : 4,
+                      year === season.id
+                        ? themeMode === "dark"
+                          ? "0 0 20px rgba(26, 138, 152, 0.7)"
+                          : "0 8px 20px rgba(26, 138, 152, 0.3)"
+                        : themeMode === "dark"
+                          ? "0 6px 12px rgba(0, 0, 0, 0.4)"
+                          : "0 4px 10px rgba(0, 0, 0, 0.2)",
                   },
                   border:
                     year === season.id ? (themeMode === "dark" ? "2px solid #1A8A98" : "3px solid #1A8A98") : "none",
@@ -226,6 +282,7 @@ export default function YearSelector({ year, setYear, selectedMonths = [], setSe
                         : themeMode === "dark"
                           ? "brightness(0.65)"
                           : "brightness(0.85)",
+                    transition: "filter 0.3s ease",
                   }}
                 />
 
@@ -238,11 +295,12 @@ export default function YearSelector({ year, setYear, selectedMonths = [], setSe
                     background:
                       year === season.id
                         ? themeMode === "dark"
-                          ? "linear-gradient(rgba(26, 138, 152, 0.3), rgba(26, 138, 152, 0.1))"
-                          : "linear-gradient(rgba(26, 138, 152, 0.2), rgba(26, 138, 152, 0.05))"
+                          ? "linear-gradient(135deg, rgba(26, 138, 152, 0.4), rgba(26, 138, 152, 0.1))"
+                          : "linear-gradient(135deg, rgba(26, 138, 152, 0.3), rgba(26, 138, 152, 0.05))"
                         : themeMode === "dark"
                           ? "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5))"
                           : "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2))",
+                    transition: "background 0.3s ease",
                   }}
                 />
               </Paper>
@@ -258,11 +316,11 @@ export default function YearSelector({ year, setYear, selectedMonths = [], setSe
             sx={{
               width: "100%",
               mt: 2,
-              p: 2,
+              p: 3,
               borderRadius: 2,
-              bgcolor: bgColor,
+              bgcolor: alpha(theme.palette.background.paper, 0.5),
               border: `1px solid ${borderColor}`,
-              boxShadow: 1,
+              boxShadow: themeMode === "dark" ? "0 4px 12px rgba(0, 0, 0, 0.2)" : "0 4px 12px rgba(0, 0, 0, 0.05)",
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
@@ -282,12 +340,25 @@ export default function YearSelector({ year, setYear, selectedMonths = [], setSe
                   variant={selectedMonths.includes(month) ? "filled" : "outlined"}
                   sx={{
                     borderRadius: "16px",
+                    fontWeight: selectedMonths.includes(month) ? "bold" : "normal",
+                    fontSize: "0.875rem",
+                    py: 0.5,
                     "&.MuiChip-colorPrimary": {
                       bgcolor: "#1A8A98",
+                      boxShadow: themeMode === "dark" ? "0 0 10px rgba(26, 138, 152, 0.3)" : "none",
                     },
                     "&.MuiChip-outlined": {
                       borderColor: "rgba(26, 138, 152, 0.3)",
                       color: themeMode === "dark" ? "white" : "rgba(0, 0, 0, 0.87)",
+                    },
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      backgroundColor: selectedMonths.includes(month)
+                        ? "#106570"
+                        : themeMode === "dark"
+                          ? "rgba(26, 138, 152, 0.2)"
+                          : "rgba(26, 138, 152, 0.1)",
+                      transform: "translateY(-2px)",
                     },
                   }}
                 />
@@ -299,4 +370,3 @@ export default function YearSelector({ year, setYear, selectedMonths = [], setSe
     </Box>
   )
 }
-

@@ -14,14 +14,13 @@ import {
 } from "@mui/material"
 import { BarChart2, PieChartIcon } from "lucide-react"
 
-export default function CompetenciaChart({ themeMode = "dark", selectedYear, selectedSeason, selectedMonth }) {
+export default function CompetenciaChart({ themeMode = "dark", selectedYear, selectedSeason, selectedMonth, filterBy = "ganancia" }) {
   const [competenciaData, setCompetenciaData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [chartType, setChartType] = useState("pie") // "bar" o "pie"
+  const [chartType, setChartType] = useState("pie")
   const theme = useTheme()
 
-  // Manejar cambio de tipo de gráfico
   const handleChartTypeChange = (event, newType) => {
     if (newType !== null) {
       setChartType(newType)
@@ -29,31 +28,38 @@ export default function CompetenciaChart({ themeMode = "dark", selectedYear, sel
   }
 
   const getColorByCompetencia = (name) => {
-    if (name === "Liga") return "#1A8A98"      // Turquesa
-    if (name === "Amistoso") return "#2ecc71"  // Verde
-    return "#ccc" // Color default si llega algo inesperado
-  }
+    if (filterBy === "gastos") {
+      const gastoColors = {
+        Liga: "#e74c3c",     
+        Amistoso: "#f39c12", 
+      }
+      return gastoColors[name] || "#e74c3c"
+    }
   
+    const colors = {
+      Liga: "#1A8A98",
+      Amistoso: "#2ecc71",
+    }
+  
+    return colors[name] || "#ccc"
+  }  
 
-  // Fetch the data from the backend API
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true)
         setError(null)
-  
+
         let url = "https://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_competencia"
         let params = {}
 
         if (selectedYear && selectedMonth && selectedYear !== "all" && selectedMonth !== "all") {
-          //  Si se selecciona un mes específico
           url = "https://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_competencia_mes_filtro"
           params = {
             año: selectedYear,
             mes: selectedMonth,
           }
         } else if (selectedYear && selectedSeason && selectedYear !== "all" && selectedSeason !== "all") {
-          // Si se selecciona una temporada
           url = "https://cancunfc-dashboard-production.up.railway.app/api/ventas_gastos_taquilla_competencia_temporada"
           const temporadaNum = selectedSeason === "Clausura" ? "1" : "2"
           params = {
@@ -61,69 +67,55 @@ export default function CompetenciaChart({ themeMode = "dark", selectedYear, sel
             temporada: temporadaNum,
           }
         }
-  
+
         const response = await axios.get(url, { params })
-  
-        const rawData =
-          response.data.resumen_competencia_temporada || response.data // si viene del filtrado o del general
-  
+        const rawData = response.data.resumen_competencia_temporada || response.data
         setCompetenciaData(rawData)
       } catch (err) {
         const backendMessage = err.response?.data?.message
-
         if (backendMessage === "No se encontraron datos para el mes y año solicitados") {
-          setCompetenciaData([]) // limpia datos si no hay
-          setError(null) // evita mostrar la alerta roja
+          setCompetenciaData([])
+          setError(null)
           return
         }
-
-        console.error("Error real al obtener los datos", err)
         setError("Error al cargar los datos. Intente nuevamente.")
       } finally {
         setLoading(false)
       }
     }
-  
     fetchData()
-  }, [selectedYear, selectedSeason, selectedMonth])  
+  }, [selectedYear, selectedSeason, selectedMonth])
 
-  // Calculate the total income across all competitions (Ventas + Taquilla - Gastos)
-  const totalIngresos = useMemo(() => {
+  const totalBase = useMemo(() => {
     return competenciaData.reduce((acc, item) => {
       const ventas = Number(item.Total_Ventas)
       const taquilla = Number(item.Total_Taquilla)
       const gastos = Number(item.Total_Gastos)
-      return acc + ventas + taquilla - gastos
+      return acc + (filterBy === "gastos" ? gastos : ventas + taquilla - gastos)
     }, 0)
-  }, [competenciaData])
+  }, [competenciaData, filterBy])
 
-  // Map the data to include the percentage of gain for each competition
   const data = useMemo(() => {
-    return (
-      competenciaData
-        .map((item) => {
-          const ventas = Number(item.Total_Ventas)
-          const taquilla = Number(item.Total_Taquilla)
-          const gastos = Number(item.Total_Gastos)
-          const totalIngresosCompetencia = ventas + taquilla - gastos
-          const porcentajeGanancia = (totalIngresosCompetencia / totalIngresos) * 100
+    return competenciaData
+      .map((item) => {
+        const ventas = Number(item.Total_Ventas)
+        const taquilla = Number(item.Total_Taquilla)
+        const gastos = Number(item.Total_Gastos)
+        const valor = filterBy === "gastos" ? gastos : ventas + taquilla - gastos
+        const porcentaje = totalBase > 0 ? (valor / totalBase) * 100 : 0
 
-          return {
-            name: item.Nombre_Competencia,
-            value: porcentajeGanancia,
-            ...item,
-            totalIngresosCompetencia,
-          }
-        })
-        // Ordenar de mayor a menor porcentaje
-        .sort((a, b) => b.value - a.value)
-    )
-  }, [competenciaData, totalIngresos])
+        return {
+          name: item.Nombre_Competencia,
+          value: porcentaje,
+          ...item,
+          valor,
+        }
+      })
+      .sort((a, b) => b.value - a.value)
+  }, [competenciaData, totalBase, filterBy])
 
-  // Componente personalizado para el tooltip
   const CustomTooltip = ({ active, payload }) => {
     if (!active || !payload || !payload.length) return null
-
     const item = payload[0].payload
     const porcentaje = item.value
     const ventas = Number(item.Total_Ventas)
@@ -131,85 +123,46 @@ export default function CompetenciaChart({ themeMode = "dark", selectedYear, sel
     const gastos = Number(item.Total_Gastos)
     const ganancia = ventas + taquilla - gastos
     const color = payload[0].color
-
-    // Función para formatear valores monetarios con comas
     const formatCurrency = (value) => {
-      return `$${value.toLocaleString("es-MX", {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      })}`
+      return `$${value.toLocaleString("es-MX", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
     }
-
     return (
-      <Box
-        sx={{
-          backgroundColor: "rgba(0, 0, 0, 0.9)",
-          border: `1px solid ${color}`,
-          borderRadius: "8px",
-          padding: "12px",
-          boxShadow: "0 6px 24px rgba(0, 0, 0, 0.6)",
-          maxWidth: "300px",
-        }}
-      >
-        <Typography variant="body2" sx={{ color: "#fff", marginBottom: 1, fontWeight: "bold" }}>
-          {item.name}
-        </Typography>
-
+      <Box sx={{ backgroundColor: "rgba(0, 0, 0, 0.9)", border: `1px solid ${color}`, borderRadius: "8px", padding: "12px", boxShadow: "0 6px 24px rgba(0, 0, 0, 0.6)", maxWidth: "300px" }}>
+        <Typography variant="body2" sx={{ color: "#fff", marginBottom: 1, fontWeight: "bold" }}>{item.name}</Typography>
         <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-          <Box
-            component="span"
-            sx={{
-              width: 14,
-              height: 14,
-              backgroundColor: color,
-              marginRight: 1.5,
-              borderRadius: "50%",
-              boxShadow: "0 0 6px rgba(255, 255, 255, 0.3)",
-            }}
-          />
-          <Typography variant="body2" sx={{ color: "#fff", fontWeight: "medium" }}>
-            Porcentaje: {porcentaje.toFixed(1)}%
-          </Typography>
+          <Box component="span" sx={{ width: 14, height: 14, backgroundColor: color, marginRight: 1.5, borderRadius: "50%", boxShadow: "0 0 6px rgba(255, 255, 255, 0.3)" }} />
+          <Typography variant="body2" sx={{ color: "#fff", fontWeight: "medium" }}>Porcentaje: {porcentaje.toFixed(1)}%</Typography>
         </Box>
-
-        <Box sx={{ mt: 2, pt: 1, borderTop: "1px solid rgba(255, 255, 255, 0.2)" }}>
-          <Typography
-            variant="body2"
-            sx={{ color: "#2ecc71", display: "flex", justifyContent: "space-between", mb: 0.5 }}
-          >
-            <span>Ventas:</span> <span>{formatCurrency(ventas)}</span>
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ color: "#f39c12", display: "flex", justifyContent: "space-between", mb: 0.5 }}
-          >
-            <span>Taquilla:</span> <span>{formatCurrency(taquilla)}</span>
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ color: "#e74c3c", display: "flex", justifyContent: "space-between", mb: 0.5 }}
-          >
-            <span>Gastos:</span> <span>{formatCurrency(gastos)}</span>
-          </Typography>
-        </Box>
-
-        <Box sx={{ mt: 1, pt: 1, borderTop: "1px solid rgba(255, 255, 255, 0.2)" }}>
-          <Typography
-            variant="body2"
-            sx={{
-              color: color,
-              fontWeight: "bold",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <span>Ganancia:</span> <span>{formatCurrency(ganancia)}</span>
-          </Typography>
-        </Box>
+        {filterBy === "gastos" ? (
+          <Box sx={{ mt: 2, pt: 1, borderTop: "1px solid rgba(255, 255, 255, 0.2)" }}>
+            <Typography variant="body2" sx={{ color: "#e74c3c", fontWeight: "bold", display: "flex", justifyContent: "space-between" }}>
+              <span>Gastos:</span> <span>{formatCurrency(gastos)}</span>
+            </Typography>
+          </Box>
+        ) : (
+          <>
+            <Box sx={{ mt: 2, pt: 1, borderTop: "1px solid rgba(255, 255, 255, 0.2)" }}>
+              <Typography variant="body2" sx={{ color: "#2ecc71", display: "flex", justifyContent: "space-between", mb: 0.5 }}>
+                <span>Ventas:</span> <span>{formatCurrency(ventas)}</span>
+              </Typography>
+              <Typography variant="body2" sx={{ color: "#f39c12", display: "flex", justifyContent: "space-between", mb: 0.5 }}>
+                <span>Taquilla:</span> <span>{formatCurrency(taquilla)}</span>
+              </Typography>
+              <Typography variant="body2" sx={{ color: "#e74c3c", display: "flex", justifyContent: "space-between", mb: 0.5 }}>
+                <span>Gastos:</span> <span>{formatCurrency(gastos)}</span>
+              </Typography>
+            </Box>
+            <Box sx={{ mt: 1, pt: 1, borderTop: "1px solid rgba(255, 255, 255, 0.2)" }}>
+              <Typography variant="body2" sx={{ color: color, fontWeight: "bold", display: "flex", justifyContent: "space-between" }}>
+                <span>Ganancia:</span> <span>{formatCurrency(ganancia)}</span>
+              </Typography>
+            </Box>
+          </>
+        )}
       </Box>
     )
   }
-
+  
   // Renderizar el gráfico de barras verticales
   const renderBarChart = () => {
     return (
@@ -256,63 +209,70 @@ export default function CompetenciaChart({ themeMode = "dark", selectedYear, sel
   // Renderizar el gráfico circular (original)
   const renderPieChart = () => {
     return (
-      <ResponsiveContainer width="100%" height={400}>
-        <PieChart>
-        <Pie
-          data={data}
-          dataKey="value"
-          nameKey="name"
-          cx="50%"
-          cy="50%"
-          innerRadius={50}
-          outerRadius={120}
-          paddingAngle={4}
-          stroke="#1a1a1a"
-          strokeWidth={2}
-          label={({ name, value, cx, cy, midAngle, outerRadius }) => {
-            const RADIAN = Math.PI / 180
-            const radius = outerRadius + 10
-            const x = cx + radius * Math.cos(-midAngle * RADIAN)
-            const y = cy + radius * Math.sin(-midAngle * RADIAN)
-          
-            return (
-              <text
-                x={x}
-                y={y}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fontSize={12}
-                fontWeight="bold"
-                fill="#ffffff"
-                stroke="#000000"
-                strokeWidth={0.8}
-                paintOrder="stroke"
-              >
-                {`${name}: ${value.toFixed(1)}%`}
-              </text>
-            )
-          }}          
-          labelLine={{
-            stroke: themeMode === "dark" ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.3)",
-            strokeWidth: 1.2,
-            strokeDasharray: "2 2",
+      <>
+        {/* Leyenda personalizada centrada arriba */}
+        <Box
+          sx={{
+            mb: 2,
+            display: "flex",
+            justifyContent: "center",
+            gap: 3,
+            flexWrap: "wrap",
           }}
         >
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={getColorByCompetencia(entry.name)}
-                stroke={themeMode === "dark" ? "rgba(0, 0, 0, 0.3)" : "rgba(255, 255, 255, 0.3)"}
-                strokeWidth={1}
-                cursor="default"
+          {data.map((entry, index) => (
+            <Box key={index} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Box
+                sx={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
+                  backgroundColor: getColorByCompetencia(entry.name),
+                }}
               />
-            ))}
-          </Pie>
-          <Tooltip content={<CustomTooltip />} />
-        </PieChart>
-      </ResponsiveContainer>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: themeMode === "dark" ? "rgba(255, 255, 255, 0.85)" : "rgba(0, 0, 0, 0.75)",
+                  fontSize: "0.8rem",
+                }}
+              >
+                {entry.name}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+  
+        <ResponsiveContainer width="100%" height={400}>
+          <PieChart>
+            <Pie
+              data={data}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              innerRadius={50}
+              outerRadius={120}
+              stroke="#1a1a1a"
+              strokeWidth={2}
+              label={false}
+              labelLine={false}
+            >
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={getColorByCompetencia(entry.name)}
+                  stroke={themeMode === "dark" ? "rgba(0, 0, 0, 0.3)" : "rgba(255, 255, 255, 0.3)"}
+                  strokeWidth={1}
+                />
+              ))}
+            </Pie>
+            <Tooltip content={<CustomTooltip />} />
+          </PieChart>
+        </ResponsiveContainer>
+      </>
     )
-  }
+  }  
 
   // Render the chart when data is ready
   const renderChart = () => {
@@ -373,9 +333,9 @@ export default function CompetenciaChart({ themeMode = "dark", selectedYear, sel
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
-        <Typography variant="h6" color="#1A8A98" fontWeight="bold">
-          Porcentaje de Ganancia por Competencia
-        </Typography>
+      <Typography variant="h6" color="#1A8A98" fontWeight="bold">
+        {filterBy === "gastos" ? "Proporción de Gastos por Competencia" : "Porcentaje de Ganancia por Competencia"}
+      </Typography>
         <ToggleButtonGroup
           value={chartType}
           exclusive

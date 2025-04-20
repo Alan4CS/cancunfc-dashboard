@@ -60,6 +60,7 @@ export default function MainCharts({
   selectedSeason: seasonProp = "all",
   selectedMonths = [],
   themeMode = "dark", // Valor por defecto
+  showOnly = "all",
 }) {
   const [ventasGastosData, setVentasGastosData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -70,6 +71,12 @@ export default function MainCharts({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const [partidosData, setPartidosData] = useState([])
   const [viewMode, setViewMode] = useState("meses") // "meses" o "partidos"
+  const [activeSeries, setActiveSeries] = useState({
+    ventas: showOnly === "ventas" || showOnly === "all",
+    gastos: showOnly === "gastos" || showOnly === "all",
+    taquilla: showOnly === "taquilla" || showOnly === "all",
+  })
+  
 
   // Función para formatear números grandes
   const formatNumber = (num) => {
@@ -257,7 +264,13 @@ export default function MainCharts({
   const filteredData = useMemo(() => {
     // Si estamos mostrando partidos y tenemos datos de partidos
     if (viewMode === "partidos" && partidosData.length > 0) {
-      let filtered = [...partidosData]
+      let filtered = [...partidosData].map(item => ({
+        ...item,
+        ventas: showOnly === "ventas" || showOnly === "all" ? item.ventas : 0,
+        gastos: showOnly === "gastos" || showOnly === "all" ? item.gastos : 0,
+        taquilla: showOnly === "taquilla" || showOnly === "all" ? item.taquilla : 0,
+      }))
+      
 
       // Si hay meses seleccionados, filtrar por esos meses
       if (selectedMonths.length > 0) {
@@ -285,7 +298,15 @@ export default function MainCharts({
     }
 
     // Modo mes (única vista disponible ahora)
-    let filtered = [...ventasGastosData]
+    let filtered = [...ventasGastosData].map(item => {
+      return {
+        ...item,
+        ventas: showOnly === "ventas" || showOnly === "all" ? item.ventas : 0,
+        gastos: showOnly === "gastos" || showOnly === "all" ? item.gastos : 0,
+        taquilla: showOnly === "taquilla" || showOnly === "all" ? item.taquilla : 0,
+      }
+    })
+    
 
     // Filtrar por año
     if (yearProp !== "all") {
@@ -303,7 +324,7 @@ export default function MainCharts({
     }
 
     return filtered
-  }, [ventasGastosData, partidosData, yearProp, seasonProp, viewMode, selectedMonths])
+  }, [ventasGastosData, partidosData, yearProp, seasonProp, viewMode, selectedMonths, showOnly])
 
   // Manejadores de eventos
   const handleChartTypeChange = (event, newType) => {
@@ -319,6 +340,14 @@ export default function MainCharts({
   // Manejador para cambiar entre vista de partidos y meses
   const handleViewModeChange = (event) => {
     setViewMode(event.target.value)
+  }
+
+  // Manejador para cambiar la visibilidad de las series
+  const handleSeriesToggle = (series) => {
+    setActiveSeries((prev) => ({
+      ...prev,
+      [series]: !prev[series],
+    }))
   }
 
   // Calcular el valor máximo para el dominio del eje Y
@@ -395,7 +424,44 @@ export default function MainCharts({
       ),
       cartesianGrid: <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />,
       tooltip: <Tooltip content={<CustomTooltip />} />,
-      legend: <Legend verticalAlign="top" height={36} wrapperStyle={{ paddingBottom: 10 }} iconType="circle" />,
+      legend: (
+        <Legend
+          verticalAlign="top"
+          height={36}
+          wrapperStyle={{ paddingBottom: 10 }}
+          iconType="circle"
+          payload={[
+            ...(showOnly === "ventas" || showOnly === "all"
+              ? [{ dataKey: "ventas", value: "Ventas", type: "circle", color: "#2ecc71" }]
+              : []),
+            ...(showOnly === "gastos" || showOnly === "all"
+              ? [{ dataKey: "gastos", value: "Gastos", type: "circle", color: "#e74c3c" }]
+              : []),
+            ...(showOnly === "taquilla" || showOnly === "all"
+              ? [{ dataKey: "taquilla", value: "Taquilla", type: "circle", color: "#1A8A98" }]
+              : []),
+          ]}
+          onClick={(data) => {
+            const { dataKey } = data
+            handleSeriesToggle(dataKey)
+          }}
+          formatter={(value, entry) => {
+            const { dataKey } = entry
+            const isActive = activeSeries[dataKey]
+            return (
+              <span
+                style={{
+                  color: isActive ? undefined : "rgba(255, 255, 255, 0.5)",
+                  textDecoration: isActive ? undefined : "line-through",
+                  cursor: "pointer",
+                }}
+              >
+                {value}
+              </span>
+            )
+          }}
+        />
+      ),
       referenceLine: <ReferenceLine y={0} stroke={axisColor} strokeDasharray="3 3" />,
     }
 
@@ -409,9 +475,30 @@ export default function MainCharts({
             {commonAxisProps.tooltip}
             {commonAxisProps.legend}
             {commonAxisProps.referenceLine}
-            <Bar dataKey="ventas" name="Ventas" fill="#2ecc71" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="gastos" name="Gastos" fill="#e74c3c" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="taquilla" name="Taquilla" fill="#1A8A98" radius={[4, 4, 0, 0]} />
+            <Bar
+              dataKey="ventas"
+              name="Ventas"
+              fill={activeSeries.ventas ? "#2ecc71" : "rgba(46, 204, 113, 0.3)"}
+              radius={[4, 4, 0, 0]}
+              fillOpacity={activeSeries.ventas ? 1 : 0.3}
+              strokeOpacity={activeSeries.ventas ? 1 : 0.3}
+            />
+            <Bar
+              dataKey="gastos"
+              name="Gastos"
+              fill={activeSeries.gastos ? "#e74c3c" : "rgba(231, 76, 60, 0.3)"}
+              radius={[4, 4, 0, 0]}
+              fillOpacity={activeSeries.gastos ? 1 : 0.3}
+              strokeOpacity={activeSeries.gastos ? 1 : 0.3}
+            />
+            <Bar
+              dataKey="taquilla"
+              name="Taquilla"
+              fill={activeSeries.taquilla ? "#1A8A98" : "rgba(26, 138, 152, 0.3)"}
+              radius={[4, 4, 0, 0]}
+              fillOpacity={activeSeries.taquilla ? 1 : 0.3}
+              strokeOpacity={activeSeries.taquilla ? 1 : 0.3}
+            />
           </BarChart>
         )
       case "line":
@@ -427,25 +514,43 @@ export default function MainCharts({
               type="linear"
               dataKey="ventas"
               name="Ventas"
-              stroke="#2ecc71"
-              dot={{ r: 4, fill: "#2ecc71", strokeWidth: 2 }}
-              activeDot={{ r: 6 }}
+              stroke={activeSeries.ventas ? "#2ecc71" : "rgba(46, 204, 113, 0.3)"}
+              strokeWidth={activeSeries.ventas ? 2 : 1}
+              dot={{
+                r: activeSeries.ventas ? 4 : 3,
+                fill: activeSeries.ventas ? "#2ecc71" : "rgba(46, 204, 113, 0.3)",
+                strokeWidth: activeSeries.ventas ? 2 : 1,
+              }}
+              activeDot={{ r: activeSeries.ventas ? 6 : 4 }}
+              strokeOpacity={activeSeries.ventas ? 1 : 0.5}
             />
             <Line
               type="linear"
               dataKey="gastos"
               name="Gastos"
-              stroke="#e74c3c"
-              dot={{ r: 4, fill: "#e74c3c", strokeWidth: 2 }}
-              activeDot={{ r: 6 }}
+              stroke={activeSeries.gastos ? "#e74c3c" : "rgba(231, 76, 60, 0.3)"}
+              strokeWidth={activeSeries.gastos ? 2 : 1}
+              dot={{
+                r: activeSeries.gastos ? 4 : 3,
+                fill: activeSeries.gastos ? "#e74c3c" : "rgba(231, 76, 60, 0.3)",
+                strokeWidth: activeSeries.gastos ? 2 : 1,
+              }}
+              activeDot={{ r: activeSeries.gastos ? 6 : 4 }}
+              strokeOpacity={activeSeries.gastos ? 1 : 0.5}
             />
             <Line
               type="linear"
               dataKey="taquilla"
               name="Taquilla"
-              stroke="#1A8A98"
-              dot={{ r: 4, fill: "#1A8A98", strokeWidth: 2 }}
-              activeDot={{ r: 6 }}
+              stroke={activeSeries.taquilla ? "#1A8A98" : "rgba(26, 138, 152, 0.3)"}
+              strokeWidth={activeSeries.taquilla ? 2 : 1}
+              dot={{
+                r: activeSeries.taquilla ? 4 : 3,
+                fill: activeSeries.taquilla ? "#1A8A98" : "rgba(26, 138, 152, 0.3)",
+                strokeWidth: activeSeries.taquilla ? 2 : 1,
+              }}
+              activeDot={{ r: activeSeries.taquilla ? 6 : 4 }}
+              strokeOpacity={activeSeries.taquilla ? 1 : 0.5}
             />
           </LineChart>
         )
@@ -466,6 +571,18 @@ export default function MainCharts({
                 <stop offset="5%" stopColor="#1A8A98" stopOpacity={0.8} />
                 <stop offset="95%" stopColor="#1A8A98" stopOpacity={0.1} />
               </linearGradient>
+              <linearGradient id="colorVentasInactive" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="rgba(46, 204, 113, 0.3)" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="rgba(46, 204, 113, 0.3)" stopOpacity={0.05} />
+              </linearGradient>
+              <linearGradient id="colorGastosInactive" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="rgba(231, 76, 60, 0.3)" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="rgba(231, 76, 60, 0.3)" stopOpacity={0.05} />
+              </linearGradient>
+              <linearGradient id="colorTaquillaInactive" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="rgba(26, 138, 152, 0.3)" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="rgba(26, 138, 152, 0.3)" stopOpacity={0.05} />
+              </linearGradient>
             </defs>
             {commonAxisProps.cartesianGrid}
             {commonAxisProps.xAxis}
@@ -477,31 +594,49 @@ export default function MainCharts({
               type="linear"
               dataKey="ventas"
               name="Ventas"
-              stroke="#2ecc71"
-              fillOpacity={1}
-              fill="url(#colorVentas)"
-              dot={{ r: 4, fill: "#2ecc71", strokeWidth: 2 }}
-              activeDot={{ r: 6 }}
+              stroke={activeSeries.ventas ? "#2ecc71" : "rgba(46, 204, 113, 0.3)"}
+              strokeWidth={activeSeries.ventas ? 2 : 1}
+              fillOpacity={activeSeries.ventas ? 1 : 0.3}
+              fill={activeSeries.ventas ? "url(#colorVentas)" : "url(#colorVentasInactive)"}
+              dot={{
+                r: activeSeries.ventas ? 4 : 3,
+                fill: activeSeries.ventas ? "#2ecc71" : "rgba(46, 204, 113, 0.3)",
+                strokeWidth: activeSeries.ventas ? 2 : 1,
+              }}
+              activeDot={{ r: activeSeries.ventas ? 6 : 4 }}
+              strokeOpacity={activeSeries.ventas ? 1 : 0.5}
             />
             <Area
               type="linear"
               dataKey="gastos"
               name="Gastos"
-              stroke="#e74c3c"
-              fillOpacity={1}
-              fill="url(#colorGastos)"
-              dot={{ r: 4, fill: "#e74c3c", strokeWidth: 2 }}
-              activeDot={{ r: 6 }}
+              stroke={activeSeries.gastos ? "#e74c3c" : "rgba(231, 76, 60, 0.3)"}
+              strokeWidth={activeSeries.gastos ? 2 : 1}
+              fillOpacity={activeSeries.gastos ? 1 : 0.3}
+              fill={activeSeries.gastos ? "url(#colorGastos)" : "url(#colorGastosInactive)"}
+              dot={{
+                r: activeSeries.gastos ? 4 : 3,
+                fill: activeSeries.gastos ? "#e74c3c" : "rgba(231, 76, 60, 0.3)",
+                strokeWidth: activeSeries.gastos ? 2 : 1,
+              }}
+              activeDot={{ r: activeSeries.gastos ? 6 : 4 }}
+              strokeOpacity={activeSeries.gastos ? 1 : 0.5}
             />
             <Area
               type="linear"
               dataKey="taquilla"
               name="Taquilla"
-              stroke="#1A8A98"
-              fillOpacity={1}
-              fill="url(#colorTaquilla)"
-              dot={{ r: 4, fill: "#1A8A98", strokeWidth: 2 }}
-              activeDot={{ r: 6 }}
+              stroke={activeSeries.taquilla ? "#1A8A98" : "rgba(26, 138, 152, 0.3)"}
+              strokeWidth={activeSeries.taquilla ? 2 : 1}
+              fillOpacity={activeSeries.taquilla ? 1 : 0.3}
+              fill={activeSeries.taquilla ? "url(#colorTaquilla)" : "url(#colorTaquillaInactive)"}
+              dot={{
+                r: activeSeries.taquilla ? 4 : 3,
+                fill: activeSeries.taquilla ? "#1A8A98" : "rgba(26, 138, 152, 0.3)",
+                strokeWidth: activeSeries.taquilla ? 2 : 1,
+              }}
+              activeDot={{ r: activeSeries.taquilla ? 6 : 4 }}
+              strokeOpacity={activeSeries.taquilla ? 1 : 0.5}
             />
           </AreaChart>
         )
