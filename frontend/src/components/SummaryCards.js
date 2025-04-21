@@ -10,28 +10,32 @@ const cardConfig = [
     endpoint: "https://cancunfc-dashboard-production.up.railway.app/api/ingresos_totales",
     key: "total_ingresos",
     color: "#2ecc71",
+    type: "ingresos",
   },
   {
     title: "Taquilla",
     endpoint: "https://cancunfc-dashboard-production.up.railway.app/api/taquilla_total",
     key: "taquilla_total",
     color: "#1A8A98",
+    type: "ingresos",
   },
   {
     title: "Gastos",
     endpoint: "https://cancunfc-dashboard-production.up.railway.app/api/gastos_totales",
     key: "total_gastos",
     color: "#e74c3c",
+    type: "gastos",
   },
   {
     title: "Ganancias",
     calculated: true,
     color: "#f39c12",
+    type: "general",
   },
 ]
 
 // Modificar la definición del componente para aceptar props de año, temporada y meses seleccionados
-export default function SummaryCards({ selectedYear, selectedTemporada, selectedMonths = [], themeMode = "dark",  viewType = "general"}) {
+export default function SummaryCards({ selectedYear, selectedTemporada, selectedMonths = [], themeMode = "dark", viewType = "general" }) {
   // Estado para almacenar los datos
   const [summaryData, setSummaryData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -52,14 +56,15 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
     return `$${value.toLocaleString("es-MX")}`
   }
 
-  
-  const visibleCards = summaryData.filter((card) => {
-    if (viewType === "general") return true
-    if (viewType === "ingresos") return card.title.includes("Esquilmos") || card.title.includes("Taquilla")
-    if (viewType === "gastos") return card.title.includes("Gastos")
-    return false
-  })
-  
+  // Filtrar las tarjetas según el tipo de vista
+  const getVisibleCards = useCallback(() => {
+    if (viewType === "general") return summaryData
+    if (viewType === "ingresos") return summaryData.filter(card => card.type === "ingresos")
+    if (viewType === "gastos") return summaryData.filter(card => card.type === "gastos")
+    return summaryData
+  }, [summaryData, viewType])
+
+  const visibleCards = getVisibleCards()
 
   // Función para refrescar los datos
   const handleRefresh = () => {
@@ -91,12 +96,10 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
 
           // Si no hay datos para los meses seleccionados
           if (filteredMonths.length === 0) {
-            const emptyResults = cardConfig.map((card) => {
-              if (card.calculated) {
-                return { ...card, value: 0 }
-              }
-              return { ...card, value: 0 }
-            })
+            const emptyResults = cardConfig.map((card) => ({
+              ...card,
+              value: 0
+            }))
           
             setSummaryData(emptyResults)
             setActiveFilter(`${selectedMonths.length} meses seleccionados`)
@@ -115,21 +118,25 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
               title: "Esquilmos",
               value: totalVentas,
               color: "#2ecc71",
+              type: "ingresos",
             },
             {
               title: "Taquilla",
               value: totalTaquilla,
               color: "#1A8A98",
+              type: "ingresos",
             },
             {
               title: "Gastos",
               value: totalGastos,
               color: "#e74c3c",
+              type: "gastos",
             },
             {
               title: "Ganancias",
               value: ganancias,
               color: "#f39c12",
+              type: "general",
             },
           ]
 
@@ -147,33 +154,28 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
               title: "Esquilmos",
               value: Number.parseFloat(response.data.total_ventas) || 0,
               color: "#2ecc71",
+              type: "ingresos",
             },
             {
               title: "Taquilla",
               value: Number.parseFloat(response.data.total_taquilla) || 0,
               color: "#1A8A98",
+              type: "ingresos",
             },
             {
               title: "Gastos",
               value: Number.parseFloat(response.data.total_gastos) || 0,
               color: "#e74c3c",
+              type: "gastos",
             },
             {
               title: "Ganancias",
               calculated: true,
               color: "#f39c12",
-              value: null, // Se calculará después
+              type: "general",
+              value: Number.parseFloat(response.data.total_ventas) + Number.parseFloat(response.data.total_taquilla) - Number.parseFloat(response.data.total_gastos) || 0,
             },
           ]
-
-          // Calcular ganancias
-          const ingresos = results[0].value || 0
-          const gastos = results[1].value || 0
-          const taquilla = results[2].value || 0
-          const ganancias = ingresos + taquilla - gastos
-
-          // Actualizar la tarjeta de ganancias
-          results[3].value = ganancias
 
           setSummaryData(results)
           setActiveFilter(`${selectedTemporada} ${selectedYear}`)
@@ -228,11 +230,13 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
   }, [fetchData, refreshKey]) // Ahora depende de fetchData y refreshKey
 
   // Función para animar los valores (opcional)
-  const [animatedValues, setAnimatedValues] = useState(cardConfig.map(() => 0))
+  const [animatedValues, setAnimatedValues] = useState([])
 
   useEffect(() => {
     if (loading || !summaryData.length) return
 
+    setAnimatedValues(summaryData.map(() => 0))
+    
     const targetValues = summaryData.map((item) => item.value || 0)
     const duration = 1500
     const frameDuration = 16
@@ -294,67 +298,71 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
       </Box>
 
       <Stack direction={{ xs: "column", sm: "row" }} spacing={3} sx={{ width: "100%" }}>
-        {visibleCards.map((item, index) => (
-          <Paper
-            key={index}
-            sx={{
-              p: 3,
-              display: "flex",
-              flexDirection: "column",
-              height: 120,
-              flex: 1,
-              bgcolor: bgColor,
-              borderRadius: 2,
-              border: `1px solid ${borderColor}`,
-              position: "relative",
-              overflow: "hidden",
-              boxShadow: themeMode === "dark" ? "0 4px 8px rgba(0, 0, 0, 0.2)" : "0 2px 8px rgba(0, 0, 0, 0.05)",
-              "&:hover": {
-                borderColor: "rgba(26, 138, 152, 0.3)",
-                boxShadow: boxShadow,
-              },
-              // Replace the bottom color band with a left side band
-              "&::before": {
-                content: '""',
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "6px",
-                height: "100%",
-                backgroundColor: item.color,
-              },
-              // Remove the bottom band
-              "&::after": {
-                content: "none",
-              },
-            }}
-          >
-            <Typography component="p" variant="subtitle1" color={secondaryTextColor}>
-              {item.title}
-            </Typography>
-            <Typography
-              component="p"
-              variant="h4"
+        {visibleCards.map((item, index) => {
+          // Find the index of this card in the original summaryData
+          const dataIndex = summaryData.findIndex(card => card.title === item.title)
+          
+          return (
+            <Paper
+              key={index}
               sx={{
-                mt: 1,
-                fontWeight: "bold",
-                color: item.color, // Always use the card's color regardless of theme
+                p: 3,
                 display: "flex",
-                alignItems: "center",
+                flexDirection: "column",
+                height: 120,
+                flex: 1,
+                bgcolor: bgColor,
+                borderRadius: 2,
+                border: `1px solid ${borderColor}`,
+                position: "relative",
+                overflow: "hidden",
+                boxShadow: themeMode === "dark" ? "0 4px 8px rgba(0, 0, 0, 0.2)" : "0 2px 8px rgba(0, 0, 0, 0.05)",
+                "&:hover": {
+                  borderColor: "rgba(26, 138, 152, 0.3)",
+                  boxShadow: boxShadow,
+                },
+                // Replace the bottom color band with a left side band
+                "&::before": {
+                  content: '""',
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "6px",
+                  height: "100%",
+                  backgroundColor: item.color,
+                },
+                // Remove the bottom band
+                "&::after": {
+                  content: "none",
+                },
               }}
             >
-              {loading ? (
-                <CircularProgress size={24} sx={{ color: item.color || "#1A8A98" }} />
-              ) : error ? (
-                "Error"
-              ) : (
-                formatCurrency(animatedValues[index])
-              )}
-            </Typography>
-          </Paper>
-        ))}
+              <Typography component="p" variant="subtitle1" color={secondaryTextColor}>
+                {item.title}
+              </Typography>
+              <Typography
+                component="p"
+                variant="h4"
+                sx={{
+                  mt: 1,
+                  fontWeight: "bold",
+                  color: item.color, // Always use the card's color regardless of theme
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                {loading ? (
+                  <CircularProgress size={24} sx={{ color: item.color || "#1A8A98" }} />
+                ) : error ? (
+                  "Error"
+                ) : (
+                  formatCurrency(animatedValues[dataIndex])
+                )}
+              </Typography>
+            </Paper>
+          )
+        })}
       </Stack>
     </Box>
   )
 }
-
