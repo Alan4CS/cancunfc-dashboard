@@ -6,32 +6,32 @@ import { RefreshCwIcon as RefreshIcon, CalendarIcon } from "lucide-react"
 // Definir la configuración de las tarjetas fuera del componente
 const cardConfig = [
   {
-    title: "Ingresos Totales",
+    title: "Esquilmos",
     endpoint: "https://cancunfc-dashboard-production.up.railway.app/api/ingresos_totales",
     key: "total_ingresos",
+    color: "#2ecc71",
+  },
+  {
+    title: "Taquilla",
+    endpoint: "https://cancunfc-dashboard-production.up.railway.app/api/taquilla_total",
+    key: "taquilla_total",
     color: "#1A8A98",
   },
   {
-    title: "Gastos Totales",
+    title: "Gastos",
     endpoint: "https://cancunfc-dashboard-production.up.railway.app/api/gastos_totales",
     key: "total_gastos",
     color: "#e74c3c",
   },
   {
-    title: "Taquilla Total",
-    endpoint: "https://cancunfc-dashboard-production.up.railway.app/api/taquilla_total",
-    key: "taquilla_total",
-    color: "#2ecc71",
-  },
-  {
-    title: "Ganancias Totales",
+    title: "Ganancias",
     calculated: true,
     color: "#f39c12",
   },
 ]
 
 // Modificar la definición del componente para aceptar props de año, temporada y meses seleccionados
-export default function SummaryCards({ selectedYear, selectedTemporada, selectedMonths = [], themeMode = "dark" }) {
+export default function SummaryCards({ selectedYear, selectedTemporada, selectedMonths = [], themeMode = "dark",  viewType = "general"}) {
   // Estado para almacenar los datos
   const [summaryData, setSummaryData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -51,6 +51,15 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
     if (value === null || value === undefined) return "-"
     return `$${value.toLocaleString("es-MX")}`
   }
+
+  
+  const visibleCards = summaryData.filter((card) => {
+    if (viewType === "general") return true
+    if (viewType === "ingresos") return card.title.includes("Esquilmos") || card.title.includes("Taquilla")
+    if (viewType === "gastos") return card.title.includes("Gastos")
+    return false
+  })
+  
 
   // Función para refrescar los datos
   const handleRefresh = () => {
@@ -103,22 +112,22 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
           // Crear el array de datos para las tarjetas
           const results = [
             {
-              title: "Ingresos Totales",
+              title: "Esquilmos",
               value: totalVentas,
+              color: "#2ecc71",
+            },
+            {
+              title: "Taquilla",
+              value: totalTaquilla,
               color: "#1A8A98",
             },
             {
-              title: "Gastos Totales",
+              title: "Gastos",
               value: totalGastos,
               color: "#e74c3c",
             },
             {
-              title: "Taquilla Total",
-              value: totalTaquilla,
-              color: "#2ecc71",
-            },
-            {
-              title: "Ganancias Totales",
+              title: "Ganancias",
               value: ganancias,
               color: "#f39c12",
             },
@@ -135,22 +144,22 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
           // Crear el array de datos para las tarjetas
           const results = [
             {
-              title: "Ingresos Totales",
+              title: "Esquilmos",
               value: Number.parseFloat(response.data.total_ventas) || 0,
+              color: "#2ecc71",
+            },
+            {
+              title: "Taquilla",
+              value: Number.parseFloat(response.data.total_taquilla) || 0,
               color: "#1A8A98",
             },
             {
-              title: "Gastos Totales",
+              title: "Gastos",
               value: Number.parseFloat(response.data.total_gastos) || 0,
               color: "#e74c3c",
             },
             {
-              title: "Taquilla Total",
-              value: Number.parseFloat(response.data.total_taquilla) || 0,
-              color: "#2ecc71",
-            },
-            {
-              title: "Ganancias Totales",
+              title: "Ganancias",
               calculated: true,
               color: "#f39c12",
               value: null, // Se calculará después
@@ -285,7 +294,7 @@ export default function SummaryCards({ selectedYear, selectedTemporada, selected
       </Box>
 
       <Stack direction={{ xs: "column", sm: "row" }} spacing={3} sx={{ width: "100%" }}>
-        {summaryData.map((item, index) => (
+        {visibleCards.map((item, index) => (
           <Paper
             key={index}
             sx={{

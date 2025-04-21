@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
 import {
   Paper, Typography, Box, CircularProgress, Alert, Dialog, DialogContent, Button, IconButton, LinearProgress,
-  Chip, useTheme, alpha,
+  Chip, alpha,
 } from "@mui/material"
 import {
   Close as CloseIcon, CalendarMonth as CalendarIcon, TrendingUp as TrendingUpIcon, AttachMoney as MoneyIcon,
@@ -17,7 +17,6 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
   const [openModal, setOpenModal] = useState(false)
   const [selectedPartido, setSelectedPartido] = useState(null)
   const [showAllPartidos, setShowAllPartidos] = useState(false)
-  const theme = useTheme()
 
   // Función para obtener los datos de los partidos desde el backend
   const fetchTopPartidos = useCallback(async () => {
@@ -592,48 +591,10 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
               }}
             >
               <TrendingUpIcon sx={{ mr: 1 }} />
-              Resumen Financiero
+              Resumen
             </Typography>
-
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
-              <Box
-                sx={{
-                  p: 2,
-                  borderRadius: 2,
-                  bgcolor:
-                    themeMode === "dark"
-                      ? alpha(theme.palette.primary.main, 0.1)
-                      : alpha(theme.palette.primary.main, 0.05),
-                  border: `1px solid ${themeMode === "dark"
-                    ? alpha(theme.palette.primary.main, 0.2)
-                    : alpha(theme.palette.primary.main, 0.1)
-                    }`,
-                  flex: "1 1 calc(25% - 16px)",
-                  minWidth: "200px",
-                }}
-              >
-                <Typography
-                  variant="overline"
-                  sx={{
-                    color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "text.secondary",
-                  }}
-                >
-                  Ganancia Neta
-                </Typography>
-                <Typography
-                  variant="h5"
-                  sx={{
-                    color: "#1A8A98",
-                    fontWeight: "bold",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <MoneyIcon sx={{ mr: 1, fontSize: 20 }} />
-                  {formatCurrency(selectedPartido.ganancia)}
-                </Typography>
-              </Box>
-
+              {/* Esquilmos */}
               <Box
                 sx={{
                   p: 2,
@@ -650,7 +611,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                     color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "text.secondary",
                   }}
                 >
-                  Ventas
+                  Esquilmos
                 </Typography>
                 <Typography
                   variant="h5"
@@ -666,6 +627,40 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                 </Typography>
               </Box>
 
+              {/* Taquilla */}
+              <Box
+                sx={{
+                  p: 2,
+                  borderRadius: 2,
+                  bgcolor: themeMode === "dark" ? alpha("#1A8A98", 0.1) : alpha("#1A8A98", 0.05), // Cambié el color de fondo a azul
+                  border: `1px solid ${themeMode === "dark" ? alpha("#1A8A98", 0.2) : alpha("#1A8A98", 0.1)}`, // Cambié el borde a azul
+                  flex: "1 1 calc(25% - 16px)",
+                  minWidth: "200px",
+                }}
+              >
+                <Typography
+                  variant="overline"
+                  sx={{
+                    color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "text.secondary",
+                  }}
+                >
+                  Taquilla
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    color: "#1A8A98",
+                    fontWeight: "bold",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <TicketIcon sx={{ mr: 1, fontSize: 20 }} />
+                  {formatCurrency(Number.parseFloat(selectedPartido.Total_Taquilla))}
+                </Typography>
+              </Box>
+
+              {/* Gastos */}
               <Box
                 sx={{
                   p: 2,
@@ -698,11 +693,12 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                 </Typography>
               </Box>
 
+              {/* Ganancias */}
               <Box
                 sx={{
                   p: 2,
                   borderRadius: 2,
-                  bgcolor: themeMode === "dark" ? alpha("#f39c12", 0.1) : alpha("#f39c12", 0.05),
+                  bgcolor: themeMode === "dark" ? alpha("#f39c12", 0.1) : alpha("#f39c12", 0.05), 
                   border: `1px solid ${themeMode === "dark" ? alpha("#f39c12", 0.2) : alpha("#f39c12", 0.1)}`,
                   flex: "1 1 calc(25% - 16px)",
                   minWidth: "200px",
@@ -714,7 +710,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                     color: themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "text.secondary",
                   }}
                 >
-                  Taquilla
+                  Ganancias
                 </Typography>
                 <Typography
                   variant="h5"
@@ -725,11 +721,12 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                     alignItems: "center",
                   }}
                 >
-                  <TicketIcon sx={{ mr: 1, fontSize: 20 }} />
-                  {formatCurrency(Number.parseFloat(selectedPartido.Total_Taquilla))}
+                  <MoneyIcon sx={{ mr: 1, fontSize: 20 }} />
+                  {formatCurrency(selectedPartido.ganancia)}
                 </Typography>
               </Box>
             </Box>
+                        
           </Box>
 
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, mt: 3 }}>
@@ -751,7 +748,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
               <Box sx={{ mb: 3 }}>
                 <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
                   <Typography variant="body2" sx={{ color: "#2ecc71" }}>
-                    Ventas
+                    Esquilmos
                   </Typography>
                   <Typography variant="body2" sx={{ color: "#2ecc71" }}>
                     {porcentajeVentas.toFixed(1)}%
@@ -772,10 +769,10 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                 />
 
                 <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-                  <Typography variant="body2" sx={{ color: "#f39c12" }}>
+                  <Typography variant="body2" sx={{ color: "#1A8A98" }}>
                     Taquilla
                   </Typography>
-                  <Typography variant="body2" sx={{ color: "#f39c12" }}>
+                  <Typography variant="body2" sx={{ color: "#1A8A98" }}>
                     {porcentajeTaquilla.toFixed(1)}%
                   </Typography>
                 </Box>
@@ -785,9 +782,9 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                   sx={{
                     height: 8,
                     borderRadius: 4,
-                    bgcolor: alpha("#f39c12", 0.1),
+                    bgcolor: alpha("#1A8A98", 0.1),
                     "& .MuiLinearProgress-bar": {
-                      bgcolor: "#f39c12",
+                      bgcolor: "#1A8A98",
                     },
                   }}
                 />

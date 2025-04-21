@@ -162,7 +162,7 @@ export default function Gastos() {
                 selectedTemporada={year ? (year.split("-")[1] === "A" ? "Clausura" : "Apertura") : null}
                 selectedMonths={selectedMonths}
                 themeMode={themeMode}
-                showOnly="gastos" // Prop para filtrar tarjetas
+                viewType="ingresos" // Prop para filtrar tarjetas
               />
             </Box>
 
