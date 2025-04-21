@@ -8,7 +8,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import axios from "axios"
 import { BarChartIcon, LineChartIcon, TrendingUpIcon, RefreshCwIcon as RefreshIcon } from "lucide-react"
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label, showOnly }) => {
   if (!active || !payload || !payload.length) return null
 
   // Función para formatear números
@@ -33,23 +33,30 @@ const CustomTooltip = ({ active, payload, label }) => {
       <Typography variant="subtitle2" sx={{ color: "#fff", marginBottom: 1 }}>
         {label}
       </Typography>
-      {payload.map((entry, index) => (
-        <Box key={`item-${index}`} sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
-          <Box
-            component="span"
-            sx={{
-              width: 12,
-              height: 12,
-              backgroundColor: entry.color,
-              marginRight: 1,
-              borderRadius: "50%",
-            }}
-          />
-          <Typography variant="body2" sx={{ color: "#fff" }}>
-            {entry.name}: {formatnum(entry.value)}
-          </Typography>
-        </Box>
-      ))}
+      {payload
+        .filter((entry) => {
+          if (showOnly === "gastos") return entry.name === "Gastos"
+          if (showOnly === "ventas") return entry.name !== "Gastos"
+          if (showOnly === "ventas_taquilla") return entry.name !== "Gastos"
+          return true // en "all" u otros casos muestra todo
+        })
+        .map((entry, index) => (
+          <Box key={`item-${index}`} sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
+            <Box
+              component="span"
+              sx={{
+                width: 12,
+                height: 12,
+                backgroundColor: entry.color,
+                marginRight: 1,
+                borderRadius: "50%",
+              }}
+            />
+            <Typography variant="body2" sx={{ color: "#fff" }}>
+              {entry.name}: {formatnum(entry.value)}
+            </Typography>
+          </Box>
+        ))}
     </Box>
   )
 }
@@ -72,9 +79,10 @@ export default function MainCharts({
   const [partidosData, setPartidosData] = useState([])
   const [viewMode, setViewMode] = useState("meses") // "meses" o "partidos"
   const [activeSeries, setActiveSeries] = useState({
-    ventas: showOnly === "ventas" || showOnly === "all",
+    ventas: showOnly === "ventas" || showOnly === "ventas" || showOnly === "all",
+    taquilla: showOnly === "taquilla" || showOnly === "ventas" || showOnly === "all",
     gastos: showOnly === "gastos" || showOnly === "all",
-    taquilla: showOnly === "taquilla" || showOnly === "all",
+
   })
   
 
@@ -169,12 +177,14 @@ export default function MainCharts({
         allMonths[key].hasData = true
 
         // Calcular ganancia (ventas + taquilla - gastos)
-        allMonths[key].ganancia = allMonths[key].ventas + allMonths[key].taquilla - allMonths[key].gastos
+        if (showOnly === "all") {
+          allMonths[key].ganancia = allMonths[key].ventas + allMonths[key].taquilla - allMonths[key].gastos
+        }
       }
     })
 
     return Object.values(allMonths).sort((a, b) => a.fecha - b.fecha)
-  }, [])
+  }, [showOnly])
 
   // Función para obtener datos - Wrap with useCallback
   const fetchData = useCallback(async () => {
@@ -268,7 +278,7 @@ export default function MainCharts({
         ...item,
         ventas: showOnly === "ventas" || showOnly === "all" ? item.ventas : 0,
         gastos: showOnly === "gastos" || showOnly === "all" ? item.gastos : 0,
-        taquilla: showOnly === "taquilla" || showOnly === "all" ? item.taquilla : 0,
+        taquilla: showOnly === "ventas" || showOnly === "all" ? item.taquilla : 0,
       }))
       
 
@@ -303,7 +313,7 @@ export default function MainCharts({
         ...item,
         ventas: showOnly === "ventas" || showOnly === "all" ? item.ventas : 0,
         gastos: showOnly === "gastos" || showOnly === "all" ? item.gastos : 0,
-        taquilla: showOnly === "taquilla" || showOnly === "all" ? item.taquilla : 0,
+        taquilla: showOnly === "ventas" || showOnly === "all" ? item.taquilla : 0,
       }
     })
     
@@ -423,7 +433,7 @@ export default function MainCharts({
         />
       ),
       cartesianGrid: <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />,
-      tooltip: <Tooltip content={<CustomTooltip />} />,
+      tooltip: <Tooltip content={<CustomTooltip showOnly={showOnly} />} />,
       legend: (
         <Legend
           verticalAlign="top"
@@ -437,7 +447,7 @@ export default function MainCharts({
             ...(showOnly === "gastos" || showOnly === "all"
               ? [{ dataKey: "gastos", value: "Gastos", type: "circle", color: "#e74c3c" }]
               : []),
-            ...(showOnly === "taquilla" || showOnly === "all"
+            ...(showOnly === "taquilla" || showOnly === "ventas" || showOnly === "all"
               ? [{ dataKey: "taquilla", value: "Taquilla", type: "circle", color: "#1A8A98" }]
               : []),
           ]}
@@ -799,16 +809,6 @@ export default function MainCharts({
             {renderChart()}
           </ResponsiveContainer>
         )}
-      </Box>
-
-      {/* Leyenda de ganancia */}
-      <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
-        <Typography
-          variant="caption"
-          sx={{ color: themeMode === "dark" ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.6)", fontStyle: "italic" }}
-        >
-          * Ganancia = Ventas + Taquilla - Gastos
-        </Typography>
       </Box>
     </Paper>
   )

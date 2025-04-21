@@ -85,19 +85,15 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
 
   // Función para cambiar de tab
   const handleTabChange = (event, newValue) => {
-    // Si estamos en una página específica, no permitir cambiar a tabs no relevantes
-    if (showOnly === "ingresos" && newValue === 1) return // No permitir cambiar a gastos en página de ingresos
-    if (showOnly === "gastos" && (newValue === 0 || newValue === 2)) return // No permitir cambiar a ventas o taquilla en página de gastos
-
     setTabValue(newValue)
   }
 
   // Establecer el tab inicial según la página
   useEffect(() => {
     if (showOnly === "ingresos") {
-      setTabValue(0) // Ventas
+      setTabValue(0) // Inicia en ventas pero no bloquea cambios
     } else if (showOnly === "gastos") {
-      setTabValue(1) // Gastos
+      setTabValue(1)
     }
   }, [showOnly])
 
@@ -280,22 +276,21 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
     const fetchData = async () => {
       setLoading(true)
       setError(null)
-
+  
       try {
-        // Determinar qué datos cargar según la página
         const promises = []
-
+  
         if (!showOnly || showOnly === "ingresos") {
           promises.push(fetchVentasData())
           promises.push(fetchTaquillaData())
         }
-
+  
         if (!showOnly || showOnly === "gastos") {
           promises.push(fetchGastoData())
         }
-
+  
         const results = await Promise.all(promises)
-
+  
         if (results.some((result) => !result)) {
           setError("Error al cargar algunos datos. Intente nuevamente.")
         }
@@ -306,9 +301,10 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
         setLoading(false)
       }
     }
-
+  
     fetchData()
   }, [fetchVentasData, fetchGastoData, fetchTaquillaData, refreshKey, showOnly])
+  
 
   // Determinar el título según la pestaña seleccionada
   const getTitle = () => {
@@ -385,6 +381,13 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
     // Añadir un 15% de margen para que se vea el final de la barra
     return Math.ceil(maxValue * 1.15)
   }, [filteredData, tabValue, hasData])
+
+  const visibleTabs =
+  showOnly === "ingresos"
+    ? [0, 2]
+    : showOnly === "gastos"
+    ? [1]
+    : [0, 1, 2]
 
   // Renderizar el contenido del gráfico
   const renderChart = () => {
@@ -626,8 +629,8 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
       {/* En la página de ingresos, solo mostrar pestañas de ventas y taquilla */}
       {showOnly === "ingresos" && (
         <Tabs
-          value={tabValue}
-          onChange={handleTabChange}
+          value={visibleTabs.indexOf(tabValue)}
+          onChange={(e, newIndex) => handleTabChange(e, visibleTabs[newIndex])}
           sx={{
             borderBottom: 1,
             borderColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(0, 0, 0, 0.1)",
@@ -653,7 +656,7 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
       {/* En la página de gastos, solo mostrar pestaña de gastos */}
       {showOnly === "gastos" && (
         <Tabs
-          value={0}
+          value={tabValue}
           sx={{
             borderBottom: 1,
             borderColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(0, 0, 0, 0.1)",
@@ -671,7 +674,7 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
           }}
           aria-label="Pestañas de subcategorías"
         >
-          <Tab label="Subcategoría Gastos" id="tab-0" aria-controls="tabpanel-0" />
+          <Tab label="Subcategoría Gastos" id="tab-1" aria-controls="tabpanel-1" />
         </Tabs>
       )}
 

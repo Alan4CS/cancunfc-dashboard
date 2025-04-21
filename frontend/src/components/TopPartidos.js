@@ -86,7 +86,12 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
         const fecha = partido.Fecha
 
         // Calcular la ganancia neta
-        const ganancia = filterBy === "gastos" ? 0 : ventas + taquilla - gastos
+        const ganancia =
+        filterBy === "gastos"
+          ? 0
+          : filterBy === "ventas"
+          ? ventas + taquilla
+          : ventas + taquilla - gastos
 
         return {
           Nombre_Partido: nombrePartido,
@@ -127,9 +132,11 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
         }
       }
       // Ordenar por ganancia de mayor a menor
-      const sortedData = filteredData.sort((a, b) =>
-        filterBy === "gastos" ? b.Total_Gastos - a.Total_Gastos : b.ganancia - a.ganancia
-      )      
+      const sortedData = filteredData.sort((a, b) => {
+        if (filterBy === "gastos") return b.Total_Gastos - a.Total_Gastos
+        if (filterBy === "ventas") return (b.Total_Ventas + b.Total_Taquilla) - (a.Total_Ventas + a.Total_Taquilla)
+        return b.ganancia - a.ganancia
+      })        
       setTopPartidosData(sortedData)
     } catch (err) {
       console.error("Error al obtener los partidos:", err)
@@ -311,7 +318,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                   boxShadow: themeMode === "dark" ? "0 4px 12px rgba(0, 0, 0, 0.15)" : "0 4px 12px rgba(0, 0, 0, 0.08)",
                 },
               }}
-              onClick={() => filterBy !== "gastos" && handleOpenModal(partido)} // Abrir el modal al hacer clic
+              onClick={() => (filterBy !== "gastos" && filterBy !== "ventas") && handleOpenModal(partido)} // Abrir el modal al hacer clic
             >
               <Box
                 sx={{
@@ -358,7 +365,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                   variant="body2"
                   sx={{
                     fontWeight: "bold",
-                    color: filterBy === "gastos" ? "#e74c3c" : "#1A8A98",
+                    color:  filterBy === "gastos" ? "#e74c3c" : filterBy === "ventas" ? "#2ecc71" : "#1A8A98",
                     whiteSpace: "nowrap",
                     fontSize: { xs: "0.75rem", sm: "0.875rem" },
                     display: "flex",
@@ -371,11 +378,19 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                       <CreditCardIcon sx={{ fontSize: 16 }} />
                       {formatCurrency(partido.Total_Gastos)}
                     </>
+                  ) : filterBy === "ventas" ? (
+                    <>
+                      <ShoppingCartIcon sx={{ fontSize: 16 }} />
+                      {formatCurrency(partido.ganancia)}
+                    </>
                   ) : (
-                    formatCurrency(partido.ganancia)
+                    <>
+                      <TrendingUpIcon sx={{ fontSize: 16 }} />
+                      {formatCurrency(partido.ganancia)}
+                    </>
                   )}
                 </Typography>
-                {filterBy !== "gastos" && (
+                {filterBy !== "gastos" && filterBy !== "ventas" && (
                   <Chip
                     label="Ver detalles"
                     size="small"
@@ -402,7 +417,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
           <Box
             sx={{
               position: "absolute",
-              bottom: "32px", // Posicionado justo encima del botón "Ver más"
+              bottom: "31.5px", // Posicionado justo encima del botón "Ver más"
               left: 0,
               right: 0,
               height: "60px",
