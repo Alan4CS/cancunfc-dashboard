@@ -38,7 +38,7 @@ export default function CompetenciaChart({
 
   // Definir variables de color condicionales basadas en el tema
   const bgColor = themeMode === "dark" ? "#121212" : "#ffffff"
-  const textColor = themeMode === "dark" ? "#ffffff" : "#333333"
+  //const textColor = themeMode === "dark" ? "#ffffff" : "#333333"
   const secondaryTextColor = themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.6)"
   const borderColor = themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(0, 0, 0, 0.1)"
   const hoverBgColor = themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)"
