@@ -2,6 +2,7 @@ const mysql = require("mysql2");
 require("dotenv").config();
 
 // Crear un pool de conexiones
+// Base de datos 
 const db = mysql.createPool({
     connectionLimit: 10,
     host: process.env.DB_HOST,
