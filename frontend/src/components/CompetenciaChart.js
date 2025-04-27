@@ -43,8 +43,8 @@ export default function CompetenciaChart({
   const borderColor = themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(0, 0, 0, 0.1)"
   const hoverBgColor = themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)"
   const boxShadow = themeMode === "dark" ? "0 4px 20px rgba(0, 0, 0, 0.2)" : "0 2px 10px rgba(0, 0, 0, 0.05)"
-  const tooltipBgColor = themeMode === "dark" ? "rgba(0, 0, 0, 0.9)" : "rgba(255, 255, 255, 0.95)"
-  const tooltipTextColor = themeMode === "dark" ? "#ffffff" : "#333333"
+  const tooltipBgColor = themeMode === "dark" ? "rgba(0, 0, 0, 0.9)" : "rgba(0, 0, 0, 0.95)"
+  const tooltipTextColor = themeMode === "dark" ? "#ffffff" : "#ffffff"
   const tooltipBorderColor = themeMode === "dark" ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)"
   const alertBgColor = themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)"
   const alertTextColor = themeMode === "dark" ? "white" : "#1A8A98"
@@ -369,7 +369,7 @@ export default function CompetenciaChart({
               variant="body2"
               sx={{ color: "#2ecc71", display: "flex", justifyContent: "space-between", mb: 0.5 }}
             >
-              <span>Ventas:</span> <span>{formatCurrency(ventas)}</span>
+              <span>Esquilmos:</span> <span>{formatCurrency(ventas)}</span>
             </Typography>
             <Typography
               variant="body2"
@@ -393,7 +393,7 @@ export default function CompetenciaChart({
                 variant="body2"
                 sx={{ color: "#2ecc71", display: "flex", justifyContent: "space-between", mb: 0.5 }}
               >
-                <span>Ventas:</span> <span>{formatCurrency(ventas)}</span>
+                <span>Esquilmos:</span> <span>{formatCurrency(ventas)}</span>
               </Typography>
               <Typography
                 variant="body2"
@@ -413,7 +413,7 @@ export default function CompetenciaChart({
               <Typography
                 variant="body2"
                 sx={{
-                  color: color,
+                  color: "white",
                   fontWeight: "bold",
                   display: "flex",
                   justifyContent: "space-between",

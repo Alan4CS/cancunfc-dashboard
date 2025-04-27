@@ -1,8 +1,10 @@
 import { useState, useEffect, useMemo, useCallback } from "react"
-import { Paper, Typography, Box, CircularProgress, Alert, ToggleButtonGroup, ToggleButton, Skeleton,
+import {
+  Paper, Typography, Box, CircularProgress, Alert, ToggleButtonGroup, ToggleButton, Skeleton,
   useMediaQuery, useTheme, FormControl, Select, MenuItem, InputLabel,
 } from "@mui/material"
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+import {
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   ReferenceLine, BarChart, Bar, LineChart, Line,
 } from "recharts"
 import axios from "axios"
@@ -84,7 +86,7 @@ export default function MainCharts({
     gastos: showOnly === "gastos" || showOnly === "all",
 
   })
-  
+
 
   // Función para formatear números grandes
   const formatNumber = (num) => {
@@ -280,7 +282,7 @@ export default function MainCharts({
         gastos: showOnly === "gastos" || showOnly === "all" ? item.gastos : 0,
         taquilla: showOnly === "ventas" || showOnly === "all" ? item.taquilla : 0,
       }))
-      
+
 
       // Si hay meses seleccionados, filtrar por esos meses
       if (selectedMonths.length > 0) {
@@ -316,7 +318,7 @@ export default function MainCharts({
         taquilla: showOnly === "ventas" || showOnly === "all" ? item.taquilla : 0,
       }
     })
-    
+
 
     // Filtrar por año
     if (yearProp !== "all") {
@@ -442,7 +444,7 @@ export default function MainCharts({
           iconType="circle"
           payload={[
             ...(showOnly === "ventas" || showOnly === "all"
-              ? [{ dataKey: "ventas", value: "Ventas", type: "circle", color: "#2ecc71" }]
+              ? [{ dataKey: "ventas", value: "Esquilmos", type: "circle", color: "#2ecc71" }]
               : []),
             ...(showOnly === "gastos" || showOnly === "all"
               ? [{ dataKey: "gastos", value: "Gastos", type: "circle", color: "#e74c3c" }]
@@ -487,7 +489,7 @@ export default function MainCharts({
             {commonAxisProps.referenceLine}
             <Bar
               dataKey="ventas"
-              name="Ventas"
+              name="Esquilmos"
               fill={activeSeries.ventas ? "#2ecc71" : "rgba(46, 204, 113, 0.3)"}
               radius={[4, 4, 0, 0]}
               fillOpacity={activeSeries.ventas ? 1 : 0.3}
@@ -523,7 +525,7 @@ export default function MainCharts({
             <Line
               type="linear"
               dataKey="ventas"
-              name="Ventas"
+              name="Esquilmos"
               stroke={activeSeries.ventas ? "#2ecc71" : "rgba(46, 204, 113, 0.3)"}
               strokeWidth={activeSeries.ventas ? 2 : 1}
               dot={{
@@ -603,7 +605,7 @@ export default function MainCharts({
             <Area
               type="linear"
               dataKey="ventas"
-              name="Ventas"
+              name="Esquilmos"
               stroke={activeSeries.ventas ? "#2ecc71" : "rgba(46, 204, 113, 0.3)"}
               strokeWidth={activeSeries.ventas ? 2 : 1}
               fillOpacity={activeSeries.ventas ? 1 : 0.3}

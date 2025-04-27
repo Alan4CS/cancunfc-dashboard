@@ -38,7 +38,7 @@ const CustomTooltip = ({ active, payload, label }) => {
   const percentage = payload[0].payload.percentage // Obtener el porcentaje
 
   // Determinar el título según el dataKey
-  const title = dataKey === "total_ventas" ? "Ventas" : dataKey === "total_gasto" ? "Gastos" : "Taquilla"
+  const title = dataKey === "total_ventas" ? "Esquilmos" : dataKey === "total_gasto" ? "Gastos" : "Taquilla"
 
   return (
     <Box
@@ -107,10 +107,10 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
   const calculatePercentage = (data, dataKey) => {
     console.log(`Calculating percentages for dataKey: ${dataKey}`)
     console.log(`Data sample:`, data.length > 0 ? data[0] : 'Empty data')
-    
+
     const total = data.reduce((acc, item) => acc + (Number(item[dataKey]) || 0), 0)
     console.log(`Total calculated: ${total}`)
-    
+
     if (total === 0) {
       console.log('Warning: Total is zero, avoiding division by zero')
       return data.map(item => ({
@@ -118,7 +118,7 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
         percentage: "0.00"
       }))
     }
-    
+
     return data.map(item => ({
       ...item,
       percentage: (((Number(item[dataKey]) || 0) / total) * 100).toFixed(2)
@@ -129,9 +129,9 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
     try {
       let url = "https://cancunfc-dashboard-production.up.railway.app/api/ventas_por_subcategoria_total"
       let params = {}
-  
+
       //  Si hay MES seleccionado (más específico)
-      if ( selectedYear && selectedSeason && selectedMonth && selectedYear !== "all" && selectedSeason !== "all"
+      if (selectedYear && selectedSeason && selectedMonth && selectedYear !== "all" && selectedSeason !== "all"
       ) {
         url = "https://cancunfc-dashboard-production.up.railway.app/api/ventas_por_subcategoria_mes_filtro"
         params = {
@@ -148,36 +148,36 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
           temporada: temporadaNum,
         }
       }
-  
+
       const response = await axios.get(url, { params })
       const data = response.data.ventas_por_subcategoria || response.data
-  
+
       // Aplicar cálculo del porcentaje
       const dataWithPercentage = calculatePercentage(data, "total_ventas")
-  
+
       const sortedData = dataWithPercentage.sort((a, b) => b.total_ventas - a.total_ventas)
       setVentasData(sortedData)
       return true
     } catch (err) {
       const msg = err.response?.data?.message;
-    
+
       if (msg === "No se encontraron datos para el mes y año solicitados") {
         setVentasData([]); // o el set correspondiente
         return true; // No es un fallo crítico
       }
-    
+
       console.error("Error al obtener ventas por subcategoría:", err);
       return false;
     }
-    
+
   }, [selectedYear, selectedSeason, selectedMonth])
-  
-    
+
+
   const fetchGastoData = useCallback(async () => {
     try {
       let url = "https://cancunfc-dashboard-production.up.railway.app/api/gastos_por_subcategoria_total"
       let params = {}
-  
+
       if (selectedYear && selectedSeason && selectedMonth && selectedYear !== "all" && selectedSeason !== "all") {
         // Filtro por MES
         url = "https://cancunfc-dashboard-production.up.railway.app/api/gastos_por_subcategoria_mes_filtro"
@@ -194,30 +194,30 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
           temporada: temporadaNum,
         }
       }
-  
+
       const response = await axios.get(url, { params })
       const data = response.data.gastos_por_subcategoria || response.data
-  
+
       // Aplicar cálculo del porcentaje
       const dataWithPercentage = calculatePercentage(data, "total_gasto")
-  
+
       const sortedData = dataWithPercentage.sort((a, b) => b.total_gasto - a.total_gasto)
       setCostosData(sortedData)
       return true
     } catch (err) {
       const msg = err.response?.data?.message;
-    
+
       if (msg === "No se encontraron datos para el mes y año solicitados") {
         setCostosData([]); // o el set correspondiente
         return true; // No es un fallo crítico
       }
-    
+
       console.error("Error al obtener ventas por subcategoría:", err);
       return false;
     }
-    
+
   }, [selectedYear, selectedSeason, selectedMonth])
-  
+
 
   // Función para refrescar los datos
   const handleRefresh = () => {
@@ -230,7 +230,7 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
     try {
       let url = "https://cancunfc-dashboard-production.up.railway.app/api/taquilla_por_subcategoria_total"
       let params = {}
-  
+
       if (selectedYear && selectedSeason && selectedMonth && selectedYear !== "all" && selectedSeason !== "all") {
         //  Filtro por MES
         url = "https://cancunfc-dashboard-production.up.railway.app/api/taquilla_por_subcategoria_mes_filtro"
@@ -247,50 +247,50 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
           temporada: temporadaNum,
         }
       }
-  
+
       const response = await axios.get(url, { params })
       const data = response.data.taquilla_por_subcategoria || response.data
-  
+
       // Aplicar cálculo del porcentaje
       const dataWithPercentage = calculatePercentage(data, "total_taquilla")
-  
+
       const sortedData = dataWithPercentage.sort((a, b) => b.total_taquilla - a.total_taquilla)
       setTaquillaData(sortedData)
       return true
     } catch (err) {
       const msg = err.response?.data?.message;
-    
+
       if (msg === "No se encontraron datos para el mes y año solicitados") {
         setTaquillaData([]); // o el set correspondiente
         return true; // No es un fallo crítico
       }
-    
+
       console.error("Error al obtener ventas por subcategoría:", err);
       return false;
     }
-    
-  }, [selectedYear, selectedSeason, selectedMonth])  
+
+  }, [selectedYear, selectedSeason, selectedMonth])
 
   // useEffect para hacer las peticiones a los endpoints
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
       setError(null)
-  
+
       try {
         const promises = []
-  
+
         if (!showOnly || showOnly === "ingresos") {
           promises.push(fetchVentasData())
           promises.push(fetchTaquillaData())
         }
-  
+
         if (!showOnly || showOnly === "gastos") {
           promises.push(fetchGastoData())
         }
-  
+
         const results = await Promise.all(promises)
-  
+
         if (results.some((result) => !result)) {
           setError("Error al cargar algunos datos. Intente nuevamente.")
         }
@@ -301,10 +301,10 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
         setLoading(false)
       }
     }
-  
+
     fetchData()
   }, [fetchVentasData, fetchGastoData, fetchTaquillaData, refreshKey, showOnly])
-  
+
 
   // Determinar el título según la pestaña seleccionada
   const getTitle = () => {
@@ -312,7 +312,7 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
 
     switch (tabValue) {
       case 0:
-        title = "Ventas por Subcategoría"
+        title = "Esquilmos por Subcategoría"
         break
       case 1:
         title = "Gastos por Subcategoría"
@@ -383,11 +383,11 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
   }, [filteredData, tabValue, hasData])
 
   const visibleTabs =
-  showOnly === "ingresos"
-    ? [0, 2]
-    : showOnly === "gastos"
-    ? [1]
-    : [0, 1, 2]
+    showOnly === "ingresos"
+      ? [0, 2]
+      : showOnly === "gastos"
+        ? [1]
+        : [0, 1, 2]
 
   // Renderizar el contenido del gráfico
   const renderChart = () => {
@@ -421,7 +421,7 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
         </Alert>
       )
     }
-    
+
     if (!hasData) {
       return (
         <Alert severity="info" sx={{ height: "100%", display: "flex", alignItems: "center" }}>
@@ -429,7 +429,7 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
         </Alert>
       )
     }
-    
+
     const dataKey = tabValue === 0 ? "total_ventas" : tabValue === 1 ? "total_gasto" : "total_taquilla"
     const gradientId = tabValue === 0 ? "ventasGradient" : tabValue === 1 ? "gastosGradient" : "taquillaGradient"
     const gradientColor1 = tabValue === 0 ? "#2ecc71" : tabValue === 1 ? "#f39c12" : "#1A8A98"
@@ -620,7 +620,7 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
           }}
           aria-label="Pestañas de subcategorías"
         >
-          <Tab label="Subcategoría Ventas" id="tab-0" aria-controls="tabpanel-0" />
+          <Tab label="Subcategoría Esquilmos" id="tab-0" aria-controls="tabpanel-0" />
           <Tab label="Subcategoría Gastos" id="tab-1" aria-controls="tabpanel-1" />
           <Tab label="Subcategoría Taquilla" id="tab-2" aria-controls="tabpanel-2" />
         </Tabs>
@@ -648,7 +648,7 @@ export default function SubcategoriasChart({ selectedYear, selectedSeason, selec
           }}
           aria-label="Pestañas de subcategorías"
         >
-          <Tab label="Subcategoría Ventas" id="tab-0" aria-controls="tabpanel-0" />
+          <Tab label="Subcategoría Esquilmos" id="tab-0" aria-controls="tabpanel-0" />
           <Tab label="Subcategoría Taquilla" id="tab-2" aria-controls="tabpanel-2" />
         </Tabs>
       )}
