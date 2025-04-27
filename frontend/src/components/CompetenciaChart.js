@@ -36,6 +36,23 @@ export default function CompetenciaChart({
   const [lastFetchParams, setLastFetchParams] = useState(null)
   const theme = useTheme()
 
+  // Definir variables de color condicionales basadas en el tema
+  const bgColor = themeMode === "dark" ? "#121212" : "#ffffff"
+  const textColor = themeMode === "dark" ? "#ffffff" : "#333333"
+  const secondaryTextColor = themeMode === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.6)"
+  const borderColor = themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(0, 0, 0, 0.1)"
+  const hoverBgColor = themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)"
+  const boxShadow = themeMode === "dark" ? "0 4px 20px rgba(0, 0, 0, 0.2)" : "0 2px 10px rgba(0, 0, 0, 0.05)"
+  const tooltipBgColor = themeMode === "dark" ? "rgba(0, 0, 0, 0.9)" : "rgba(255, 255, 255, 0.95)"
+  const tooltipTextColor = themeMode === "dark" ? "#ffffff" : "#333333"
+  const tooltipBorderColor = themeMode === "dark" ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)"
+  const alertBgColor = themeMode === "dark" ? "rgba(26, 138, 152, 0.1)" : "rgba(26, 138, 152, 0.05)"
+  const alertTextColor = themeMode === "dark" ? "white" : "#1A8A98"
+  const alertBorderColor = themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)"
+  const footerBgColor = themeMode === "dark" ? "rgba(26, 138, 152, 0.05)" : "rgba(26, 138, 152, 0.02)"
+  const axisColor = themeMode === "dark" ? "#ccc" : "#666"
+  const axisTickColor = themeMode === "dark" ? "#fff" : "#333"
+
   // Manejar cambio de tipo de gráfico
   const handleChartTypeChange = (event, newType) => {
     if (newType !== null) {
@@ -163,34 +180,34 @@ export default function CompetenciaChart({
         }
 
         // Validar los datos antes de procesarlos
-        const validatedData = processedData.filter(item => {
+        const validatedData = processedData.filter((item) => {
           // Verificar que los campos necesarios existan y puedan convertirse a números
-          const ventas = parseFloat(item.Total_Ventas || 0)
-          const taquilla = parseFloat(item.Total_Taquilla || 0)
-          const gastos = parseFloat(item.Total_Gastos || 0)
-          
+          const ventas = Number.parseFloat(item.Total_Ventas || 0)
+          const taquilla = Number.parseFloat(item.Total_Taquilla || 0)
+          const gastos = Number.parseFloat(item.Total_Gastos || 0)
+
           // Verificar que tengamos un nombre de competencia válido
-          const hasValidName = item.Nombre_Competencia && typeof item.Nombre_Competencia === 'string';
-          
+          const hasValidName = item.Nombre_Competencia && typeof item.Nombre_Competencia === "string"
+
           // Para el filtro de gastos, solo necesitamos verificar que gastos sea un número válido
           if (filterBy === "gastos") {
-            return hasValidName && !isNaN(gastos);
+            return hasValidName && !isNaN(gastos)
           }
-          
+
           // Para el filtro de ingresos, solo necesitamos verificar que ventas y taquilla sean números válidos
           if (filterBy === "ingresos") {
-            return hasValidName && !isNaN(ventas) && !isNaN(taquilla);
+            return hasValidName && !isNaN(ventas) && !isNaN(taquilla)
           }
-          
+
           // Para ganancia, necesitamos verificar todos los valores
-          return hasValidName && !isNaN(ventas) && !isNaN(taquilla) && !isNaN(gastos);
-        });
-        
+          return hasValidName && !isNaN(ventas) && !isNaN(taquilla) && !isNaN(gastos)
+        })
+
         if (validatedData.length === 0) {
-          console.log("CompetenciaChart - No valid data after validation");
-          setCompetenciaData([]);
-          setLoading(false);
-          return;
+          console.log("CompetenciaChart - No valid data after validation")
+          setCompetenciaData([])
+          setLoading(false)
+          return
         }
 
         // Actualizar el estado con los datos procesados
@@ -226,60 +243,62 @@ export default function CompetenciaChart({
 
     // Preprocesar datos para manejar valores absolutos para el cálculo de porcentajes
     const preprocessedData = competenciaData.map((item) => {
-      const ventas = parseFloat(item.Total_Ventas || 0)
-      const taquilla = parseFloat(item.Total_Taquilla || 0)
-      const gastos = parseFloat(item.Total_Gastos || 0)
-      
-      let valor = 0;
+      const ventas = Number.parseFloat(item.Total_Ventas || 0)
+      const taquilla = Number.parseFloat(item.Total_Taquilla || 0)
+      const gastos = Number.parseFloat(item.Total_Gastos || 0)
+
+      let valor = 0
       if (filterBy === "gastos") {
-        valor = isNaN(gastos) ? 0 : gastos;
+        valor = isNaN(gastos) ? 0 : gastos
       } else if (filterBy === "ingresos") {
         // Para ingresos, calculamos ventas + taquilla
-        const suma = isNaN(ventas) ? 0 : ventas;
-        const sumaTaquilla = isNaN(taquilla) ? 0 : taquilla;
-        valor = suma + sumaTaquilla;
+        const suma = isNaN(ventas) ? 0 : ventas
+        const sumaTaquilla = isNaN(taquilla) ? 0 : taquilla
+        valor = suma + sumaTaquilla
       } else {
         // Para ganancias, calculamos ventas + taquilla - gastos
-        const suma = isNaN(ventas) ? 0 : ventas;
-        const sumaTaquilla = isNaN(taquilla) ? 0 : taquilla;
-        const sumaGastos = isNaN(gastos) ? 0 : gastos;
-        valor = suma + sumaTaquilla - sumaGastos;
+        const suma = isNaN(ventas) ? 0 : ventas
+        const sumaTaquilla = isNaN(taquilla) ? 0 : taquilla
+        const sumaGastos = isNaN(gastos) ? 0 : gastos
+        valor = suma + sumaTaquilla - sumaGastos
       }
-      
+
       return {
         ...item,
-        calculatedValue: valor
-      };
-    });
-    
+        calculatedValue: valor,
+      }
+    })
+
     // Para garantizar que todos los valores sean positivos para el gráfico
     // Tomamos el valor absoluto para el cálculo de porcentajes
-    let absTotal = 0;
-    
+    let absTotal = 0
+
     // Calculamos la suma total de valores absolutos
-    preprocessedData.forEach(item => {
-      absTotal += Math.abs(item.calculatedValue);
-    });
-    
+    preprocessedData.forEach((item) => {
+      absTotal += Math.abs(item.calculatedValue)
+    })
+
     // Si no hay valores, usamos 1 para evitar división por cero
-    if (absTotal === 0) absTotal = 1;
+    if (absTotal === 0) absTotal = 1
 
-    return preprocessedData
-      .map((item) => {
-        const valor = item.calculatedValue;
-        
-        // Calcular el porcentaje basado en el total absoluto
-        const porcentaje = (Math.abs(valor) / absTotal) * 100;
+    return (
+      preprocessedData
+        .map((item) => {
+          const valor = item.calculatedValue
 
-        return {
-          name: item.Nombre_Competencia,
-          value: porcentaje,
-          ...item,
-          valor: valor
-        }
-      })
-      // Ordenar de mayor a menor porcentaje
-      .sort((a, b) => b.value - a.value)
+          // Calcular el porcentaje basado en el total absoluto
+          const porcentaje = (Math.abs(valor) / absTotal) * 100
+
+          return {
+            name: item.Nombre_Competencia,
+            value: porcentaje,
+            ...item,
+            valor: valor,
+          }
+        })
+        // Ordenar de mayor a menor porcentaje
+        .sort((a, b) => b.value - a.value)
+    )
   }, [competenciaData, filterBy])
 
   // Componente personalizado para el tooltip
@@ -288,9 +307,9 @@ export default function CompetenciaChart({
 
     const item = payload[0].payload
     const porcentaje = item.value
-    const ventas = parseFloat(item.Total_Ventas || 0)
-    const taquilla = parseFloat(item.Total_Taquilla || 0)
-    const gastos = parseFloat(item.Total_Gastos || 0)
+    const ventas = Number.parseFloat(item.Total_Ventas || 0)
+    const taquilla = Number.parseFloat(item.Total_Taquilla || 0)
+    const gastos = Number.parseFloat(item.Total_Gastos || 0)
     const ingresos = ventas + taquilla
     const ganancia = ventas + taquilla - gastos
     const color = payload[0].color
@@ -306,15 +325,15 @@ export default function CompetenciaChart({
     return (
       <Box
         sx={{
-          backgroundColor: "rgba(0, 0, 0, 0.9)",
+          backgroundColor: tooltipBgColor,
           border: `1px solid ${color}`,
           borderRadius: "8px",
           padding: "12px",
-          boxShadow: "0 6px 24px rgba(0, 0, 0, 0.6)",
+          boxShadow: themeMode === "dark" ? "0 6px 24px rgba(0, 0, 0, 0.6)" : "0 6px 24px rgba(0, 0, 0, 0.15)",
           maxWidth: "300px",
         }}
       >
-        <Typography variant="subtitle2" sx={{ color: "#fff", marginBottom: 1, fontWeight: "bold" }}>
+        <Typography variant="subtitle2" sx={{ color: tooltipTextColor, marginBottom: 1, fontWeight: "bold" }}>
           {item.name}
         </Typography>
 
@@ -327,16 +346,16 @@ export default function CompetenciaChart({
               backgroundColor: color,
               marginRight: 1.5,
               borderRadius: "50%",
-              boxShadow: "0 0 6px rgba(255, 255, 255, 0.3)",
+              boxShadow: themeMode === "dark" ? "0 0 6px rgba(255, 255, 255, 0.3)" : "0 0 6px rgba(0, 0, 0, 0.1)",
             }}
           />
-          <Typography variant="body2" sx={{ color: "#fff", fontWeight: "medium" }}>
+          <Typography variant="body2" sx={{ color: tooltipTextColor, fontWeight: "medium" }}>
             Porcentaje: {porcentaje.toFixed(1)}%
           </Typography>
         </Box>
 
         {filterBy === "gastos" ? (
-          <Box sx={{ mt: 2, pt: 1, borderTop: "1px solid rgba(255, 255, 255, 0.2)" }}>
+          <Box sx={{ mt: 2, pt: 1, borderTop: `1px solid ${tooltipBorderColor}` }}>
             <Typography
               variant="body2"
               sx={{ color: "#e74c3c", fontWeight: "bold", display: "flex", justifyContent: "space-between" }}
@@ -345,7 +364,7 @@ export default function CompetenciaChart({
             </Typography>
           </Box>
         ) : filterBy === "ingresos" ? (
-          <Box sx={{ mt: 2, pt: 1, borderTop: "1px solid rgba(255, 255, 255, 0.2)" }}>
+          <Box sx={{ mt: 2, pt: 1, borderTop: `1px solid ${tooltipBorderColor}` }}>
             <Typography
               variant="body2"
               sx={{ color: "#2ecc71", display: "flex", justifyContent: "space-between", mb: 0.5 }}
@@ -358,7 +377,7 @@ export default function CompetenciaChart({
             >
               <span>Taquilla:</span> <span>{formatCurrency(taquilla)}</span>
             </Typography>
-            <Box sx={{ pt: 1, borderTop: "1px solid rgba(255, 255, 255, 0.2)" }}>
+            <Box sx={{ pt: 1, borderTop: `1px solid ${tooltipBorderColor}` }}>
               <Typography
                 variant="body2"
                 sx={{ color: "#3498db", fontWeight: "bold", display: "flex", justifyContent: "space-between" }}
@@ -369,7 +388,7 @@ export default function CompetenciaChart({
           </Box>
         ) : (
           <>
-            <Box sx={{ mt: 2, pt: 1, borderTop: "1px solid rgba(255, 255, 255, 0.2)" }}>
+            <Box sx={{ mt: 2, pt: 1, borderTop: `1px solid ${tooltipBorderColor}` }}>
               <Typography
                 variant="body2"
                 sx={{ color: "#2ecc71", display: "flex", justifyContent: "space-between", mb: 0.5 }}
@@ -390,7 +409,7 @@ export default function CompetenciaChart({
               </Typography>
             </Box>
 
-            <Box sx={{ mt: 1, pt: 1, borderTop: "1px solid rgba(255, 255, 255, 0.2)" }}>
+            <Box sx={{ mt: 1, pt: 1, borderTop: `1px solid ${tooltipBorderColor}` }}>
               <Typography
                 variant="body2"
                 sx={{
@@ -420,31 +439,31 @@ export default function CompetenciaChart({
             textAnchor="end"
             height={70}
             tick={{
-              fill: themeMode === "dark" ? "#fff" : "#333",
+              fill: axisTickColor,
               fontSize: 12,
             }}
-            stroke={themeMode === "dark" ? "#ccc" : "#666"}
+            stroke={axisColor}
           />
           <YAxis
             type="number"
             domain={[0, 100]}
             tickFormatter={(value) => `${value}%`}
-            stroke={themeMode === "dark" ? "#ccc" : "#666"}
+            stroke={axisColor}
+            tick={{
+              fill: axisTickColor,
+            }}
           />
           <Tooltip content={<CustomTooltip />} />
           <Bar dataKey="value" radius={[4, 4, 0, 0]}>
             {data.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={getColorByCompetencia(entry.name, index)} 
-              />
+              <Cell key={`cell-${index}`} fill={getColorByCompetencia(entry.name, index)} />
             ))}
             <LabelList
               dataKey="value"
               position="top"
               formatter={(value) => `${value.toFixed(1)}%`}
               style={{
-                fill: themeMode === "dark" ? "#fff" : "#333",
+                fill: axisTickColor,
                 fontSize: 12,
                 fontWeight: "bold",
               }}
@@ -482,7 +501,7 @@ export default function CompetenciaChart({
               <Typography
                 variant="body2"
                 sx={{
-                  color: themeMode === "dark" ? "rgba(255, 255, 255, 0.85)" : "rgba(0, 0, 0, 0.75)",
+                  color: secondaryTextColor,
                   fontSize: "0.8rem",
                 }}
               >
@@ -502,7 +521,7 @@ export default function CompetenciaChart({
               cy="50%"
               innerRadius={50}
               outerRadius={120}
-              stroke="#1a1a1a"
+              stroke={themeMode === "dark" ? "#1a1a1a" : "#f5f5f5"}
               strokeWidth={2}
               label={false}
               labelLine={false}
@@ -554,9 +573,9 @@ export default function CompetenciaChart({
           severity="info"
           sx={{
             my: 2,
-            bgcolor: "rgba(26, 138, 152, 0.1)",
-            color: "white",
-            border: "1px solid rgba(26, 138, 152, 0.2)",
+            bgcolor: alertBgColor,
+            color: alertTextColor,
+            border: `1px solid ${alertBorderColor}`,
           }}
         >
           No hay datos disponibles para mostrar con los filtros seleccionados.
@@ -569,14 +588,14 @@ export default function CompetenciaChart({
 
   // Título dinámico basado en los filtros
   const renderTitle = () => {
-    let title = "";
-    
+    let title = ""
+
     if (filterBy === "gastos") {
-      title = "Proporción de Gastos por Competencia";
+      title = "Proporción de Gastos por Competencia"
     } else if (filterBy === "ingresos") {
-      title = "Proporción de Ingresos por Competencia";
+      title = "Proporción de Ingresos por Competencia"
     } else {
-      title = "Porcentaje de Ganancia por Competencia";
+      title = "Porcentaje de Ganancia por Competencia"
     }
 
     // Agregar información de filtros si están aplicados
@@ -612,9 +631,9 @@ export default function CompetenciaChart({
       sx={{
         p: 3,
         borderRadius: 2,
-        bgcolor: "#121212",
-        border: "1px solid rgba(26, 138, 152, 0.1)",
-        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+        bgcolor: bgColor,
+        border: `1px solid ${borderColor}`,
+        boxShadow: boxShadow,
         height: "100%",
         display: "flex",
         flexDirection: "column",
@@ -632,17 +651,17 @@ export default function CompetenciaChart({
           aria-label="tipo de gráfico"
           sx={{
             ".MuiToggleButton-root": {
-              color: "rgba(255, 255, 255, 0.7)",
-              borderColor: "rgba(26, 138, 152, 0.3)",
+              color: secondaryTextColor,
+              borderColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.3)" : "rgba(26, 138, 152, 0.2)",
               "&.Mui-selected": {
-                backgroundColor: "rgba(26, 138, 152, 0.2)",
+                backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.2)" : "rgba(26, 138, 152, 0.1)",
                 color: "#1A8A98",
                 "&:hover": {
-                  backgroundColor: "rgba(26, 138, 152, 0.3)",
+                  backgroundColor: themeMode === "dark" ? "rgba(26, 138, 152, 0.3)" : "rgba(26, 138, 152, 0.15)",
                 },
               },
               "&:hover": {
-                backgroundColor: "rgba(26, 138, 152, 0.1)",
+                backgroundColor: hoverBgColor,
               },
             },
           }}
@@ -666,8 +685,8 @@ export default function CompetenciaChart({
       >
         {renderChart()}
       </Box>
-      <Box sx={{ mt: 2, p: 2, bgcolor: "rgba(26, 138, 152, 0.05)", borderRadius: 1 }}>
-        <Typography variant="caption" sx={{ color: "rgba(255, 255, 255, 0.7)", fontStyle: "italic" }}>
+      <Box sx={{ mt: 2, p: 2, bgcolor: footerBgColor, borderRadius: 1 }}>
+        <Typography variant="caption" sx={{ color: secondaryTextColor, fontStyle: "italic" }}>
           * Pase el cursor sobre cada {chartType === "bar" ? "barra" : "segmento"} para ver detalles financieros
           completos de la competencia.
         </Typography>
