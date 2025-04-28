@@ -10,7 +10,7 @@ import {
 } from "@mui/icons-material"
 import axios from "axios"
 
-export default function TopPartidos({ selectedYear, selectedSeason, selectedMonth, themeMode = "dark", filterBy = "all"}) {
+export default function TopPartidos({ selectedYear, selectedSeason, selectedMonth, themeMode = "dark", filterBy = "all" }) {
   const [topPartidosData, setTopPartidosData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -86,11 +86,11 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
 
         // Calcular la ganancia neta
         const ganancia =
-        filterBy === "gastos"
-          ? 0
-          : filterBy === "ventas"
-          ? ventas + taquilla
-          : ventas + taquilla - gastos
+          filterBy === "gastos"
+            ? 0
+            : filterBy === "ventas"
+              ? ventas + taquilla
+              : ventas + taquilla - gastos
 
         return {
           Nombre_Partido: nombrePartido,
@@ -135,7 +135,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
         if (filterBy === "gastos") return b.Total_Gastos - a.Total_Gastos
         if (filterBy === "ventas") return (b.Total_Ventas + b.Total_Taquilla) - (a.Total_Ventas + a.Total_Taquilla)
         return b.ganancia - a.ganancia
-      })        
+      })
       setTopPartidosData(sortedData)
     } catch (err) {
       console.error("Error al obtener los partidos:", err)
@@ -364,7 +364,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                   variant="body2"
                   sx={{
                     fontWeight: "bold",
-                    color:  filterBy === "gastos" ? "#e74c3c" : filterBy === "ventas" ? "#2ecc71" : "#1A8A98",
+                    color: filterBy === "gastos" ? "#e74c3c" : filterBy === "ventas" ? "#2ecc71" : "#1A8A98",
                     whiteSpace: "nowrap",
                     fontSize: { xs: "0.75rem", sm: "0.875rem" },
                     display: "flex",
@@ -698,7 +698,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                 sx={{
                   p: 2,
                   borderRadius: 2,
-                  bgcolor: themeMode === "dark" ? alpha("#f39c12", 0.1) : alpha("#f39c12", 0.05), 
+                  bgcolor: themeMode === "dark" ? alpha("#f39c12", 0.1) : alpha("#f39c12", 0.05),
                   border: `1px solid ${themeMode === "dark" ? alpha("#f39c12", 0.2) : alpha("#f39c12", 0.1)}`,
                   flex: "1 1 calc(25% - 16px)",
                   minWidth: "200px",
@@ -726,7 +726,7 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
                 </Typography>
               </Box>
             </Box>
-                        
+
           </Box>
 
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, mt: 3 }}>
@@ -950,13 +950,19 @@ export default function TopPartidos({ selectedYear, selectedSeason, selectedMont
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
         <Typography variant="subtitle1" fontWeight="bold" color="#1A8A98">
-        {filterBy === "gastos"
-          ? showAllPartidos
-            ? "Todos los partidos por gastos"
-            : "Top 5 partidos con más gastos"
-          : showAllPartidos
-          ? "Todos los partidos por ganancias netas"
-          : "Top 5 partidos de ganancias netas"}
+          {filterBy === "gastos" ? (
+            showAllPartidos
+              ? "Todos los partidos por gastos"
+              : "Top 5 partidos con más gastos"
+          ) : filterBy === "ventas" ? (
+            showAllPartidos
+              ? "Todos los partidos por ingresos"
+              : "Top 5 partidos con más ingresos"
+          ) : (
+            showAllPartidos
+              ? "Todos los partidos por ganancias netas"
+              : "Top 5 partidos de ganancias netas"
+          )}
           {selectedYear && selectedYear !== "all" && selectedSeason && selectedSeason !== "all" && (
             <span style={{ fontSize: "0.8em", marginLeft: "8px", opacity: 0.8 }}>
               ({selectedYear} - {selectedSeason}
